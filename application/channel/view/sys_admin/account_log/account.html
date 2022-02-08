@@ -1,0 +1,33 @@
+{extend name="mainadmin@layouts/base" /}
+{block name="main" }
+
+<header class="header  b-b clearfix">
+    <form id="forms" class="talbe-search form-inline "  method="post" action="{:url('getAccountList')}" >
+        <div class="page-breadcrumbs">
+            <ul class="breadcrumb" >
+                <li>
+                    <i class="fa fa-ellipsis-v"></i>
+                    <strong>代理帐户</strong>
+                </li>
+            </ul>
+            <select name="role_id"  style="width: 130px;" data-toggle="select2" data-notsearch="true" data-chang="submit">
+                <option value="">所有层级</option>
+                {volist name="roleList" id="vo"}
+                <option value="{$vo.role_id}">{$vo.role_name}</option>
+                {/volist}
+            </select>
+
+            <input type="text" class="form-control input-large" value="{$search.keyword}" name="keyword" placeholder="会员ID/姓名/手机号" data-rule-required="true" />
+            <button class="btn btn-sm btn-default-iq" type="submit" title="搜索"><i class="fa fa-search"></i></button>
+        </div>
+    </form>
+</header>
+
+<section class="scrollable wrapper w-f ">
+    <section class="panel panel-default ">
+        <div class="table-responsive " id="list_box">
+            {include file="sys_admin/account_log/account_list" /}
+        </div>
+    </section>
+</section>
+{/block}

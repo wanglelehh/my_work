@@ -1,0 +1,63 @@
+{extend name="mainadmin@layouts/base" /}
+{block name="main" }
+<header >
+         <div class="page-breadcrumbs">
+                    <ul class="breadcrumb" >
+                        <li>
+                            <i class="fa fa-ellipsis-v"></i>
+                            <strong>{$row['id']>0?"编辑会员":"添加会员"}</strong>
+                        </li>                                  
+                    </ul>
+          
+            <a class="pull-right pointer p-r" data-toggle="back" title="返回"><i class="fa fa-reply"></i></a>
+            </div>
+        </header>
+
+<section class="scrollable  wrapper">
+  <form class="form-horizontal form-validate" method="post" action="{:url('info')}" style="padding:0;">
+
+      <section class="panel panel-default">
+         
+          <div class="panel-body">
+             <div class="form-group">
+                <label class="col-sm-2 control-label">用户名：</label>
+                <div class="col-sm-2">
+                    <input type="text" class="input-max" data-rule-required="true" name="user_name" value="{$row.user_name}">
+                </div>
+            </div>
+              <div class="form-group">
+                  <label class="col-sm-2 control-label">头像：</label>
+                  <div class="col-sm-4 " >
+                      <div class="defUpImgBox" data-toggle="uploaderOne">
+                          <img id="img_imagefile" src="{$row.headimgurl|default='__STATIC__/main/img/image.png'}">
+                          <input id="input_imagefile" type="hidden"  name="headimgurl"  value="{$row.headimgurl}">
+                          <div class="tips">点击上传</div>
+                      </div>
+                      <p>
+                          <span class="help-inline">图片尺寸：150*150像素</span>
+                      </p>
+                  </div>
+              </div>
+
+              <div class="control-group">
+                  <div class="controls col-sm-offset-2">
+                      <button type="submit" class="btn btn-primary" data-loading-text="保存中...">保存</button>
+                      <input class="btn" name="button" id="button" data-toggle="back" value="取消" type="button">
+                  </div>
+              </div>
+              
+          </div> 
+      </section>
+      
+      <input type="hidden" name="id" value="{$row.id}" >
+  </form>
+      
+</section>
+
+{/block}
+{block name="footer" }
+<script type="text/javascript">
+seajs.use("dist/plupload/init.js")
+
+</script>
+{/block}

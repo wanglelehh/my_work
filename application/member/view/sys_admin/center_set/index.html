@@ -1,0 +1,184 @@
+{extend name="mainadmin@layouts/base" /}
+{block name="main" }
+<header class="header  b-b clearfix">
+    <div class="page-breadcrumbs">
+        <ul class="breadcrumb" >
+            <li>
+                <i class="fa fa-ellipsis-v"></i>
+                <strong>中心设置</strong>
+            </li>
+        </ul>
+    </div>
+</header>
+<form class="form-horizontal form-validate form_vbox" method="post" action="{:url('save')}">
+    <section class="vbox">
+        <section class="scrollable  wrapper w-f">
+            <section class="panel panel-default">
+                <header>
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a href="#basic" data-toggle="tab">会员中心</a></li>
+                        <li><a href="#sign" data-toggle="tab">签到中心</a></li>
+                        <li><a href="#wallet" data-toggle="tab">钱包与积分</a></li>
+                    </ul>
+                </header>
+                <div class="tab-content">
+                    <div class="tab-pane active" id="basic">
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">顶部背景图片：</label>
+                            <div class="controls col-sm-6">
+                                <div class="defUpImgBox" data-toggle="uploaderImg" style="width: 180px;">
+                                    <img id="img_user_center_top_bg" src="{$setting.user_center_top_bg|default='__STATIC__/main/img/image.png'}">
+                                    <input id="input_user_center_top_bg" type="hidden"  name="user_center_top_bg"  value="{$setting.user_center_top_bg}">
+                                    <div class="tips">点击上传（750px * 560px）</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">是否显示身份：</label>
+                            <div class="controls">
+                                <label class="radio-inline">
+                                    <input name="user_center_show_role" value="0" {$setting['user_center_show_role']==0?'checked':''}
+                                    type="radio">隐藏
+                                </label>
+                                <label class="radio-inline">
+                                    <input name="user_center_show_role" value="1" {$setting['user_center_show_role']==1?'checked':''}
+                                    type="radio" >显示
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">我的工具排版：</label>
+                            <div class="controls">
+                                <label class="radio-inline">
+                                    <input name="user_center_nav_tpl" value="0" {$setting['user_center_nav_tpl']==0?'checked':''}
+                                    type="radio">网格类型
+                                </label>
+                                <label class="radio-inline">
+                                    <input name="user_center_nav_tpl" value="1" {$setting['user_center_nav_tpl']==1?'checked':''}
+                                    type="radio" >列表类型
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">待付款图标：</label>
+                            <div class="controls col-sm-6">
+                                <div class="defUpImgBox" data-toggle="uploaderImg">
+                                    <img  src="{$setting.user_center_oicon_wait_pay|default='__STATIC__/main/img/image.png'}">
+                                    <input  type="hidden"  name="user_center_oicon_wait_pay"  value="{$setting.user_center_oicon_wait_pay}">
+                                    <div class="tips">点击上传</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">待发货图标：</label>
+                            <div class="controls col-sm-6">
+                                <div class="defUpImgBox" data-toggle="uploaderImg">
+                                    <img  src="{$setting.user_center_oicon_wait_shipping|default='__STATIC__/main/img/image.png'}">
+                                    <input  type="hidden"  name="user_center_oicon_wait_shipping"  value="{$setting.user_center_oicon_wait_shipping}">
+                                    <div class="tips">点击上传</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">待收货图标：</label>
+                            <div class="controls col-sm-6">
+                                <div class="defUpImgBox" data-toggle="uploaderImg">
+                                    <img  src="{$setting.user_center_oicon_wait_sign|default='__STATIC__/main/img/image.png'}">
+                                    <input  type="hidden"  name="user_center_oicon_wait_sign"  value="{$setting.user_center_oicon_wait_sign}">
+                                    <div class="tips">点击上传</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">已完成图标：</label>
+                            <div class="controls col-sm-6">
+                                <div class="defUpImgBox" data-toggle="uploaderImg">
+                                    <img  src="{$setting.user_center_oicon_sign|default='__STATIC__/main/img/image.png'}">
+                                    <input  type="hidden"  name="user_center_oicon_sign"  value="{$setting.user_center_oicon_sign}">
+                                    <div class="tips">点击上传</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">退换货图标：</label>
+                            <div class="controls col-sm-6">
+                                <div class="defUpImgBox" data-toggle="uploaderImg">
+                                    <img  src="{$setting.user_center_oicon_after_sale|default='__STATIC__/main/img/image.png'}">
+                                    <input  type="hidden"  name="user_center_oicon_after_sale"  value="{$setting.user_center_oicon_after_sale}">
+                                    <div class="tips">点击上传</div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="tab-pane" id="sign">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">顶部背景图片：</label>
+                            <div class="controls col-sm-6">
+                                <div class="defUpImgBox" data-toggle="uploaderImg" style="width: 165px;height:120px; ">
+                                    <img id="img_user_sign_top_bg" src="{$setting.img_user_sign_top_bg|default='__STATIC__/main/img/image.png'}">
+                                    <input id="input_user_sign_top_bg" type="hidden"  name="img_user_sign_top_bg"  value="{$setting.img_user_sign_top_bg}">
+                                    <div class="tips">点击上传（165px * 120px）</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">积分图标：</label>
+                            <div class="controls col-sm-6">
+                                <div class="defUpImgBox" data-toggle="uploaderImg" style="width: 80px;height:50px; ">
+                                    <img id="img_icon_integral" src="{$setting.img_icon_integral|default='__STATIC__/main/img/image.png'}">
+                                    <input id="input_img_icon_integral" type="hidden"  name="img_icon_integral"  value="{$setting.img_icon_integral}">
+                                    <div class="tips">点击上传</div>
+                                </div>
+                                <span class="help-inline">建议尺寸：（50px * 50px）</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">签到成功：</label>
+                            <div class="controls col-sm-6">
+                                <div class="defUpImgBox" data-toggle="uploaderImg" style="width: 200px;height:91px; ">
+                                    <img id="img_user_sign_ok" src="{$setting.img_user_sign_ok|default='__STATIC__/main/img/image.png'}">
+                                    <input id="input_img_user_sign_ok" type="hidden"  name="img_user_sign_ok"  value="{$setting.img_user_sign_ok}">
+                                    <div class="tips">点击上传（400px * 180px）</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane" id="wallet">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">我的钱包顶部背景：</label>
+                            <div class="controls col-sm-6">
+                                <div class="defUpImgBox" data-toggle="uploaderImg" style="width: 200px;height:119px; ">
+                                    <img id="img_wallet_top_bg" src="{$setting.img_wallet_top_bg|default='__STATIC__/main/img/image.png'}">
+                                    <input id="input_img_wallet_top_bg" type="hidden"  name="img_wallet_top_bg"  value="{$setting.img_wallet_top_bg}">
+                                    <div class="tips">点击上传（750px * 445px）</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">我的积分顶部背景：</label>
+                            <div class="controls col-sm-6">
+                                <div class="defUpImgBox" data-toggle="uploaderImg" style="width: 200px;height:119px; ">
+                                    <img id="img_points_top_bg" src="{$setting.img_points_top_bg|default='__STATIC__/main/img/image.png'}">
+                                    <input id="input_img_points_top_bg" type="hidden"  name="img_points_top_bg"  value="{$setting.img_points_top_bg}">
+                                    <div class="tips">点击上传（750px * 445px）</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </section>
+        <footer class="footer bg-white b-t p-t">
+            <div class="form-group">
+                <div class="col-sm-4 col-sm-offset-1">
+                    <button type="submit" class="btn btn-primary js_save_submit" data-loading-text="保存中...">保存</button>
+                    <button type="button" class="btn btn-default" data-toggle="back">取消</button>
+                </div>
+            </div>
+        </footer>
+    </section>
+</form>
+
+{/block}

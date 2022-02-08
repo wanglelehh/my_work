@@ -1,0 +1,156 @@
+{extend name="mainadmin@layouts/base" /}
+{block name="main" }
+<header class="header  b-b clearfix">
+    <div class="page-breadcrumbs">
+        <ul class="breadcrumb">
+            <li>
+                <i class="fa fa-ellipsis-v"></i>
+                <strong>奖励设置 - 每页设置单独保存</strong>
+            </li>
+        </ul>
+
+    </div>
+</header>
+    <section class="vbox">
+        <section class="scrollable  wrapper ">
+            <section class="panel panel-default">
+                <header>
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a href="#bhjl" data-toggle="tab">补货奖励</a></li>
+                        <li><a href="#yfh" data-toggle="tab">月分红</a></li>
+                        <li><a href="#qyj" data-toggle="tab">区域奖</a></li>
+                    </ul>
+                </header>
+                <div class="tab-content">
+                    <div class="tab-pane active" id="bhjl">
+                        <form class="form-horizontal form-validate form-modal form_vbox" method="post" action="{:url('bhjl')}">
+                            <div style="color:#555; padding-bottom: 20px;"><b>各个层级推荐下级补货并非自己出货的，根据下级的层级得到对应奖励</b></div>
+                            {volist name="role_list" id="vo"}
+                            <div class="form-group">
+                                <label class="control-label">{$vo.role_name}：</label>
+                                <div class="col-sm-9">
+                                    {volist name="role_list" id="vob"}
+                                    <div class="fl input-group form-group-addon m-r">
+                                        直推{$vob.role_name}：<input type="text" class="input-ssmall" name="bhjl[{$vo.role_id}][{$vob.role_id}]" data-rule-min="0" data-rule-number="true"  value="{$rewardList['bhjl'][$vo['role_id']][$vob['role_id']]}" > <span class="input-group-addon">%</span>
+                                    </div>
+                                    {/volist}
+                                </div>
+                            </div>
+                            <div class="line line-dashed"></div>
+                            {/volist}
+                            <div class="form-group">
+                                <div class="col-sm-offset-1">
+                                    <button type="submit" class="btn btn-primary" data-loading-text="保存中...">保存补货奖励设置</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="tab-pane " id="yfh">
+                        <form class="form-horizontal form-validate form-modal form_vbox" method="post" action="{:url('yfh')}">
+                            <div style="color:#555; padding-bottom: 20px;"><b>按月统计本人和团队的总业绩*对应业绩区间的比例减去每个直推同级的总业绩*对应业绩区间的比例（升级，补货都算业绩）</b></div>
+                            {volist name="role_list" id="vo"}
+                            <div class="form-group">
+                                <label class="control-label">{$vo.role_name}：</label>
+                                <div class="col-sm-9">
+                                    <div class="input-group ">
+                                        <label class="radio-inline">
+                                            <input type="radio" name="is_yfh[{$vo.role_id}]" value="1" {$rewardList.yfh[$vo['role_id']][is_join]|tplckval='=1','checked'} class="js_radio_undertake"
+                                            data-class="yfh_box_{$vo.proxy_id}"/>参与</label>
+                                        <label class="radio-inline">
+                                            <input type="radio" name="is_yfh[{$vo.role_id}]" value="0"  {$rewardList.yfh[$vo['role_id']][is_join]|tplckval='=0','checked',true} class="js_radio_undertake"
+                                            />不参与</label>
+                                    </div>
+                                    <div class="radio_undertake_is_yfh_{$vo.role_id} yfh_box_{$vo.role_id} {$rewardList.yfh[$vo['role_id']][is_join]==0?'hide':''}">
+                                        <div class="distance_box" data-proxy_id="{$vo.role_id}" data-json='{$rewardList.yfh[$vo['role_id']][distance]|json_encode|raw}'>
+
+                                        </div>
+                                        <a href="javascript:;" data-proxy_id="{$vo.role_id}"  class="btn btn-sm btn-default addDistance"><i class="fa fa-plus m-r-xs"></i>添加业绩区间</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="line line-dashed"></div>
+                            {/volist}
+                            <div class="form-group">
+                                <div class="col-sm-offset-1">
+                                    <button type="submit" class="btn btn-primary" data-loading-text="保存中...">保存月分红设置</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="tab-pane " id="qyj">
+                        <form class="form-horizontal form-validate form-modal form_vbox" method="post" action="{:url('qyj')}">
+                            <div style="color:#555; padding-bottom: 20px;"><b>按订单收货地址返，一人可多市，一市只能一人（升级，补货都返）商品金额*比例，返到余额</b></div>
+                            <div class="form-group">
+                                <label class="control-label">省代：</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="input-mmini" name="province" data-rule-min="0" data-rule-number="true" data-rule-required="true" value="{$rewardList.qyj.province}" >%
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label">市代：</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="input-mmini" name="city" data-rule-min="0" data-rule-number="true" data-rule-required="true" value="{$rewardList.qyj.city}" >%
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label">区代：</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="input-mmini" name="district" data-rule-min="0" data-rule-number="true" data-rule-required="true" value="{$rewardList.qyj.district}" >%
+                                </div>
+                            </div>
+                            <div class="line line-dashed"></div>
+                            <div class="form-group">
+                                <div class="col-sm-offset-1">
+                                    <button type="submit" class="btn btn-primary" data-loading-text="保存中...">保存区域奖设置</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                </div>
+            </section>
+        </section>
+
+    </section>
+</form>
+{/block}
+
+{block name="footer" }
+<script type="text/html" id="distance_tmp">
+    <div class="relative">
+        总业绩区间：
+        <input type="text" class="input-mmini" name="distance[{{proxy_id}}][min][]" data-rule-min="0" data-rule-number="true" data-rule-required="true" value="{{min}}" >
+        ~
+        <input type="text" class="input-mmini" name="distance[{{proxy_id}}][max][]" data-rule-min="0" data-rule-number="true" data-rule-required="true" value="{{max}}" >万
+        ，奖励比例：
+        <input type="text" class="input-mmini" name="distance[{{proxy_id}}][val][]" data-rule-min="0" data-rule-number="true" data-rule-required="true" value="{{val}}" >%
+        <a href="javascript:;" class="delDistance"><i class="fa fa-times "></i></a>
+    </div>
+</script>
+<script type="text/javascript">
+ $('.distance_box').each(function(){
+     var json = $(this).data('json');
+     if (json == null || json.length < 1){
+         return true;
+     }
+     var arr = new Object();
+     arr.proxy_id = $(this).data('proxy_id');
+     var _this = this;
+     $.each(json.min,function(i,v){
+         arr.min = v;
+         arr.max = json.max[i];
+         arr.val = json.val[i];
+         $(_this).append(template('distance_tmp',arr));
+     })
+ })
+ $('.addDistance').on('click',function () {
+     var arr = new Object();
+     arr.proxy_id = $(this).data('proxy_id');
+     $(this).parent().find('.distance_box').append(template('distance_tmp',arr));
+ })
+ $(document).on('click','.delDistance',function () {
+     $(this).parent().remove();
+ })
+</script>
+{/block}

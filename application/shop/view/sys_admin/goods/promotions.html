@@ -1,0 +1,225 @@
+{if condition="$settings.sys_model_shop_goods_buy_brokerage == 1"}
+<div class="form-group">
+    <label class="col-sm-2 control-label">返还类型：</label>
+    <div class="col-sm-8" >
+        <label><input type="checkbox" name="buy_brokerage_type[]" value="first_buy"  {:in_array('first_buy',$row['buy_brokerage_type'])?'checked':'';}> 首次购买</label>
+        <label><input type="checkbox" name="buy_brokerage_type[]" value="repeat_buy"  {:in_array('repeat_buy',$row['buy_brokerage_type'])?'checked':'';}> 重复购买</label>
+    </div>
+</div>
+<div class="form-group">
+    <label class="col-sm-2 control-label">购买返还：</label>
+    <div class="col-sm-8" >
+        <input type="text" class="input-mini" name="buy_brokerage_amount" data-rule-min="0" data-rule-max="9999" data-rule-number="true" value="{$row['buy_brokerage_amount']|intval}">元
+        <span class="help-inline red">以佣金方式返还，返还金额高于实际售价50%时不生效.</span>
+    </div>
+</div>
+{else/}
+<input type="hidden" class="input-mini" name="buy_brokerage_amount"  value="0">
+{/if}
+
+
+{if condition="$settings.sys_model_shop_goods_use_integral == 1"}
+<div class="line line-dashed line-lg pull-in"></div>
+<div class="form-group">
+    <label class="col-sm-2 control-label">抵扣积分：</label>
+    <div class="col-sm-8" >
+        <input type="text" class="input-mini" name="use_integral" data-rule-min="0" data-rule-max="9999" data-rule-number="true" value="{$row['use_integral']|intval}">
+        <span class="help-inline">用于积分+现金组合购买，一旦设置用户须有相应积分进行抵扣才能购买,针对购买普通商品（拼团等无效）</span>
+    </div>
+</div>
+{else/}
+<input type="hidden" value="0">
+{/if}
+
+
+{if condition="$settings.sys_model_shop_bonus == 1"}
+<div class="form-group">
+      <label class="col-sm-2 control-label">优惠券：</label>
+      <div class="col-sm-10">
+        <label class="radio-inline">
+            <input type="radio" name="use_bond" value="0" {$row.use_bond|tplckval='0','checked'} >不能使用
+        </label>
+        <label class="radio-inline">
+            <input type="radio" name="use_bond" value="1" {$row.use_bond|tplckval='>0','checked',true}  /> 可以使用
+        </label>
+    </div>
+</div>
+{/if}
+
+
+{if condition="$settings.sys_model_shop_goods_give_integral == 1"}
+<div class="form-group">
+    <label class="col-sm-2 control-label">赠送积分：</label>
+    <div class="col-sm-10">
+        <label class="radio-inline">
+            <input type="radio" name="is_give_integral" value="-1" {$row['give_integral']==-1?'checked':''}  class="js_radio_undertake">不赠送
+        </label>
+        <label class="radio-inline">
+            <input type="radio" name="is_give_integral" value="0" {$row['give_integral']==0?'checked':''}  class="js_radio_undertake">1:1赠送（销售价）
+        </label>
+        <label class="radio-inline">
+            <input type="radio" name="is_give_integral" value="1" {$row['give_integral']>0?'checked':''}  class="js_radio_undertake "
+            data-class="give_integral_val"/>
+            赠送指定积分
+        </label>
+        <label class="radio_undertake_is_give_integral give_integral_val v-top {$row['give_integral']>0?'':'hide'} " style="position:relative;">
+            <input class="input-xs input-sm" type="text" data-rule-required="true" min="1" name="give_integral" value="{$row['give_integral']<0?0:$row['give_integral']}" data-rule-positive="true" />
+        </label>
+    </div>
+</div>
+{else/}
+<input type="hidden" name="is_give_integral" value="-1" />
+{/if}
+
+
+{if condition="$settings.sys_model_shop_goods_urole_price == 1"}
+{notempty name="$UsersRole"}
+<div class="help-inline red">默认全分销身份可购买，一旦勾选则只有勾选中的分销身份才能进行购买</div>
+<div class="form-group">
+      <label class="col-sm-2 control-label">限制分销身份购买：</label>
+      <div class="col-sm-8" >
+      {volist name="UsersRole" id="urow" }
+        <li style="list-style:none; float:left; margin:2px;">
+        <label><input type="checkbox" name="limit_user_role[]" value="{$urow.role_id}" <?=in_array($urow['role_id'],$limit_user_role)?'checked':'';?>> {$urow.role_name}</label></li>
+       {/volist}
+      </div>
+</div>
+
+<div class="form-group">
+    <label class="col-sm-2 control-label">身份价格优惠：</label>
+    <div class="col-sm-9" >
+        <select name="role_price_type" class="role_price_type">
+            <option value="0" {$row['role_price_type']==0?'selected':''}>默认商城售价</option>
+            <!--<option value="1" {$row['role_price_type']==1?'selected':''}>自定义折扣</option>-->
+            <option value="2" {$row['role_price_type']==2?'selected':''}>指定固定售价(多规格的子商品价格统一售价)</option>
+        </select>
+    </div>
+</div>
+<div class="form-group role_price_box {$row['role_price_type']==0?'hd':''}">
+    <label class="col-sm-2 control-label">身份价格：</label>
+    <div class="col-sm-9" >
+        {volist name="UsersRole" id="urow" }
+        <li style="list-style:none; float:left; position:relative; margin-right:10px;">
+            {$urow.role_name}：<input type="text" class="input-mini" min="0.1"  name="role_price[{$urow['role_id']}]" data-rule-ismoney="true" value="{$rolePrice[$urow['role_id']]|default='0'}" ><b class="symbol p-l">{$row['role_price_type']==1?'%':'元'}</b></li>
+        {/volist}
+    </div>
+</div>
+<div class="line line-dashed line-lg pull-in"></div>
+{/notempty}
+{/if}
+
+
+{if condition="$settings.sys_model_shop_goods_volume_price == 1"}
+<div style=" padding-bottom:10px; line-height:20px;">
+<div class="help-inline red">设置阶梯价格则所有规格商品统一售价</div>
+</div>
+<div class="form-group">
+      <label class="col-sm-2 control-label">阶梯价格定义：</label>
+      <div class="col-sm-9" >
+        <select name="volume_price_type" class="volume_price_type">
+               <option value="1" {$row['volume_price_type']<=1?'selected':''}>指定固定售价</option>
+               <option value="2" {$row['volume_price_type']==2?'selected':''}>指定折扣售价</option>
+         </select>
+      </div>
+</div>
+<div class="form-group volume_price_box">
+      <label class="col-sm-2 control-label">阶梯价格：</label>
+      <div class="col-sm-4" id="volume_box">
+        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+            {volist name="VolumePriceList" id="vpl" key="key"}
+                <tr>
+                  <td> {eq name="key" value="1"}
+                          <a class="fa fa-plus m-xs addVolumePrice" title="增加" href="javascript:;"></a>
+                      {else/}  
+                          <a class="fa fa-minus m-xs removeVolumePrice" title="删除" href="javascript:;"></a>
+                      {/eq} </td>
+                  <td>优惠数量</td>
+                  <td style="position:relative;"><input name="volume_number[]" class="volume_number input-mini" value="{$vpl.number}" type="text" data-rule-ismoney="true"></td>
+                  <td>优惠价格</td>
+                  <td style="position:relative;"><input name="volume_price[]" class="volume_price input-mini" value="{$vpl.price}" type="text"  data-rule-ismoney="true">{$row['volume_price_type']<=1?'元':'%'}</td>
+                </tr>
+          {/volist}
+          {empty name="VolumePriceList"}
+                <tr>
+                  <td><a class="fa fa-plus m-xs addVolumePrice" title="增加" href="javascript:;"></a></td>
+                  <td>优惠数量</td>
+                  <td style="position:relative;"><input name="volume_number[]" class="volume_number input-mini" value="" type="text"  data-rule-ismoney="true"></td>
+                  <td>优惠价格</td>
+                  <td style="position:relative;"><input name="volume_price[]" class="volume_price input-mini" value="" type="text"  data-rule-ismoney="true"><b class="symbol p-l">{$row['volume_price_type']<=1?'元':'%'}</b></td>
+                </tr>
+           {/empty}
+        </table>
+      </div>
+      <span class="help-inline">购买数量达到优惠数量时享受的优惠价格</span>
+</div>
+<div class="line line-dashed line-lg pull-in"></div>
+{/if}
+
+
+
+
+<script type="text/javascript">
+$('.select_integral_type').change(function(){
+	if ($(this).val() == 2){
+		$(this).parent().find('input').removeClass('hd');
+	}else{
+		$(this).parent().find('input').addClass('hd');
+	}
+})
+
+//身份价格优惠
+$('.role_price_type').change(function(){
+	$('.role_price_box').find('input').val(0);
+	$('.role_price_box').find('input').removeClass('error');
+	$('.role_price_box .error').remove();
+	if ($(this).val() == 0){
+		$('.role_price_box').addClass('hd');
+		return false;
+	}
+	$('.role_price_box').removeClass('hd');
+	if ($(this).val() == 1){
+		$('.role_price_box').find('.symbol').html('%');
+	}else{
+		$('.role_price_box').find('.symbol').html('元');		
+	}
+})
+//价格阶梯定义
+$('.volume_price_type').change(function(){
+	if ($(this).val() == 1){
+		$('.volume_price_box').find('.symbol').html('元');
+	}else{
+		$('.volume_price_box').find('.symbol').html('%');		
+	}
+	$('.volume_price').val('');
+})
+$('.addVolumePrice').click(function(){
+	var title = '';
+	$('.volume_number').each(function(){
+		if ($(this).val() == ''){
+			title += "请输入优惠数量<br>";
+			return false
+		}
+	});
+	$('.volume_price').each(function(){
+		if ($(this).val() == ''){
+			title += "请输入优惠价格";
+			return false;
+		}
+	})
+	if (title) return _alert(title);	
+	if ($('.volume_price_type').val() == 1){
+		var symbol = '元';
+	}else{
+		var symbol = '%';	
+	}
+	$('#volume_box').find('table').append('<tr><td><a class="fa fa-minus m-xs removeVolumePrice" title="删除" href="javascript:;"></a></td>'
+          +'<td>优惠数量</td>'
+          +'<td style="position:relative;"><input name="volume_number[]" class="volume_number input-mini" value="" type="text"  data-rule-positive="true"></td>'
+          +'<td>优惠价格</td>'
+          +'<td style="position:relative;"><input name="volume_price[]" class="volume_price input-mini" value="" type="text"  data-rule-positive="true"><b class="symbol p-l">'+symbol+'</b></td>'
+        +'</tr>');
+});
+$("#volume_box").on("click",".removeVolumePrice",function(){
+	$(this).parents('tr').remove();
+});
+</script>

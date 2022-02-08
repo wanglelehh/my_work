@@ -1,0 +1,29 @@
+<table class="table table-striped  m-b-none">
+<thead>
+<tr>
+	<th width="90">UID</th>
+    <th width="120">注册手机</th>
+    <th width="100">昵称</th>
+    <th width="100">真实姓名</th>
+    <th width="130">最近登陆</th>
+</tr>
+</thead>
+<tbody>
+
+{volist name="data.list" id="vo" }
+<tr>
+<td><label><input type="checkbox" class="m-r checkItems" name="user_id" value="{$vo.user_id}" data-mobile="{$vo.mobile}" data-nick_name="{$vo.nick_name}/{$vo.user_id|userInfo=true,'real_name'}"><span class="diy--checkbox diy--radioInput"></span> {$vo.user_id}</label></td>
+<td>{$vo.mobile}</td>
+<td>{$vo.nick_name}</td>
+<td>{$vo.user_id|userInfo=true,'real_name'}</td>
+<td>{$vo.login_time|dateTpl}</td>
+</tr>
+
+{/volist} 
+</tbody>
+</table>
+{empty name="data.list"}
+<table width="100%" >
+ 	<tr><td height="300" colspan="8" align="center" valign="middle" >没有相关数据！</td></tr>
+</table>
+{/empty}  

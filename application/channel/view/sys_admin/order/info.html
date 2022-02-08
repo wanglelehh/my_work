@@ -1,0 +1,465 @@
+{extend name="mainadmin@layouts/base" /}
+{block name="main" }
+<header>
+    <div class="page-breadcrumbs">
+        <ul class="breadcrumb">
+            <li>
+                <i class="fa fa-ellipsis-v"></i>
+                <strong>订单详情</strong>
+            </li>
+        </ul>
+
+        <a class="pull-right pointer p-r" data-toggle="back" title="返回"><i class="fa fa-reply"></i></a>
+    </div>
+</header>
+
+<section class="scrollable  wrapper ">
+    <form class="form-horizontal form-validate" method="post" action="" style="padding:0;">
+        <div class="alert alert-warning ">
+
+            <div >
+                <table>
+                    <tr>
+                        <td>
+                            当前订单状态：【{$orderInfo['ostatus']}】
+                        </td>
+
+                        {eq name="operating.isCancel" value="1"}
+                        <td>&nbsp;</td>
+                        <td><a href="javascript:;"
+                               data-remote="{:url('cancel',array('order_id'=>$orderInfo['order_id']))}"
+                               data-toggle="ajaxRemove" data-msg="确定取消订单？" class="btn btn-default btn-sm"
+                               data-loading-text="取消中...">取消</a></td>
+                        {/eq}
+                        {notempty name="operating.setUnPay"}
+                        <td>&nbsp;</td>
+                        <td><a href="javascript:;"
+                               data-remote="{:url('setUnPay',array('order_id'=>$orderInfo['order_id']))}"
+                               data-toggle="ajaxRemove" data-msg="确定撤回付款审核？" class="btn btn-default btn-sm"
+                               title="撤回付款审核">撤回付款审核</a></td>
+                        {/notempty}
+                        {notempty name="operating.returnPay"}
+                        <td>&nbsp;</td>
+                        <td><a href="javascript:;"
+                               data-remote="{:url('returnPay',array('order_id'=>$orderInfo['order_id']))}"
+                               data-toggle="ajaxRemove" data-msg="确定设为退款？" class="btn btn-default btn-sm"
+                               title="设为退款">设为退款</a></td>
+                        {/notempty}
+                        {notempty name="operating.editConsignee"}
+                        <td>&nbsp;</td>
+                        <td><a href="javascript:;"
+                               data-remote="{:url('editConsignee',array('order_id'=>$orderInfo['order_id']))}"
+                               data-toggle="ajaxModal" class="btn btn-default btn-sm" title="修改收货信息">修改收货信息</a></td>
+                        {/notempty}
+                        {notempty name="operating.cfmCodPay"}
+                        <td>&nbsp;</td>
+                        <td><a href="javascript:;"
+                               data-remote="{:url('cfmCodPay',array('order_id'=>$orderInfo['order_id']))}"
+                               data-toggle="ajaxModal" class="btn btn-default btn-sm" title="线下支付收款确认">线下打款审核</a>
+                        </td>
+                        {/notempty}
+                        {notempty name="operating.shipping"}
+                        <td>&nbsp;</td>
+                        <td><a href="javascript:;"
+                               data-remote="{:url('shipping',array('order_id'=>$orderInfo['order_id']))}"
+                               data-toggle="ajaxModal" class="btn btn-default btn-sm" title="发货">发货</a></td>
+                        {/notempty}
+                        {notempty name="operating.unshipping"}
+                        <td>&nbsp;</td>
+                        <td><a href="javascript:;"
+                               data-remote="{:url('unshipping',array('order_id'=>$orderInfo['order_id']))}"
+                               data-toggle="ajaxCurl" data-msg="确定把订单设为未发货？" class="btn btn-default btn-sm"
+                               title="未发货">设为未发货</a></td>
+                        {/notempty}
+                        {notempty name="operating.sign"}
+                        <td>&nbsp;</td>
+                        <td><a href="javascript:;" data-remote="{:url('sign',array('order_id'=>$orderInfo['order_id']))}"
+                               data-msg="确定把订单设为签收？" data-toggle="ajaxCurl" class="btn btn-default btn-sm"
+                               title="设为签收">设为签收</a></td>
+                        {/notempty}
+                        {notempty name="operating.unsign"}
+                        <td>&nbsp;</td>
+                        <td><a href="javascript:;"
+                               data-remote="{:url('unsign',array('order_id'=>$orderInfo['order_id']))}"
+                               data-msg="确定把订单设为未签收？" data-toggle="ajaxCurl" class="btn btn-default btn-sm"
+                               title="设为未签收">设为未签收</a></td>
+                        {/notempty}
+                        {notempty name="operating.returned"}
+                        <td>&nbsp;</td>
+                        <td><a href="javascript:;"
+                               data-remote="{:url('returned',array('order_id'=>$orderInfo['order_id']))}"
+                               data-msg="确定把订单设为退货状态？" data-toggle="ajaxCurl" class="btn btn-default btn-sm"
+                               title="设为退货">设为退货</a></td>
+                        {/notempty}
+
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <section class="panel panel-default">
+            <div class="panel-body">
+
+                <div class="col-sm-12">
+                    <div class="form-group col-sm-6">
+                        <label class="col-sm-3 control-label">下单代理：</label>
+                        <div class="col-sm-5 form-control-static">
+                            <a href="{:url('member/sys_admin.users/info',['user_id'=>$orderInfo['user_id']])}" data-toggle="wrapperAjax">{$orderInfo.user_id} - {$orderInfo.user_id|userInfo=true,'real_name'}</a>
+                        </div>
+                    </div>
+                    <div class="form-group col-sm-6">
+                        <label class="col-sm-3 control-label">代理层级：</label>
+                        <div class="col-sm-5 form-control-static">
+                            {$roleList[$orderInfo['user_role_id']]['role_name']}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="form-group col-sm-6">
+                        <label class="col-sm-3 control-label">供货代理：</label>
+                        <div class="col-sm-5 form-control-static">
+                            {if condition="$orderInfo['supply_uid'] == 0 "}
+                                厂家
+                            {else/}
+                                <a href="{:url('member/sys_admin.users/info',['user_id'=>$orderInfo['supply_uid']])}" data-toggle="wrapperAjax">{$orderInfo.supply_uid} - {$orderInfo.supply_uid|userInfo=true,'real_name'}</a>
+                            {/if}
+                        </div>
+                    </div>
+                    <div class="form-group col-sm-6">
+                        <label class="col-sm-3 control-label">供货层级：</label>
+                        <div class="col-sm-5 form-control-static">
+                            {if condition="$orderInfo['supply_uid'] == 0 "}
+                                厂家
+                            {else/}
+                                {$roleList[$orderInfo['supply_role_id']]['role_name']}
+                            {/if}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="form-group col-sm-6">
+                        <label class="col-sm-3 control-label">订单编号：</label>
+                        <div class="col-sm-5 form-control-static">
+                            {$orderInfo.order_sn}
+                        </div>
+                    </div>
+                    <div class="form-group col-sm-6">
+                        <label class="col-sm-3 control-label">订单金额：</label>
+                        <div class="col-sm-5 form-control-static">
+                            ￥{$orderInfo.order_amount}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="form-group col-sm-6">
+                        <label class="col-sm-3 control-label">下单时间：</label>
+                        <div class="col-sm-5 form-control-static">
+                            {$orderInfo.add_time|dateTpl}
+                        </div>
+                    </div>
+                    <div class="form-group col-sm-6">
+                        <label class="col-sm-3 control-label">支付时间：</label>
+                        <div class="col-sm-5 form-control-static">
+                            {$orderInfo.pay_time|dateTpl}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="form-group col-sm-6">
+                        <label class="col-sm-3 control-label">取消时间：</label>
+                        <div class="col-sm-5 form-control-static">
+                            {$orderInfo.cancel_time|dateTpl}
+                        </div>
+                    </div>
+                    <div class="form-group col-sm-6">
+                        <label class="col-sm-3 control-label">确定时间：</label>
+                        <div class="col-sm-5 form-control-static">
+                            {$orderInfo.confirm_time|dateTpl}
+                        </div>
+                    </div>
+                </div>
+
+                {if condition="$orderInfo.purchase_type > 1"}
+                <div class="col-sm-12">
+                    <div class="form-group col-sm-6">
+                        <label class="col-sm-3 control-label">发货时间：</label>
+                        <div class="col-sm-5 form-control-static">
+                            {$orderInfo.shipping_time|dateTpl}
+                        </div>
+                    </div>
+                    <div class="form-group col-sm-6">
+                        <label class="col-sm-3 control-label">签收时间：</label>
+                        <div class="col-sm-5 form-control-static">
+                            {$orderInfo.sign_time|dateTpl}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">退货时间：</label>
+                        <div class="col-sm-5 form-control-static">
+                            {$orderInfo.returned_time|dateTpl}
+                        </div>
+                    </div>
+                </div>
+                {/if}
+                <div class="col-sm-12">
+                    <div class="form-group ">
+                        <label class="col-sm-1 control-label">买家留言：</label>
+                        <div class="col-sm-8 form-control-static">
+                            {$orderInfo.buyer_message}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <header>
+                <ul class="nav nav-tabs">
+                    <li class="active"><a href="#tabinfo" data-toggle="tab">商品信息</a></li>
+                    <li><a href="#payinfo" data-toggle="tab">支付信息</a></li>
+                    {if condition="$orderInfo.purchase_type > 1"}
+                        <li><a href="#tabdescribe" data-toggle="tab">物流信息</a></li>
+                    {/if}
+                    <li><a href="#log" data-toggle="tab">订单日志</a></li>
+                    <li><a href="#reward" class="reward_tab" data-order_id="{$orderInfo.order_id}" data-toggle="tab">奖励明细</a></li>
+                </ul>
+            </header>
+            <div class="panel-body">
+                <div class="tab-content">
+                    <div class="tab-pane active" id="tabinfo">
+
+                        <div class="col-sm-12 table-responsive">
+
+                            <table class="table table-bordered ">
+                                <thead>
+                                <tr>
+                                    <th>商品信息</th>
+                                    <th>单价</th>
+                                    <th>数量</th>
+                                    <th>计量单位</th>
+                                    <th>小计</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {volist name="orderInfo.goodsList" id="grow"}
+                                <tr>
+                                    <td>
+
+                                        <div class="media">
+                                            <span class="pull-left thumb-sm"> <img src="{$grow.pic}" alt="John said"></span>
+                                            <div class="media-body">
+                                                <div>{$grow.goods_name}</div>
+                                                <div style="color:#999;">{$grow.sku_name}</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>￥{$grow.sale_price|priceFormat}</td>
+                                    <td>{$grow.goods_number}</td>
+                                    <td>{$grow.goods_unit_name}</td>
+                                    <td>￥{$grow['sale_price']*$grow['real_number']|priceFormat}</td>
+                                </tr>
+                                {/volist}
+                                <tr>
+                                    <td colspan="8" align="right">
+                                        <p>商品价格：￥{$orderInfo.goods_amount|priceFormat}</p>
+                                        <p>+ 运费：￥{$orderInfo.shipping_fee|priceFormat}</p>
+                                        <p>= 实收款：￥{$orderInfo.order_amount|priceFormat}</p>
+                                    </td>
+                                </tr>
+
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+
+                    <div class="tab-pane" id="payinfo">
+                        <div class="col-sm-12">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <div class="col-sm-10 ">
+                                        应付款:￥{$orderInfo.order_amount|priceFormat}
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+                        <div class="col-sm-12 table-responsive">
+                            <table class="table table-bordered ">
+                                <thead>
+                                <tr>
+                                    <th>支付方式</th>
+                                    <th>支付金额</th>
+                                    <th>支付时间</th>
+                                    <th>支付流水号|商户订单号|线下打款凭证</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td>{$orderInfo.pay_name}</td>
+                                    <td>{$orderInfo.money_paid|priceFormat}</td>
+                                    <td>{$orderInfo.pay_time|dateTpl}</td>
+
+                                    <td class="image-list">
+                                        {eq name="orderInfo.pay_code" value="offline"}
+                                        {volist name="$orderInfo.offlineimg" id="offlineimg"}
+                                           <img src="{$offlineimg}" style="width:100px;height: 100px;" >
+                                        {/volist}
+                                        {else}
+                                        {$orderInfo.transaction_id}
+                                        {/eq}
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="tab-pane" id="tabdescribe" style="overflow: hidden">
+                        <div class="form-group">
+                            <label class="col-sm-1 control-label">收货人：</label>
+                            <div class="col-sm-8 form-control-static">
+                                {$orderInfo.consignee}
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-1 control-label">联系手机：</label>
+                            <div class="col-sm-8 form-control-static">
+                                {$orderInfo.mobile}
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-1 control-label">收货地址：</label>
+                            <div class="col-sm-8 form-control-static">
+                                【{$orderInfo.merger_name}】
+                                {$orderInfo.address}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-1 control-label">快递费用：</label>
+                            <div class="col-sm-8 form-control-static">
+                                {eq name="$orderInfo.shipping_fee" value="0"}
+                                免运费
+                                {else/}
+                                {$orderInfo.shipping_fee|priceFormat}
+                                {/eq}
+                            </div>
+                        </div>
+
+                        {gt name="$orderInfo.shipping_status" value="0"}
+                        <div class="form-group">
+                            <label class="col-sm-5 control-label">快递公司：</label>
+                            <div class="col-sm-8 ">
+                                <label>{$orderInfo.shipping_name} 快递单号：{$orderInfo.invoice_no}</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-5 control-label"></label>
+                            <div class="col-sm-8 shipping_log">
+                                <table class="table table-bordered ">
+                                    <thead>
+                                    <tr>
+                                        <td colspan="4">数据加载中...</td>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table></div>
+                        </div>
+                        <script type="text/javascript">
+                            $(function(){
+                                var _obj = $('.shipping_log');
+                                jq_ajax('{:url("shop/api.shipping/getLog")}','order_id={$orderInfo.order_id}',function(res){
+                                    if (res.code == 0){
+                                        _obj.find('thead td').html(res.msg);
+                                        return false;
+                                    }
+                                    _obj.find('thead').remove();
+                                    $.each(res.data,function(i,v){
+                                        _obj.find('tbody').append('<tr><td>'+v.time+'</td><td >'+v.context+'</td></tr>');
+                                    })
+                                })
+                            })
+                        </script>
+                        {/gt}
+                    </div>
+
+                    <div class="tab-pane" id="log">
+                        <table class="table table-bordered ">
+                            <thead>
+                            <tr>
+                                <th width="150">记录时间</th>
+                                <th width="120">操作者</th>
+                                <th width="120">订单状态</th>
+                                <th width="120">支付状态</th>
+                                <th width="120">发货状态</th>
+                                <th>备注</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {volist name="orderLog" id="log"}
+                            <tr>
+                                <td>{$log.log_time|dateTpl}</td>
+                                <td>{$log.admin_id|adminInfo}</td>
+                                <td>{$orderLang['os'][$log['order_status']]|raw}</td>
+                                <td>{$orderLang['ps'][$log['pay_status']]|raw}</td>
+                                <td>{$orderLang['ss'][$log['shipping_status']]|raw}</td>
+                                <td>{$log.log_info}</td>
+                            </tr>
+                            {/volist}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="tab-pane" id="reward"></div>
+                </div>
+            </div>
+
+
+        </section>
+
+    </form>
+</section>
+
+{/block}
+
+{block name="footer" }
+<script type="text/javascript">
+    var order_id = {$orderInfo.order_id};
+    $(document).on('click','.reward_tab',function(){
+        if ($('#reward').html() == ''){
+            getRewardList(order_id);
+        }
+    })
+    function getRewardList(order_id) {
+        jq_ajax('{:url("getRewardLog")}','order_id='+order_id,function(res){
+            $('#reward').html(res.content);
+        });
+    }
+    $(document).on('click','.reward_info_btn',function(){
+        var id = $(this).data('id');
+        if($('#reward_info_'+id).is(':visible')){
+            $('#reward_info_'+id).hide();
+        }else{
+            $('#reward_info_'+id).show();
+        }
+    })
+    var isRefreshReward = false;
+    function refreshReward(obj){
+        if (isRefreshReward == true){
+            return _alert('正在计算，请等待',true);
+        }
+        isRefreshReward = true;
+        $(obj).html('正在重新计算中...');
+        jq_ajax('{:url("refreshReward")}','order_id='+order_id,function(res){
+            isRefreshReward = false;
+            $(obj).html($(obj).data('text'));
+            if (res.code == 0){
+                return _alert(res.msg,true);
+            }
+             _alert('已重新生成.',true);
+            setTimeout(function(){getRewardList(order_id)},2000);
+        });
+
+    }
+</script>
+{/block}

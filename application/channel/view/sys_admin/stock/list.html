@@ -1,0 +1,43 @@
+<table class="table table-hover m-b-none">
+<thead>
+<tr>
+	<th width="60" >UID</th>
+    <th width="70">注册手机</th>
+    <th width="80">姓名</th>
+    <th width="100">代理层级</th>
+    <th width="120">拿货上级</th>
+    <th width="120">推荐人</th>
+    <th width="90">云仓总库存</th>
+    <th width="90">云仓总出库</th>
+
+    <th width="80">操作</th>
+</tr>
+</thead>
+<tbody>
+
+{volist name="data.list" id="vo" }
+<tr>
+    <td>{$vo.user_id}</td>
+    <td>{$vo.mobile}</td>
+    <td>{$vo.real_name}</td>
+    <td>{if condition = "$vo.role_id > 0" }{$roleList[$vo['role_id']]['role_name']}{/if}</td>
+    <td>{if condition = "$vo.supply_uid > 0" }{$vo.supply_uid} - {$vo.supply_uid|userInfo=true,'real_name'}{else/}厂家{/if}</td>
+    <td>{if condition = "$vo.pid > 0" }{$vo.pid} - {$vo.pid|userInfo=true,'real_name'}{else/}平台{/if}</td>
+    <td>{$vo.cloudStockTotal|intval}</td>
+    <td>{$vo.cloudOutTotal|intval}</td>
+
+    <td>
+        <a href="{:url('channel/sys_admin.stock/info',array('user_id'=>$vo['user_id']))}" class="m-xs" title="查看">
+            <i class="fa fa-search text-muted"></i> 查看
+        </a>
+    </td>
+</tr>
+
+{/volist} 
+</tbody>
+</table>
+{empty name="data.list"}
+<table width="100%" >
+ 	<tr><td height="300" colspan="8" align="center" valign="middle" >没有相关数据！</td></tr>
+</table>
+{/empty}  

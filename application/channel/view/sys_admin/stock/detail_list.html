@@ -1,0 +1,31 @@
+<table class="table table-hover m-b-none">
+<thead>
+<tr>
+    <th width="80" >ID</th>
+	<th width="120" >出入库方向</th>
+    <th width="100">增减数量</th>
+    <th width="100">订单ID</th>
+    <th width="150">时间</th>
+    <th >出入库原因</th>
+</tr>
+</thead>
+<tbody>
+
+{volist name="data.list" id="vo" }
+<tr>
+    <td>{$vo.id}</td>
+    <td>{$vo['operate']==1?'入库':'出库'}</td>
+    <td>{$vo.goods_number}</td>
+    <td>{$vo['order_id']>0?$vo['order_id']:'后台调整'}</td>
+    <td>{$vo.add_time|dateTpl}</td>
+    <td>{$vo.log}</td>
+</tr>
+
+{/volist} 
+</tbody>
+</table>
+{empty name="data.list"}
+<table width="100%" >
+ 	<tr><td height="300" colspan="8" align="center" valign="middle" >没有相关数据！</td></tr>
+</table>
+{/empty}  

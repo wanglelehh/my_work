@@ -1,0 +1,235 @@
+{extend name="mainadmin@layouts/base" /}
+{block name="main" }
+<header class="header  b-b clearfix">
+    <div class="page-breadcrumbs">
+        <ul class="breadcrumb">
+            <li>
+                <i class="fa fa-ellipsis-v"></i>
+                <strong>大转盘</strong>
+            </li>
+        </ul>
+
+    </div>
+</header>
+<form class="form-horizontal form-validate form_vbox" id="_form" method="post" action="{:url('save')}">
+    <section class="vbox">
+        <section class="scrollable  wrapper w-f">
+            <section class="panel panel-default">
+                <div class="panel-body ">
+                    <header>
+                        <ul class="nav nav-tabs">
+                            <li class="active"><a href="#basic" data-toggle="tab">基本配置</a></li>
+                            <li><a href="#page" data-toggle="tab">页面配置</a></li>
+                            <li><a href="#log" class="log_tab" data-luck_id="{$row.luck_id}" data-toggle="tab">中奖记录</a></li>
+                        </ul>
+                    </header>
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="basic">
+                            <div class="form-group">
+                                <label class=" control-label" >状态：</label>
+                                <div class="col-sm-9">
+                                    <label class="radio-inline">
+                                        <input type="radio" name="status" value="0" {$row['status']|tplckval='=0','checked',true} >关闭
+                                    </label>
+                                    <label class="radio-inline">
+                                        <input type="radio" name="status" value="1"  {$row['status']|tplckval='=1','checked'}>开启
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group sel_prize_type">
+                                <label class="control-label">兑换抽奖次数：</label>
+                                <div class="col-sm-5">
+                                    <input type="text" class="input-ssmall" data-rule-integer="true" data-rule-required="true" data-msg-required="请填写兑换积分" name="integral_add_luckdrawnum" value="{$integral_add_luckdrawnum|intval}" >积分，兑换1次抽奖次数
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class=" control-label">规则说明：</label>
+                                <div class="col-sm-8">
+                                   <textarea name="rule" style="width: 100%;height: 120px;">{$row.rule}</textarea>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class=" control-label">奖品设置：</label>
+                                <div class="col-sm-10" >
+                                   <table class="table  "style="border: 1px solid #ccc;">
+                                       <thead>
+                                       <tr>
+                                           <th width="60">序号</th>
+                                           <th>奖品名称</th>
+                                           <th width="90">奖品图片</th>
+                                           <th width="90">中奖概率</th>
+                                           <th width="90">开奖限制</th>
+                                           <th width="90">奖品类型</th>
+                                           <th width="90">奖品数量</th>
+                                           <th width="90">已中数量</th>
+                                           <th width="60">编缉</th>
+                                       </tr>
+                                       </thead>
+                                        <tbody id="prize_list_box">
+
+                                        </tbody>
+                                       <tr>
+                                           <td colspan="9" align="center">
+                                               <a href="{:url('addPrize',['luck_id'=>$row['luck_id']])}" data-toggle="ajaxModal"  class="btn btn-primary" >添加奖项</a>
+                                           </td>
+                                       </tr>
+                                   </table>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane " id="page">
+                            <div class="form-group">
+                                <label class=" control-label">页面背景：</label>
+                                <div class="col-sm-5">
+                                    <div class="defUpImgBox" data-toggle="uploaderImg" data-type="image" style="width:100px;height:170px;">
+                                        <img id="img_bg_img" src="{$row.bg_img|default='__STATIC__/luckdraw/turntable/bg.jpg'}">
+                                        <input id="input_bg_img" type="hidden" name="bg_img"  value="{$row.bg_img}">
+                                        <div class="tips">点击上传</div>
+                                    </div>
+                                    <div style="color:red;margin-top:0.5rem">(请上传750*1600的图片),<a href="javascript:;" onclick="$('#img_bg_img').attr('src','__STATIC__/luckdraw/turntable/bg.jpg');$('#input_bg_img').val('__STATIC__/luckdraw/turntable/bg.jpg')">【使用默认图】</a></div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-1 control-label">页面背景色：</label>
+                                <div class="controls minicolors minicolors-theme-bootstrap minicolors-position-bottom minicolors-position-left">
+                                    <input type="text" name="bg_color"
+                                           class="form-control colorpicker minicolors-input" style="padding-left: 30px;"
+                                           data-control="hue" value="{$row.bg_color}" size="7">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class=" control-label">转盘背景：</label>
+                                <div class="col-sm-5 ">
+                                    <div class="defUpImgBox" data-toggle="uploaderImg" data-type="image" style="width:120px;height:120px;">
+                                        <img id="img_turntable_bg" src="{$row.turntable_bg|default='__STATIC__/luckdraw/turntable/lotteryBg.png'}">
+                                        <input id="input_turntable_bg" type="hidden"  name="turntable_bg"  value="{$row.turntable_bg}">
+                                        <div class="tips">点击上传</div>
+                                    </div>
+                                    <div style="color:red;margin-top:0.5rem">(请上传650*650的图片),<a href="javascript:;" onclick="$('#img_turntable_bg').attr('src','__STATIC__/luckdraw/turntable/lotteryBg.png');$('#input_turntable_bg').val('__STATIC__/luckdraw/turntable/lotteryBg.png')">【使用默认图】</a></div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class=" control-label">抽奖按钮：</label>
+                                <div class="col-sm-5 ">
+                                    <div class="defUpImgBox" data-toggle="uploaderImg" data-type="image" style="width:120px;height:120px;">
+                                        <img id="img_turntable_btn" src="{$row.turntable_btn|default='__STATIC__/luckdraw/turntable/lotteryBtn.png'}">
+                                        <input id="input_turntable_btn" type="hidden"  name="turntable_btn"  value="{$row.turntable_btn}">
+                                        <div class="tips">点击上传</div>
+                                    </div>
+                                    <div style="color:red;margin-top:0.5rem">(请上传212*228的图片),<a href="javascript:;" onclick="$('#img_turntable_btn').attr('src','__STATIC__/luckdraw/turntable/lotteryBtn.png');$('#input_turntable_btn').val('__STATIC__/luckdraw/turntable/lotteryBtn.png')">【使用默认图】</a></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="log">
+                            <div class="form-group">
+                                <div class="col-sm-5 ">
+                                    <select id="prize_type" onchange="getLogList(1)">
+                                        <option value="">所有奖品类型</option>
+                                        {volist name="prize_type" id="val" }
+                                            <option value="{$key}">{$val}</option>
+                                        {/volist}
+                                    </select>
+                                </div>
+                            </div>
+                            <table class="table table-bordered table-hover  m-b-none" id="tabOptLogBox_{$row.user_id}">
+                                <thead>
+                                <tr>
+                                    <th width="120">奖品类型</th>
+                                    <th >中奖奖品</th>
+                                    <th width="200">中奖时间</th>
+                                    <th width="150">中奖会员</th>
+                                    <th width="100">状态</th>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                            <div id="log_page" style="margin-top:10px;text-align:right;padding-right:5px;"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </section>
+        <footer class="footer bg-white b-t p-t">
+            <div class="form-group">
+                <div class="col-sm-4 col-sm-offset-1">
+                    <input name="luck_id" type="hidden" value="{$row.luck_id}">
+                    <button type="submit" class="btn btn-primary js_save_submit" data-loading-text="保存中...">保存
+                    </button>
+                    <button type="button" class="btn btn-default" data-toggle="back">取消</button>
+                </div>
+            </div>
+        </footer>
+    </section>
+</form>
+{/block}
+
+{block name="footer" }
+<script type="text/html" id="prize_list_tmp">
+    {{each prize_list as prize index}}
+    <tr>
+        <td>{{index + 1}}</td>
+        <td>{{prize.prize_name}}</td>
+        <td><img src="{{prize.prize_img}}" style="width: 50px;height: 50px;"> </td>
+        <td>{{prize.prize_pre}}%</td>
+        <td>{{prize.prize_limit}}</td>
+        <td>{{prize_type[prize.prize_type]}}</td>
+        <td>{{prize.prize_num}}</td>
+        <td>{{prize.open_num}}</td>
+        <td><a href="{:_url('editPrize',array('prize_id'=>'[[prize.prize_id]]'))}" data-toggle="ajaxModal" title="编缉">
+            <i class="fa fa-edit"></i>
+        </a></td>
+    </tr>
+
+    {{/each}}
+    {literal}
+    {{if (prize_list.length < 1) }}
+    <tr>
+        <td colspan="9" align="center" height="120">暂无设置奖品</td>
+    </tr>
+    {{/if}}
+    {/literal}
+</script>
+<script type="text/html" id="loglist">
+    {{each list as item index}}
+    <tr>
+        <td>{{item.prize_type}}</td>
+        <td>{{item.prize_name}}</td>
+        <td>{{item.add_time}}</td>
+        <td>{{item.user_id}} - {{item.user_name}}</td>
+        <td>{{item._status}}</td>
+    </tr>
+    {{/each}}
+</script>
+<script type="text/javascript">
+    var prize_type = {$prize_type|json_encode|raw};
+    var luck_id = {$row['luck_id']};
+    $(function () {
+        getPrize();
+    })
+    function getPrize(){
+        jq_ajax('{:url("getPrize",["luck_id"=>$row["luck_id"]])}','',function (res) {
+            $('#prize_list_box').html(template('prize_list_tmp',{prize_type:prize_type,prize_list:res.prize_list}));
+        })
+    }
+    //加载操作日志
+    function getLogList(page){
+        var prize_type = $('#prize_type').val();
+        jq_ajax('{:url("getLogList")}','luck_id='+luck_id+'&prize_type='+prize_type+'&p='+page,function(res){
+            $('#log_page').html('<span class="fr" style="line-height: 30px;margin-left: 10px;">共'+res.total_count+'条</span>'+res.page_content);
+            if (res.list.length > 0) {
+                $('#log').find('tbody').html(template('loglist', res));
+            } else {
+                $('#log').find('tbody').html('<tr><td colspan="10" align="center" style="height:150px;">暂无相关日志.</td></tr>')
+            }
+        });
+    }
+    $(document).on('click','.log_tab',function(){
+        if ($('#log').find('tbody').html() == ''){
+            getLogList(1);
+        }
+    })
+    $('#log_page').on('click','.paginate_button a',function () {
+        getLogList($(this).data('p'));
+    })
+</script>
+{/block}

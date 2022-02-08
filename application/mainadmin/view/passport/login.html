@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <title>{:settings('site_name')} - 管理后台</title>
+    <link rel="icon" type="image/png" href="__STATIC__/favicon.ico"/>
+    <link rel="stylesheet" href="__STATIC__/main/css/login/style.css"/>
+</head>
+<body class="page-login">
+<div class="container " >
+    <div id="wrapper" class="login-body">
+        <div class="mask"></div>
+        <div class="login-content">
+            <div class="brand">
+                <img alt="logo" class="brand-img" src="{:settings('logo')}">
+                <span class="brand-text">管理后台</span>
+            </div>
+            <form id="login-form" class="login-form">
+                <div class="form-group">
+                    <input class=""  name="user_name" placeholder="请输入用户名" type="text" required>
+                </div>
+                <div class="form-group">
+                    <input class="" name="password" placeholder="请输入密码" type="password" required>
+                </div>
+                <div class="form-group" style="display: flex;">
+                    <div style="flex:1; margin-right: 10px;">
+                        <input class="" name="verifyCode" placeholder="请输入验证码" type="text" required>
+                    </div>
+                    <div><img id="captchaimg" src="{:url('captcha')}" style="width: 100px; height: 40px;"></div>
+                </div>
+                <div class="form-group">
+                    <button id="btn-submit" type="submit">
+                        登录
+                    </button>
+                </div>
+                <div class="copyright">Copyright © 2013-2021 All Rights</div>
+            </form>
+        </div>
+    </div>
+</div>
+<input type="hidden" id="pubkey" value="{$public_key}" >
+</body>
+<script src="__STATIC__/js/jquery/jquery/1.8.3/jquery.min.js"></script>
+<script src="__STATIC__/js/layer/layer.js"></script>
+<script src="__STATIC__/js/jquery/jquery.form.min.js"></script>
+<script src="__STATIC__/js/jsencrypt.js"></script>
+<script>
+    if (top.location != self.location) {
+        if (typeof(window.top.goLogin)!="undefined") {
+            top.goLogin(self.location);
+        }
+        top.location = self.location;
+    }
+
+    $('#captchaimg').click(function(){
+        var timestamp = new Date().getTime();
+        $(this).attr('src','{:url("captcha")}?v='+timestamp);
+    })
+    var encrypt = new JSEncrypt();
+    encrypt.setPublicKey($('#pubkey').val());
+    // 表单提交
+    var $form = $('#login-form');
+    var loginData = {};
+
+    $form.submit(function () {
+        var $btn_submit = $('#btn-submit');
+        loginData.user_name = $("input[name='user_name']").val();
+        loginData.password = $("input[name='password']").val();
+        loginData.verifyCode = $("input[name='verifyCode']").val();
+        loginData.password = encrypt.encrypt(loginData.password);
+        $btn_submit.attr("disabled", true);
+        $.post("{:url('login')}",loginData,function (result){
+            $btn_submit.attr('disabled', false);
+            if (result.code === 1) {
+                layer.msg(result.msg, {time: 1500, anim: 1}, function () {
+                    window.location = result.url;
+                });
+                return true;
+            }
+            layer.msg(result.msg, {time: 1500, anim: 6});
+            if (result.code === -1) {
+                $('#captchaimg').click();
+            }
+        })
+        return false;
+    });
+</script>
+</html>

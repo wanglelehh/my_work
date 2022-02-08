@@ -1,0 +1,103 @@
+{extend name="mainadmin@layouts/base" /}
+{extend name="mainadmin@layouts/base" /}
+{block name="main" }
+
+<header class="header  b-b clearfix">
+    <form id="forms" class="talbe-search form-inline "  method="post" action="{:url($is_cancel==true?'trashList':'getList')}" >
+     <div class="page-breadcrumbs flex">
+            <ul class="breadcrumb" >
+                <li>
+                    <i class="fa fa-ellipsis-v"></i>
+                    <strong>
+                       {$purchaseTypeList[$search['purchaseType']]}
+                        {if condition="$search['purchaseType'] == 1"}
+                            <span class="tooltip-darkorange fa fa-question-circle" data-toggle="tooltip"  data-placement="right" data-html="true" data-original-title="云仓订单指的是代理补货进云仓的订单"></span>
+                        {elseif condition="$search['purchaseType'] == 2"}
+                            <span class="tooltip-darkorange fa fa-question-circle" data-toggle="tooltip"  data-placement="right" data-html="true" data-original-title="现货订单是指代理直接购买的订单（非云仓订单提货）"></span>
+                        {elseif condition="$search['purchaseType'] == 3"}
+                            <span class="tooltip-darkorange fa fa-question-circle" data-toggle="tooltip"  data-placement="right" data-html="true" data-original-title="提货订单指的是代理从云仓提货生成的订单"></span>
+                        {/if}
+                    </strong>
+                </li>                                  
+            </ul>
+         <div  class="relative flex_bd">
+             <div class="search-main">
+                 <div class="search-main-box">
+                    <input type="hidden" name="purchaseType" value="{$search['purchaseType']}">
+                     <select name="state" class="state_select" style="width: 100px;" data-toggle="select2" data-notsearch="true"  data-chang="submit">
+                         <option value="0" {$search['state']==0?'selected':''} >全部订单</option>
+                         {if condition="$search['purchaseType'] == 1"}
+                             <option value="1" {$search['state']==1?'selected':''} >待付款</option>
+                             <option value="2" {$search['state']==2?'selected':''} >待审核</option>
+                             <option value="5" {$search['state']==5?'selected':''} >已入仓</option>
+                         {else}
+                             <option value="1" {$search['state']==1?'selected':''} >待付款</option>
+                             <option value="2" {$search['state']==2?'selected':''} >待审核</option>
+                             <option value="3" {$search['state']==3?'selected':''} >待发货</option>
+                             <option value="4" {$search['state']==4?'selected':''} >已发货</option>
+                             <option value="5" {$search['state']==5?'selected':''} >已签收</option>
+                             {if condition="$search['purchaseType'] == 2"}
+                                 <option value="6" {$search['state']==6?'selected':''} >已退货</option>
+                                 <option value="7" {$search['state']==7?'selected':''} >待退款</option>
+                                 <option value="8" {$search['state']==8?'selected':''} >已退款</option>
+                             {/if}
+                         {/if}
+                         <option value="99" {$search['state']==99?'selected':''} >已取消</option>
+                     </select>
+                       <div class="form-group">
+                            <a class="btn btn-default " data-toggle="reportrange" data-change="submit">
+                                <i class="fa fa-calendar fa-lg"></i>
+                                <small>下单时间</small>
+                                <span></span> <b class="caret"></b>
+                                <input class="hide" type="text" value="{$start_date} - {$end_date}" id="reportrange" name="reportrange" />
+                            </a>
+                      </div>
+                     <select name="role_id"  style="width: 130px;" data-toggle="select2" data-notsearch="true" data-chang="submit">
+                         <option value="">所有代理</option>
+                         {volist name="roleList" id="vo"}
+                         <option value="{$vo.role_id}">{$vo.role_name}</option>
+                         {/volist}
+                     </select>
+                     <select name="searchBy" style="width: 120px;" data-toggle="select2" >
+                         <option value="order_sn" >订单编号</option>
+                         <option value="goods_sn">商品SN</option>
+                         <option value="user_id" >代理ID</option>
+                         <option value="user_name" >下单代理名称</option>
+                         <option value="user_mobile" >下单代理电话</option>
+                     </select>
+
+                      <input type="text" class="form-control input-large" value="{$search.keyword}" name="keyword" placeholder="输入相关内容筛选" data-rule-required="true" />
+                     <input type="hidden" value="0" name="export">
+                     <input type="hidden" value="{$favour_id}" name="favour_id">
+                     <button class="btn btn-sm btn-default-iq" type="submit" title="搜索"><i class="fa fa-search"></i></button>
+                 </div>
+             </div>
+             <i class="search_icon fa fa-chevron-down hide"></i>
+         </div>
+         <div>
+            <a href="javascript:;" onclick="ExportLog()" title="导出" class="btn btn-sm btn-default fr m-t-md m-r"><i class="fa fa-file-excel-o m-r-xs"></i>导出列表</a>
+         </div>
+    </div>
+</form>
+</header>
+
+<section class="scrollable wrapper w-f ">
+    <section class="panel panel-default ">
+        <div class="table-responsive " id="list_box">
+            {include file="sys_admin/order/list" /}
+        </div>
+
+    </section>
+</section>
+
+{/block}
+
+{block name="footer" }
+<script type="text/javascript">
+    function ExportLog(){
+        $('input[name="export"]').val('1');
+        $('#forms').submit();
+        $('input[name="export"]').val('0');
+    }
+</script>
+{/block}

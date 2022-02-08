@@ -1,0 +1,31 @@
+{extend name="mainadmin@layouts/base" /}
+{block name="main" }
+    
+<header class="header  b-b clearfix">
+ <form id="forms" class="talbe-search form-inline "  method="post" action="{:url('getList')}" >
+     <div class="page-breadcrumbs">
+            <ul class="breadcrumb" >
+                <li>
+                    <i class="fa fa-ellipsis-v"></i>
+                    <strong>多语言包</strong>
+                </li>                                  
+            </ul>
+             <select name="type"  style="width: 100px;" data-toggle="select2" data-notsearch="true" data-chang="submit">
+                 <option value="0">前端语言</option>
+                 <option value="1">后端语言</option>
+             </select>
+             <input type="text" class="form-control input-large" value="" name="keyword" placeholder="关键词" data-rule-required="true" />
+             <button class="btn btn-sm btn-default-iq" type="submit" title="搜索"><i class="fa fa-search"></i></button>
+             <a href="javascript:;" data-remote="{:url('info')}" data-toggle="ajaxModal" class="btn btn-sm btn-default fr m-r-tm m-t-md"><i class="fa fa-plus"></i>添加语言</a>
+        </div>
+    </form>
+</header>
+<section class="scrollable wrapper w-f ">
+    <section class="panel panel-default ">
+        <div class="table-responsive " id="list_box">
+            {include file="language_pack/list" /}
+        </div>
+    </section>
+</section>
+
+{/block}

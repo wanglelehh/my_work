@@ -1,0 +1,140 @@
+<form class="form-horizontal form-validate form-modal" method="post" data-fun="getPrize" action="{:url('savePrize')}">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">{$row['prize_id'] > 0?'编辑奖项':'添加奖项'}</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="control-label">奖品名称：</label>
+                    <div class="col-sm-8 must">
+                        <input type="text" class="input-max" data-rule-required="true" data-msg-required="请填写奖品名称" name="prize_name" value="{$row.prize_name}" >
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">奖品图片：</label>
+                    <div class="col-sm-8">
+                        <div class="defUpImgBox" data-toggle="uploaderImg" data-type="image">
+                            <img id="img_prize_img" src="{$row.prize_img|default='__STATIC__/main/img/image.png'}">
+                            <input id="input_prize_img" type="hidden"  name="prize_img"  value="{$row.prize_img}">
+                            <div class="tips">点击上传</div>
+                        </div>
+                        <span class="help-inline">请上传200*200的奖品图片，<a href="javascript:;" onclick="$('#img_prize_img').attr('src','__STATIC__/luckdraw/turntable/no.png');$('#input_prize_img').val('__STATIC__/luckdraw/turntable/no.png');">【使用默认感谢参与图片】</a></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">奖品数量：</label>
+                    <div class="col-sm-2 must">
+                        <input type="text" class="input-max" data-rule-integer="true" data-rule-required="true" data-msg-required="请填写奖品数量" name="prize_num" value="{$row.prize_num}" >
+                    </div>
+                    <span class="col-sm-5 help-inline">-1为无限
+                    {if condition="$row['prize_id'] > 0"}，已中数量：{$row.open_num|intval}{/if}
+                    </span>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label">中奖概率：</label>
+                    <div class="col-sm-1 must">
+                        <input type="text" class="input-max" data-rule-decimal="2" data-rule-required="true" data-msg-required="请填写中奖概率" name="prize_pre" value="{$row.prize_pre}" >
+                    </div>
+                    <span class="col-sm-5 help-inline">%，所有奖项中奖概率相加须等于100</span>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">开奖限制：</label>
+                    <div class="col-sm-2 must">
+                        <input type="text" class="input-max" data-rule-integer="true" data-rule-required="true" data-msg-required="请填写开奖限制数" name="prize_limit" value="{$row.prize_limit}" >
+                    </div>
+                    <span class="col-sm-6 help-inline">当总抽奖数量小于此数值时，不开此项奖品</span>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">奖品类型：</label>
+                    <div class="col-sm-8">
+                        <select style="width: 150px;" id="prize_type" name="prize_type" onchange="selectType()">
+                            <option value="">选择类型</option>
+                            {volist name="prize_type" id="type" }
+                            <option value="{$key}" {$key == $row['prize_type']?'selected':''}>{$type}</option>
+                            {/volist}
+                        </select>
+                        <span class="col-sm-6 help-inline fr">实体奖品，不支持多规格商品</span>
+                    </div>
+                </div>
+                <div class="form-group sel_prize_type {$row['prize_type']=='entity'?'':'hide'}" id="select_entity">
+                    <label class=" control-label">选择商品：</label>
+                    <div class="col-sm-9 ">
+                        <input id="goods_keyword" type="text" class="input-small" placeholder="商品名称/SN" aria-invalid="false">
+                        <a class="btn btn-default fa fa-search" title="搜索" onclick="searchGoods()"></a>
+                        <select id="goods_select" name="goods_id" style="width:250px;" data-toggle="select2" data-notsearch="true">
+                            <option value="">选择商品</option>
+                            {if condition="$row['prize_id'] > 0 && $row['prize_type']=='entity'"}
+                            <option value="{$goods.goods_id}" selected>{$goods.goods_name}</option>
+                            {/if}
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group sel_prize_type {$row['prize_type']=='bonus'?'':'hide'}" id="select_bonus">
+                    <label class=" control-label">选择优惠券：</label>
+                    <div class="col-sm-9 ">
+                        <input id="bonus_keyword" type="text" class="input-small" placeholder="优惠券名称" aria-invalid="false">
+                        <a class="btn btn-default fa fa-search" title="搜索" onclick="searchBonus()"></a>
+                        <select id="bonus_select" name="bonus_id" style="width:250px;" data-toggle="select2" data-notsearch="true">
+                            <option value="">选择优惠券</option>
+                            {if condition="$row['prize_id'] > 0 && $row['prize_type']=='bonus'"}
+                            <option value="{$bonus.type_id}" selected>￥{$bonus.type_money}元 - {$bonus.type_name}</option>
+                            {/if}
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group sel_prize_type {$row['prize_type']=='integral'?'':'hide'}" id="select_integral">
+                    <label class="control-label">赠送积分：</label>
+                    <div class="col-sm-2 must">
+                        <input type="text" class="input-max" data-rule-integer="true" data-rule-required="true" data-msg-required="请填写赠送积分" name="give_integral" value="{$row.relation_val}" >
+                    </div>
+                </div>
+                <div class="form-group sel_prize_type {$row['prize_type']=='luckdrawnum'?'':'hide'}" id="select_luckdrawnum">
+                    <label class="control-label">赠送抽奖次数：</label>
+                    <div class="col-sm-2 must">
+                        <input type="text" class="input-max" data-rule-integer="true" data-rule-required="true" data-msg-required="请填写赠送抽奖次数" name="give_luckdrawnum" value="{$row.relation_val}" >
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <input  type="hidden" name="prize_id" value="{$row.prize_id|intval}"/>
+                <input  type="hidden" name="luck_id" value="{$row.luck_id|intval}"/>
+                <button type="submit" class="btn btn-primary" data-loading-text="保存中..." disabled>保存</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+            </div>
+        </div>
+    </div>
+</form>
+<script type="text/javascript">
+    function selectType(){
+        var type = $('#prize_type').val();
+        $('.sel_prize_type').addClass('hide');
+        $('#select_'+type).removeClass('hide');
+    }
+    function searchGoods() {
+        var arr = new Object();
+        arr.keyword = $('#goods_keyword').val();
+        arr.min_search = 1;
+        $('#goods_select').html('<option value="">选择商品</option>');
+        var res = jq_ajax('{:url("shop/sys_admin.goods/pubSearch")}', arr);
+        $.each(res.list, function (i, value) {
+            var is_spec = '';
+            if (value.is_spec == 1){
+                is_spec = '多规格 - ';
+            }
+            $('#goods_select').append('<option value="' + value.goods_id + '" data-goods_sn="' + value.goods_sn + '">' + is_spec + value.goods_name + '</option>');
+        })
+    }
+    function searchBonus() {
+        var arr = new Object();
+        arr.keyword = $('#bonus_keyword').val();
+        arr.min_search = 1;
+        $('#bonus_select').html('<option value="">选择优惠券</option>');
+        var res = jq_ajax('{:url("shop/sys_admin.bonus/pubSearch")}', arr);
+        $.each(res.list, function (i, value) {
+            $('#bonus_select').append('<option value="'+value.type_id+'">￥'+value.type_money+'元 - '+value.type_name+'</option>');
+        })
+    }
+</script>

@@ -1,0 +1,116 @@
+<div class="form-group">
+  <label class="col-sm-2 control-label">默认计量单位：</label>
+  <div class="col-sm-4">
+    <select name="channel_unit" id="select_unit" style="width:150px;" data-toggle="select2" data-notsearch="true" data-placeholder="请选择默认计量单位.">
+      <option value="">选择默认计量单位</option>
+      {volist name="goodsUnit" id="gu"}
+      <option value="{$gu.id}" {$row['unit']==$gu['id']?'selected':''}>{$gu.name}</option>
+      {/volist}
+    </select>
+  </div>
+</div>
+<div class="form-group">
+  <label class="col-sm-2 control-label">单位换算：</label>
+  <div class="col-sm-8">
+    <select id="select_convert_unit" style="width:150px;" data-notsearch="true"  data-toggle="select2">
+      <option value="">选择换算单位</option>
+      {volist name="goodsUnit" id="gu"}
+      <option value="{$gu.id}">{$gu.name}</option>
+      {/volist}
+    </select>
+    <a href="javascript:;" onclick="addConvertUnit()" class="btn btn-sm btn-default"><i class="fa fa-plus"></i>添加</a><span class="help-inline red">* 请按从小到大顺序添加</span>
+    <div id="convert_unit_box">
+      {volist name="$row['convert_unit']" id="val"}
+      <label><input type="hidden" name="channel_convert_unit_id[]" value="{$key}" >1{$goodsUnit[$key]['name']} = <input class="input-ssmall m-t" data-rule-required="ture" data-rule-number="true" name="channel_convert_unit_val[]" type="text" value="{$val}"> {$goodsUnit[$row['unit']]['name']} <a href="javascript:;" class="text-muted del_convert_unit"><i class="fa fa-times"></i></a></label>
+      {/volist}
+    </div>
+  </div>
+</div>
+
+
+<div class="form-group">
+  <label class="col-sm-2 control-label">定价方式：</label>
+  <div class="col-sm-10 ">
+    <label class="radio-inline">
+      <input name="channel_pricing_type" class="pricing_type" value="0" {$row.pricing_type|tplckval='=0' ,'checked',true}  type="radio" >统一固定价
+    </label>
+    <label class="radio-inline">
+      <input name="channel_pricing_type" class="pricing_type" value="1" {$row.pricing_type|tplckval='=1' ,'checked'}  type="radio" >统一折扣价（根据零售价）
+    </label>
+  </div>
+</div>
+<header class="panel-heading bg-light">
+  渠道价格
+</header>
+<div class="panel-body" id="price_box">
+</div>
+
+{literal}
+<script type="text/html" id="price_type_one">
+  <table class="table table-hover table-bordered" style="width: 600px">
+    <tr>
+      <td>层级名称</td>
+      <td>进货价</td>
+    </tr>
+    {{each roleList as item index}}
+    {{if item.role_id > 0}}
+    <tr>
+      <td>{{item.role_name}}</td>
+      <td>
+        <div class="input-group" style="width: 100px;">
+          <input type="text" class="input-mini sale_price" id="price_{{item.role_id}}_0" data-role_id="{{item.role_id}}" data-pid="{{item.pid}}" data-sku_id="0" name="channel_prices[{{item.role_id}}]" data-rule-required="true" data-rule-ismoney="true" >
+          <span class="input-group-addon pricing_type_addon">{{if pricing_type == 0}}元{{else}}%{{/if}}</span>
+        </div>
+      </td>
+    </tr>
+    {{/if}}
+    {{/each}}
+    </tabel>
+</script>
+{/literal}
+<script type="text/javascript">
+  var prices = {$prices|json_encode|raw};
+  var roleList = {$roleList|json_encode|raw};
+  function setprice(){
+    $.each(prices,function (i,v) {
+      $('#price_'+v.role_id+'_'+v.sku_id).val(v.price);
+    })
+  }
+  function setPriceBox(){
+    var data = new Object();
+    data.pricing_type = $('input[name="channel_pricing_type"]:checked').val();
+    data.roleList = roleList;
+    $('#price_box').html(template('price_type_one',data));
+    setprice();
+  }
+  setPriceBox();
+
+
+  function addConvertUnit(){
+    var select_unit = $('#select_unit').val();
+    if (select_unit < 1){
+      return _alert('请先选择默认计量单位.',true);
+    }
+    var select_convert_unit = $('#select_convert_unit').val();
+    if (select_convert_unit < 1){
+      return _alert('请选择换算单位.',true);
+    }
+    if (select_unit == select_convert_unit){
+      return _alert('换算单位不能选择默认计量单位.',true);
+    }
+    var isrep = false;
+    $('#convert_unit_box').find('input[name="channel_convert_unit_id[]"]').each(function(){
+      if (select_convert_unit == $(this).val()) return isrep = true;
+    })
+    if (isrep == true) return _alert('列表中已存在此换算单位.',true);
+    var select_unit_text = $('#select_unit').find("option:selected").text();
+    var select_convert_unit_text = $('#select_convert_unit').find("option:selected").text();
+    $('#convert_unit_box').append('<label><input type="hidden" name="channel_convert_unit_id[]" value="'+select_convert_unit+'" >1'+select_convert_unit_text+' = <input class="input-ssmall m-t" data-rule-required="ture" data-rule-number="true" name="channel_convert_unit_val[]" type="text"> '+select_unit_text+' <a href="javascript:;" class="text-muted del_convert_unit"><i class="fa fa-times"></i></a></label>');
+  }
+  $(document).on('click','.del_convert_unit',function () {
+    $(this).parent().remove();
+  })
+  $(document).on('click','.pricing_type',function () {
+    setPriceBox();
+  })
+</script>

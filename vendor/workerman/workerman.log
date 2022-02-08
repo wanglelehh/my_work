@@ -1,0 +1,22 @@
+2020-07-13 10:23:24 pid:22560 Workerman[think] start in DAEMON mode
+2020-07-13 10:23:59 pid:22576 Workerman[think] stop 
+2020-07-13 10:23:59 pid:22576 Workerman[think] is stopping ...
+2020-07-13 10:23:59 pid:22562 Workerman[think] stopping ...
+2020-07-13 10:24:01 pid:22562 worker[Blockchain:22565] exit with status 9
+2020-07-13 10:24:01 pid:22562 worker[Blockchain:22566] exit with status 9
+2020-07-13 10:24:01 pid:22562 worker[Blockchain:22564] exit with status 9
+2020-07-13 10:24:01 pid:22562 worker[Blockchain:22563] exit with status 9
+2020-07-13 10:24:01 pid:22562 Workerman[think] has been stopped
+2020-07-13 10:24:01 pid:22576 Workerman[think] stop success
+2020-07-13 10:27:57 pid:22791 Workerman[think] stop 
+2020-07-13 10:27:57 pid:22791 Workerman[think] not run
+2020-07-13 10:28:00 pid:22792 Workerman[think] start in DAEMON mode
+2020-07-13 10:28:03 pid:22801 Workerman[think] stop 
+2020-07-13 10:28:03 pid:22801 Workerman[think] is stopping ...
+2020-07-13 10:28:03 pid:22794 Workerman[think] stopping ...
+2020-07-13 10:28:04 pid:22794 worker[Blockchain:22797] exit with status 65280
+2020-07-13 10:28:04 pid:22794 worker[Blockchain:22795] exit with status 65280
+2020-07-13 10:28:04 pid:22794 worker[Blockchain:22796] exit with status 65280
+2020-07-13 10:28:05 pid:22794 worker[Blockchain:22798] exit with status 9
+2020-07-13 10:28:05 pid:22794 Workerman[think] has been stopped
+2020-07-13 10:28:05 pid:22801 Workerman[think] stop success

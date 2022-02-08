@@ -1,0 +1,62 @@
+{extend name="mainadmin@layouts/simple_base" /}
+{block name="main" }
+
+<header class="header  b-b clearfix">
+    <form id="forms" class="talbe-search form-inline "  method="post" action="{:url('getSearchList')}" >
+        <div class="page-breadcrumbs">
+            <ul class="breadcrumb" >
+                <li>
+                    <i class="fa fa-ellipsis-v"></i>
+                    <strong>会员列表</strong>
+                </li>
+            </ul>
+
+            <input type="hidden" value="0" name="export">
+            <input type="text" class="form-control input-large" value="{$search.keyword}" name="keyword" placeholder="会员ID/帐号/手机号码" data-rule-required="true" />
+            <button class="btn btn-sm btn-default-iq" type="submit" title="搜索"><i class="fa fa-search"></i></button>
+            <label class="m-r " ><input type="checkbox" class="checkboxAll" data-name="user_id"> 全选 </label>
+            <a href="javascript:;" class="btn btn-sm " onclick="sureSelect()"><i class="fa fa-plus"></i>确认选择</a>
+        </div>
+    </form>
+</header>
+
+<section class="scrollable wrapper w-f ">
+    <section class="panel panel-default ">
+        <div class="table-responsive " id="list_box">
+            {include file="sys_admin/users/search_list" /}
+        </div>
+    </section>
+</section>
+
+{/block}
+
+{block name="footer" }
+<script type="text/javascript">
+
+    //商品对象
+    function userItem(user_id, mobile,nick_name) {
+        this.user_id = user_id;
+        this.mobile = mobile;
+        this.nick_name = nick_name;
+    }
+    function sureSelect()
+    {
+        var inputs = $("input[name='user_id']:checked");
+        if (inputs.length == 0) {
+            _alert('请选择会员.');
+            return false;
+        }
+        var userArr = new Array();
+        inputs.each(function(i,o){
+            var user_id = $(o).val();
+            var users = new userItem(user_id, $(o).data('nick_name'), $(o).data('mobile'));
+            userArr.push(users);
+        })
+        if(userArr.length == 0){
+            _alert('请至少选择一个会员.');
+            return false;
+        }
+        window.parent.call_back(userArr);
+    }
+</script>
+{/block}

@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,Chrome=1">
+    <meta name="renderer" content="webkit">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{:settings('site_name')} - 管理后台</title>
+    <!-- 公共样式 开始 -->
+    <link rel="icon" type="image/png" href="__STATIC__/favicon.ico"/>
+    <link rel="stylesheet" type="text/css" href="__STATIC__/framework/css/base.css">
+    <link rel="stylesheet" type="text/css" href="__STATIC__/framework/fonts/iconfont.css">
+    <script type="text/javascript" src="__STATIC__/js/jquery/jquery/2.1.4/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="__STATIC__/framework/layui/css/layui.css">
+    <!--[if lt IE 9]>
+    <script src="__STATIC__/framework/html5shiv.min.js"></script>
+    <script src="__STATIC__/framework/respond.min.js"></script>
+    <![endif]-->
+    <script type="text/javascript" src="__STATIC__/framework/layui/layui.js"></script>
+    <link rel="stylesheet" type="text/css" href="__STATIC__/framework/css/base_fontSize.css"><!-- 内容页字体大小 -->
+    <!-- 公共样式 结束 -->
+    <link rel="stylesheet" type="text/css" href="__STATIC__/framework/css/frameStyle.css">
+    <script type="text/javascript" src="__STATIC__/framework/frame.js" ></script>
+    <!-- 滚动条插件 -->
+    <script src="__STATIC__/js/jquery/jquery_ui/jquery.easyui.min.js"></script>
+    <link href="__STATIC__/framework/css/jquery.mCustomScrollbar.css" rel="stylesheet" type="text/css" />
+    <script src="__STATIC__/framework/jquery.mousewheel.min.js"></script>
+    <script src="__STATIC__/framework/jquery.mCustomScrollbar.min.js"></script>
+    <script src="__STATIC__/js/art-template.js"></script>
+    <script>
+        //判断IE
+    function IEVersion() {
+        var userAgent = navigator.userAgent; //取得浏览器的userAgent字符串
+        var isIE = userAgent.indexOf("compatible") > -1 && userAgent.indexOf("MSIE") > -1; //判断是否IE<11浏览器
+        var isEdge = userAgent.indexOf("Edge") > -1 && !isIE; //判断是否IE的Edge浏览器
+        var isIE11 = userAgent.indexOf('Trident') > -1 && userAgent.indexOf("rv:11.0") > -1;
+        if(isIE) {
+            var reIE = new RegExp("MSIE (\\d+\\.\\d+);");
+            reIE.test(userAgent);
+            var fIEVersion = parseFloat(RegExp["$1"]);
+            if(fIEVersion == 7) {
+                return 7;
+            } else if(fIEVersion == 8) {
+                return 8;
+            } else if(fIEVersion == 9) {
+                return 9;
+            } else if(fIEVersion == 10) {
+                return 10;
+            } else {
+                return 6;//IE版本<=7
+            }
+        } else if(isEdge) {
+            return 'edge';//edge
+        } else if(isIE11) {
+            return 11; //IE11
+        }else{
+            return -1;//不是ie浏览器
+        }
+    }
+    </script>
+</head>
+
+<body>
+<!-- 头部栏 - 开始 -->
+<div class="frameTop">
+    <div class="logo">
+        <h1>{:settings('site_name')}</h1>
+    </div>
+    <div class="shrinkMenu">
+        <div class="shrinkMenuBtn">
+            <i class="iconfont icon-zhankai-copy"></i>
+        </div>
+        <div class="shrinkBut">
+            <ul>
+                {volist name="$menus.top_menus" id="top_menus"}
+                <li {$i==1?'class="active"':''} data-id="{$top_menus.id}"><i>{$top_menus.name}</i></li>
+                {/volist}
+            </ul>
+        </div>
+    </div>
+
+    <div class="topMenu">
+        <ul>
+            <li><a href="javascript:void(0)" onclick="frameRefresh()" title="刷新当前选中页面"><i class="iconfont icon-shuaxin"></i></a></li>
+            <li><a href="javascript:void(0)" id="fullScreenBut" onclick="fullScreen('fullScreenBut')" title="全屏/退出全屏"><i class="iconfont icon-quanping1"></i></a></li>
+            <li>
+                <a href="javascript:void(0)"><font>{$admin['info']['user_name']}</font><i class="iconfont icon-up-copy"></i></a>
+                <dl>
+                    <dt><a href="javascript:void(0)" onclick="menuCAClick('{:url('mainAdmin/edit_pwd/index')}',this, 'pageModifyPassword')">修改密码</a></dt>
+                    {if condition="$admin['info']['role_action']=='all'"}
+                    <dt><a href="{:url('mainAdmin/index/clearCache')}" >清理缓存</a></dt>
+                    {/if}
+                    <dt><a href="{:url('mainAdmin/passport/logout')}" title="退出">退出</a></dt>
+                </dl>
+            </li>
+        </ul>
+    </div>
+</div>
+<!-- 头部栏 - 结束 -->
+
+<!-- 左侧菜单 - 开始 -->
+<i class="iconfont icon-shouhui-copy menuShrink_z" onclick="menuShrink('show')"></i>
+<div class="frameMenu">
+    <div class="menuMian">
+    <div class="menu">
+        <div class="hoverBox"></div>
+       <i class="iconfont icon-shouhui-copy menuShrink" onclick="menuShrink('hide')"></i>
+        <ul>
+
+        </ul>
+        <div style="height: 50px;"></div>
+    </div>
+
+    </div>
+</div>
+<!-- 左侧菜单 - 结束 -->
+    <!-- 核心区域 - 开始 -->
+    <div class="frameMain">
+        <div class="title" id="frameMainTitle">
+            <i class="iconfont icon-shuangzuojiantou- leftbut" onclick="pageShow('l')"></i>
+            <div class="mainPageBox">
+                <div class="mainPage">
+							<span class="active" onclick="pageSwitch(this)">
+			    				<div class="hoverBox"></div>
+								<i class="iconfont icon-shouye1"></i>
+							</span>
+                </div>
+            </div>
+            <div class="rightBox">
+            <i class="iconfont icon-shuangyoujiantou- rightbut" onclick="pageShow('r')"></i>
+            <i class="iconfont icon-iconfontarrows1 rightbut pageAllBut">
+                <dl>
+                    <dt><a href="javascript:void(0)" onclick="nowpageClose()">关闭当前标签页</a></dt>
+                    <dt><a href="javascript:void(0)" onclick="otherpageClose()">关闭其它标签页</a></dt>
+                    <dt><a href="javascript:void(0)" onclick="allpageClose()">关闭全部标签页</a></dt>
+                </dl>
+            </i>
+            </div>
+        </div>
+        <div class="con">
+            <div class="mainPageCon">
+                <iframe class="mainIframe" src="{:url('mainAdmin/index/welcome')}" scrolling="yes"></iframe>
+            </div>
+        </div>
+    </div>
+    <!-- 核心区域 - 结束 -->
+</body>
+{literal}
+<script type="text/html" id="menu_ul_tpl">
+    {{each menu.submenu as item index}}
+        {{if item.submenu}}
+            <li>
+                <a class="menuFA" href="javascript:void(0)"><font>{{item.name}}</font><i class="iconfont icon-iconfonti right"></i></a>
+                <dl>
+                    {{each item.submenu as itemb indexb}}
+                        {{if itemb.submenu}}
+                            <dt>
+                                <a class="menuFB" href="javascript:void(0)" ><i class="iconfont icon-iconfonti right"></i>{{itemb.name}}</a>
+                                <div>
+                                    {{each itemb.submenu as itemc indexc}}
+                                        <a  href="javascript:void(0)" title="{{itemc.url}}" onclick="menuCAClick('{{itemc.url}}',this, 'page{{itemc.id}}')"><i class="iconfont icon-triangle_right"></i>{{itemc.name}}</a>
+                                    {{/each}}
+                                </div>
+                            </dt>
+                        {{else}}
+                            <dt><a href="javascript:void(0)"  title="{{itemb.url}}"  onclick="menuCAClick('{{itemb.url}}',this, 'page{{itemb.id}}')">{{itemb.name}}</a></dt>
+                        {{/if}}
+                    {{/each}}
+                </dl>
+            </li>
+        {{else}}
+            <li>
+                <a class="menuFA" href="javascript:void(0)"  title="{{item.url}}"  onclick="menuCAClick('{{item.url}}',this, 'page{{item.id}}')"><font>{{item.name}}</font></a>
+            </li>
+        {{/if}}
+    {{/each}}
+</script>
+{/literal}
+<script src="__STATIC__/js/app.js"></script>
+<script type="text/javascript">
+    var menu_list = {$menus.menus|json_encode|raw};
+    function setMenu(){
+        var id = $('.shrinkBut .active').data('id');
+        $('.frameMenu .menu ul').html(template('menu_ul_tpl',{menu:menu_list[id]}));
+        menuShrink('show');
+    }
+    function goLogin(url){
+        $(window).unbind('beforeunload');
+        top.location = url;
+    }
+    $(function (){
+        $(window).bind('beforeunload', function(e){
+            return e.returnValue = "您确定要离开当前页面吗？";
+        });
+        setMenu();
+        $('.shrinkMenuBtn').click(function (){
+            $('.shrinkBut').css("display","");
+        })
+        $('.shrinkBut li').click(function (){
+            $('.shrinkBut li').removeClass('active');
+            $(this).addClass('active');
+            setMenu();
+            if ($('.frameTop .logo').is(':hidden')){
+                $('.shrinkBut').css("display","none");
+            }
+        })
+        jq_ajax('{:url("shop/sys_admin.order/autoSign")}');
+        jq_ajax('{:url("distribution/sys_admin.setting/autoEval")}');
+
+    })
+</script>
+<script src="__STATIC__/js/fuelux/treeview/tree-custom.min.js"></script>
+</html>

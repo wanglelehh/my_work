@@ -1,0 +1,53 @@
+{extend name="mainadmin@layouts/base" /}
+{block name="main" }
+
+<header class="header  b-b clearfix">
+    <form id="forms" class="talbe-search form-inline" method="post" >
+     <div class="page-breadcrumbs">
+            <ul class="breadcrumb" >
+                <li>
+                    <i class="fa fa-ellipsis-v"></i>
+                    <strong>授权模板</strong>
+                </li>                                  
+            </ul>
+            <a href="{:url('info')}"  title="添加代理层级" class="btn btn-sm btn-default fr m-t-md m-r"><i class="fa fa-plus m-r-xs"></i>添加模板</a>
+        </div>
+    </form>
+</header>
+
+<section class="scrollable wrapper  ">
+
+    <section class="panel panel-default ">
+        <div class="table-responsive " >
+            <table class="table table-bordered  ">
+                <thead class="flip-content bordered-palegreen">
+                <tr>
+                    <th >模板名称</th>
+                    <th width="100">是否默认</th>
+                    <th width="100">操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                {volist name="list" id="vo" }
+                <tr>
+                    <td>{$vo.temp_name}</td>
+                    <td><a href="javascript:;"  class="{$vo.is_default|tplckval='=1','active'}"><i class="fa fa-check text-success text-active"></i><i class="fa fa-times text-danger text"></i></a></td>
+
+                    <td >
+                        <a href="{:url('info',['id'=>$vo['id']])}"  title="编辑" class="fa fa-edit m-xs" ></a>
+                        <a href="{:url('delete',array('id'=>$vo['id']))}" data-toggle="ajaxRemove" data-msg="确定将模板 {$vo.temp_name} 删除？"  class="fa fa-trash-o"  title="删除"></a>
+                    </td>
+                </tr>
+                {/volist}
+                </tbody>
+            </table>
+            {empty name="list"}
+            <table width="100%" >
+                <tr><td height="300" colspan="8" align="center" valign="middle" >没有相关数据！</td></tr>
+            </table>
+            {/empty}
+        </div>
+    </section>
+</section>
+
+{/block}

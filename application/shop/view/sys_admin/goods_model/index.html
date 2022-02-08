@@ -1,0 +1,33 @@
+{extend name="mainadmin@layouts/base" /}
+{block name="head"}
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+{/block}
+{block name="main" }
+
+<header class="header  b-b clearfix">
+    <form id="forms" class="talbe-search form-inline "  method="post" action="{:url('getList')}" >
+     <div class="page-breadcrumbs">
+            <ul class="breadcrumb">
+                <li>
+                    <i class="fa fa-ellipsis-v"></i>
+                    <strong>商品模型</strong>
+                </li>                                  
+            </ul>
+         <input type="text" class="form-control input-large" value="{$search.keyword}" name="keyword" placeholder="名称" data-rule-required="true" />
+         <button class="btn btn-sm btn-default-iq" type="submit" title="搜索"><i class="fa fa-search"></i></button>
+         <a href="{:url('info')}" data-toggle="ajaxModal" title="添加类型" class="btn btn-sm btn-default fr m-t-md m-r"><i class="fa fa-plus m-r-xs"></i>添加模型</a>
+        </div>
+    </form>
+</header>
+
+
+<section class="scrollable wrapper w-f ">
+    <section class="panel panel-default ">
+        <div class="table-responsive " id="list_box">
+            {include file="shop@sys_admin/goods_model/list" /}
+        </div>
+    </section>
+</section>
+
+
+{/block}

@@ -1,0 +1,63 @@
+{extend name="mainadmin@layouts/base" /}
+{block name="main" }
+
+<header class="header  b-b clearfix">
+ 	<form id="forms" class="talbe-search form-inline "  method="post" action="{:url('getList',array('user_id'=>$search['user_id']))}" >
+     <div class="page-breadcrumbs">
+            <ul class="breadcrumb" >
+                <li>
+                    <i class="fa fa-ellipsis-v"></i>
+                    <strong>帐户明细</strong>
+                </li>                                  
+            </ul>
+              <div class="form-group">
+                    <a class="btn btn-default  " data-toggle="reportrange" data-change="submit">
+                        <i class="fa fa-calendar fa-lg"></i>
+                        <small>时间范围</small>
+                        <span></span> <b class="caret"></b>
+                        <input class="hide" type="text" value="{$start_date} - {$end_date}" id="reportrange" name="reportrange" />
+                    </a>
+              </div>
+            <div class="form-group">
+             <select name="change_type"  style="width: 130px;" data-toggle="select2" data-notsearch="true"  data-chang="submit">
+                   <option value="">所有变动类型</option>
+                   <option value="1">人工调整</option>
+                   <option value="2">订单相关</option>
+                   <option value="3">充值相关</option>
+                   <option value="4">提现相关</option>
+                   <option value="9">佣金相关</option>
+              </select>
+              <select name="account_type"  style="width: 130px;" data-toggle="select2"  data-notsearch="true"  data-chang="submit">
+                   <option value="">所有变动记录</option>
+                   <option value="balance_money">余额变动</option>
+                   <option value="goods_money">货款变动</option>
+                   <option value="earnest_money">保证金</option>
+              </select>
+            </div> 
+        <a class="text-muted pull-right pointer p-r m-t-md m-l" data-toggle="back" title="返回"><i class="fa fa-reply"></i></a>
+        <a href="javascript:;" data-remote="{:url('manage',array('user_id'=>$userInfo['user_id']))}" data-toggle="ajaxModal" class="btn btn-sm btn-default fr m-t-mc m-r"><i class="fa fa-edit"></i>调节帐户</a>
+        </div>
+    </form>
+</header>
+
+<section class="scrollable wrapper w-f ">
+    <div class="panel  ">
+        <table class="table m-b-none" >
+            <tr>
+                <td>用户ID：{$userInfo.user_id}，姓名：{$userInfo.real_name}，手机号码：{$userInfo.mobile}，余额：￥{$channelInfo.account.balance_money}元，货款余额：￥{$channelInfo.account.goods_money}元<span>，保证金余额：￥{$channelInfo.account.earnest_money}元</span></td>
+
+            </tr>
+            <tr>
+                <td>累计提现：￥{$channelInfo.account.withdraw_money_total}元<span>，保证金扣减：￥{$channelInfo.account.earnest_money_outlay_total}元</span>，货款累计支出：￥{$channelInfo.account.goods_money_outlay_total}元，佣金累计收入：￥{$channelInfo.account.total_brokerage}元</td>
+            </tr>
+        </table>
+    </div>
+    <section class="panel panel-default ">
+
+        <div class="table-responsive " id="list_box">
+            {include file="sys_admin/account_log/list" /}
+        </div>
+    </section>
+</section>
+
+{/block}

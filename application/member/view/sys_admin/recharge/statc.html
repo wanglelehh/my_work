@@ -1,0 +1,31 @@
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">统计汇总</h4>
+            </div>
+            <div class="modal-body">
+                <table class="table  table-hover  m-b-none">
+                    <thead>
+                    <tr>
+                        <th>支付方式</th>
+                        <th>充值数量</th>
+                        <th>充值金额</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {volist name="$data" id="vo" }
+                        <tr>
+                        <td>{$vo.pay_name}</td>
+                        <td>{$vo.num}</td>
+                        <td>{$vo.total_amount|priceFormat=true}</td>
+                        </tr>
+                    {/volist}
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                充值总数：{$totalData.num}，充值金额：{$totalData['total_amount']|priceFormat=true}
+            </div>
+        </div>
+    </div>

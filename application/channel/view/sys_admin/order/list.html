@@ -1,0 +1,98 @@
+<table class="table table-hover m-b-none" >
+<thead>
+<tr>
+    <th width="150">订单编号</th>
+    <th width="160" >下单人</th>
+    <th width="150" >代理层级</th>
+    <th width="130">订单类型</th>
+    <th width="110">订单状态</th>
+    <th width="100">下单时间</th>
+    <th width="160" >实收款</th>
+    <th width="100" >支付方式</th>
+    <th width="180">操作</th>
+</tr>
+</thead>
+<tbody>
+{volist name="data.list" id="vo" }
+
+<tr >
+    <td>
+        {$vo.order_sn}
+    </td>
+    <td >
+        {$vo.user_id} - {$vo.user_id|userInfo=true,'real_name'}
+    </td>
+    <td >
+        {$roleList[$vo['user_role_id']]['role_name']}
+    </td>
+    <td >
+        {$purchaseTypeList[$vo['purchase_type']]}
+        {eq name="$vo.is_first" value="1"}<small class="text-muted">(首单)</small>{/eq}
+    </td>
+    <td>{$vo['ostatus']}</td>
+    <td>{$vo.add_time|dateTpl}</td>
+    <td >￥{$vo.order_amount|priceFormat}
+        <small class="text-muted">[含运费: {$vo.shipping_fee}]</small>
+    </td>
+    <td>{$vo.pay_name}</td>
+
+    <td style="text-align: center;">
+        {if condition="$vo['purchase_type']==1"}
+            <a href="{:url('cloudInfo',array('order_id'=>$vo['order_id']))}" title="查看详情" class="m-r"><i class="fa fa-search"></i>查看</a>
+        {elseif condition="$vo['purchase_type']==2"}
+            <a href="{:url('spotInfo',array('order_id'=>$vo['order_id']))}" title="查看详情" class="m-r"><i class="fa fa-search"></i>查看</a>
+        {else/}
+            <a href="{:url('pickupInfo',array('order_id'=>$vo['order_id']))}" title="查看详情" class="m-r"><i class="fa fa-search"></i>查看</a>
+        {/if}
+        <a data-toggle="dropdown" href="javascript:void(0);" class="m-xs" title="更多">
+            更多<i class="fa fa-angle-down"></i>
+        </a>
+        <ul class="dropdown-menu">
+            <li>
+                <a href="javascript:;" title="显示商品"><i class="fa row-details fa-plus-square-o list_tr_open" style="width: 100%"> 商品</i></a>
+            </li>
+            {eq name="$vo.pay_status" value="10"}
+            <li>
+                <a href="javascript:;"
+                   data-remote="{:url('cfmCodPay',array('order_id'=>$vo['order_id']))}"
+                   data-toggle="ajaxModal"  title="线下支付收款确认">打款审核</i></a>
+            </li>
+            {/eq}
+        </ul>
+    </td>
+</tr>
+<tr class="hide">
+    <td colspan="3"  valign="top">
+        <ul class="list-group no-borders" >
+            {volist name="vo.goodsList" id="grow" }
+            <li class="list-group-item ">
+                <div class="media">
+                    <span class="pull-left thumb-sm">
+                        <img src="{$grow.pic}" ></span>
+
+                    <div class="media-body">
+                        <div style="color:#999;">{$grow.goods_name} {$grow.sku_name}</div>
+                        <small class="text-muted">单价： {$grow.sale_price|priceFormat}<span class="m-l-xs"></span></small>
+                        x {$grow.goods_number} {$grow.goods_unit_name}
+                    </div>
+                </div>
+            </li>
+            {/volist}
+        </ul>
+    </td>
+    <td colspan="7" valign="top">
+        {gt name="$vo.purchase_type" value="1" }
+        <p>收货人：{$vo.consignee}</p>
+        <p>联系电话：{$vo.mobile}</p>
+        <p>收货地址：{$vo.merger_name} {$vo.address}</p>
+        {/gt}
+    </td>
+</tr>
+{/volist}
+</tbody>
+</table>
+{empty name="data.list"}
+<table width="100%" >
+ 	<tr><td height="300" colspan="8" align="center" valign="middle" >没有相关数据！</td></tr>
+</table>
+{/empty}

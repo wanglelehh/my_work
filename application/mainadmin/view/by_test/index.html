@@ -1,0 +1,57 @@
+{extend name="mainadmin@layouts/base" /}
+{block name="main" }
+<header class="header  b-b clearfix">
+    <div class="page-breadcrumbs">
+        <ul class="breadcrumb">
+            <li>
+                <i class="fa fa-ellipsis-v"></i>
+                <strong>测试专用</strong>
+            </li>
+        </ul>
+    </div>
+</header>
+<form class="form-horizontal form-validate form_vbox" method="post" action="{:url('save')}">
+    <section class="vbox">
+        <section class="scrollable  wrapper ">
+            <section class="panel panel-default">
+                <div class="form-group m-t-md">
+                    <label class="control-label">校验码：</label>
+                    <div class="controls">
+                        <input type="text" id="check_code" class="input-medium">
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="form-group m-t-md">
+                    <label class="control-label">批量生成会员：</label>
+                    <div class="controls">
+                        <a href="javascript:;" class="btn btn-sm test_btn" data-url="{:url('batchAddUser')}">执行</a>
+                        <span class="help-inline">批量生成30个会员，手机号：13000000001开始，密码：abc123456</span>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="form-group m-t-md hide">
+                    <label class="control-label">测试创业金奖：</label>
+                    <div class="controls">
+                        <a href="javascript:;" class="btn btn-sm test_btn" data-url="{:url('runCyj')}">执行</a>
+                        <span class="help-inline">测试创业金，时间固定上次执行时间的当天凌晨至当前时间</span>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+
+
+            </section>
+        </section>
+
+    </section>
+</form>
+{/block}
+{block name="footer"}
+<script type="text/javascript">
+   $('.test_btn').on('click',function () {
+
+       jq_ajax($(this).data('url'),'check_code='+$('#check_code').val(),function (res) {
+           _alert(res.msg);
+       })
+   })
+</script>
+{/block}

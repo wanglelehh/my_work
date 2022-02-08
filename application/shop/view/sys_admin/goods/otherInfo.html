@@ -1,0 +1,93 @@
+<div class="col-sm-7" >
+{if condition="$row['supplyer_id'] == 0 && $row['store_id'] == 0" }
+    <div class="form-group">
+        <label class=" control-label">上架时间：</label>
+        <div class="col-sm-8" >
+            <label class="radio" style="padding-left:20px; width:200px;">
+                <input type="radio" name="isputaway" value="1"  {$row.isputaway|tplckval='=1','checked',true}  />立即上架
+            </label>
+             <label class="radio" style="padding-left:20px;width:200px;">
+                <input type="radio" name="isputaway"   value="0" {$row.isputaway|tplckval='=0','checked'} >暂不上架，放入仓库中
+            </label>
+            <label class="radio" style="padding-left:20px;width:200px;">
+                    <input type="radio" name="isputaway" value="2" {$row.isputaway|tplckval='=2','checked'}/>设定商品上下架时间
+             </label>
+
+            <div  class="col-sm-10">
+            <div class="col-sm-3" >
+                <label style="padding:0;margin:0;">上架时间</label>
+            </div>
+            <div class="col-sm-3"  style="width:180px;padding:0; margin:0;">
+                <div class="input-group"> <input type="text" class="input-max" name="added_time" readonly="readonly" value="{$row.added_time|dateTpl='Y-m-d H:i',true}" data-before="#solddate"   data-toggle="datetimepicker" /><span class="input-group-addon"><i class="fa fa-calendar"></i></span></div>
+            </div>
+            </div>
+            <div  class="col-sm-10">
+             <div  class="col-sm-3" >
+                <label style="padding:0;margin:0;">下架时间</label>
+            </div>
+            <div class="col-sm-3"  style="width:180px;padding:0; margin:0;">
+                <div class="input-group"> <input type="text" class="input-max" name="shelf_time" value="{$row.shelf_time|dateTpl='Y-m-d H:i',true}" data-after="#groundingdate" data-offsetday="0"  readonly="readonly" data-toggle="datetimepicker" /><span class="input-group-addon"><i class="fa fa-calendar"></i></span></div>
+            </div>
+            </div>
+        </div>
+    </div>
+    {/if}
+    <div class="line line-dashed line-lg pull-in"></div>
+
+    <div class="form-group">
+        <label class=" control-label">加入推荐：</label>
+        <div class="col-sm-8">
+           <label class="radio inline">
+                <input type="checkbox" name="is_new" value="1" {$row.is_new|tplckval='=1','checked'}> 新品
+            </label>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class=" control-label">虚拟销量：</label>
+        <div class="col-sm-8">
+
+            <div class="input-group">
+                <input type="text" class="input-mini" name="virtual_sale" data-rule-min="0"  data-rule-number="true"  value="{:intval($row['virtual_sale'])}">
+                 <span class="help-inline">+ {$row.sale_num|intval}，前端显示：虚拟销售量 + 真实销量</span>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class=" control-label">虚拟收藏：</label>
+        <div class="col-sm-8">
+
+            <div class="input-group">
+                <input type="text" class="input-mini" name="virtual_collect" data-rule-min="0"  data-rule-number="true"  value="{:intval($row['virtual_collect'])}">
+                 <span class="help-inline">+ {$row.sale_num|intval}，前端显示：虚拟收藏量 + 真实收藏量</span>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="line line-dashed line-lg pull-in"></div>
+
+    <div class="form-group">
+        <label class=" control-label">关键字：</label>
+        <div class="col-sm-8" >
+            <input type="text" class="input-max" data-rule-maxlength="40" name="keywords" value="{$row.keywords}" >
+            <div class="help-inline">1、用空格分隔<br>2、设置关键词，可便于用户搜索，除此之外商品标题也能被搜索，这里是做额外补充，以防商品标题字数的限制</div>
+        </div>
+    </div>
+    <div class="form-group hide">
+          <label class=" control-label">商品简单描述：</label>
+          <div class="col-sm-8">
+            <textarea name="description"  style=" width:80%; height:100px;">{$row.description}</textarea>
+          </div>
+    </div>
+</div>
+
+<div class="col-sm-5" >
+    <div style="width: 352px;">
+        <div id="m_goods_desc"></div>
+        <textarea rows="13" class="hd" data-toggle="ueditor" data-div="m_goods_desc" data-height="550" data-maximumwords="50000" name="m_goods_desc" >{$row.m_goods_desc|raw}</textarea>
+    </div>
+    <div >商品详情，移动端的图片建议宽度为750像素</div>
+
+</div>

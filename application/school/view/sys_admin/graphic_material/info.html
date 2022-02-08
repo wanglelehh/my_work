@@ -1,0 +1,107 @@
+{extend name="mainadmin@layouts/base" /}
+{block name="head" }
+<link href="__STATIC__/main/css/stylesheets/uploadify/uploadify.min.css" rel="stylesheet"/>
+{/block}
+{block name="main" }
+
+<header class="header  b-b clearfix">
+   <div class="page-breadcrumbs">
+          <ul class="breadcrumb">
+              <li>
+                  <i class="fa fa-ellipsis-v"></i>
+                  <strong>{$row['id']>0?"编辑素材":"添加素材"}</strong>
+              </li>                                  
+          </ul>
+       <a class="text-muted pull-right m-r-tm m-t-md pointer" data-toggle="back" title="返回"><i class="fa fa-reply"></i></a>
+      </div>
+</header>
+<form class="form-horizontal form-validate form_vbox" method="post" action="{:url('info')}" style="padding:0;">
+    <section class="vbox">
+        <section class="scrollable  wrapper w-f">
+            <section class="panel panel-default">
+
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label class="control-label">素材标题：</label>
+                        <div class="col-sm-7">
+                            <input type="text" class="input-max" data-rule-maxlength="40" data-rule-required="true" data-msg-required="素材标题不能为空" name="title" value="{$row.title}">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label ">素材图片：</label>
+                        <div class="col-sm-9">
+                            <div class="js_upload_container">
+                                <div class="js_file_upload ">
+                                    <button type="button" class="btn btn-default js_new_upload" data-count="6"
+                                            data-submitname="images" data-file_type="big_picture" data-uploadpath="{:url('uploadImg')}"
+                                            data-delpath="{:url('removeImg')}" style="position: relative; z-index: 1;">
+                                        上传图片
+                                    </button>
+                                    <span class="maroon">*</span>
+                                    <span class="help-inline"><small>图片格式：JPG、PNG格式，图片小于20MB，最多6张 (可拖拽图片调整显示顺序) </small></span>
+                                </div>
+                                <div class="uploadify-queue js_file_upload_queue">
+                                </div>
+                                <ul class="ipost-list ui-sortable js_fileList share_img_list" data-required="true"
+                                    >
+                                    {volist name="$row.images" id="image" }
+                                    <li class="imgbox" data-path="{$image}">
+                                        <a class="item_new_close item_close" href="javascript:void(0)"
+                                           data-delpath="{:url('removeImg')}" title="删除"></a>
+                                        <span class="item_box"><img src="{$image}"></span>
+                                        <input type="hidden" name="images[path][]" value="{$image}">
+                                    </li>
+                                    {/volist}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">显示状态：</label>
+                        <div class="col-sm-10">
+                            <label>
+                                <input name="is_show" value="1" class="js_inventory" type="radio" {$row['is_show']|tplckval='=1','checked',true}>
+                                显示
+                            </label>
+                            <label>
+                                <input name="is_show" value="0" class="js_inventory" type="radio" {$row['is_show']|tplckval='=0','checked'}>
+                                隐藏
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label">排序：</label>
+                        <div class="controls">
+                            <input type="text" class="input-mini" name="sort_order" data-rule-min="0"
+                                   data-rule-number="true" value="{$row['sort_order']}">
+                            <span class="help-inline">数组越大，排序越前</span>
+                        </div>
+                    </div>
+
+
+                </div>
+
+
+            </section>
+        </section>
+
+        <footer class="footer bg-white b-t p-t">
+            <div class="form-group">
+                <div class="col-sm-4 col-sm-offset-1">
+                    <input name="id" type="hidden" value="{$row.id|intval}">
+                    <button type="submit" class="btn btn-primary js_save_submit" data-loading-text="保存中...">保存</button>
+                    <button type="button" class="btn btn-default" data-toggle="back">取消</button>
+                </div>
+            </div>
+        </footer>
+    </section>
+</form>
+{/block}
+
+{block name="footer" }
+<script type="text/javascript">
+    seajs.use(["dist/plupload/init.js"])
+</script>
+{/block}

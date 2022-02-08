@@ -1,0 +1,123 @@
+{extend name="mainadmin@layouts/base" /}
+{block name="main" }
+<header>
+    <div class="page-breadcrumbs">
+        <ul class="breadcrumb">
+            <li>
+                <i class="fa fa-ellipsis-v"></i>
+                <strong>{$row['id']>0?"编辑菜单":"添加菜单"}</strong>
+            </li>
+        </ul>
+        <a class="pull-right pointer p-r" data-toggle="back" title="返回"><i class="fa fa-reply"></i></a>
+    </div>
+</header>
+<form class="form-horizontal form-validate form_vbox" method="post" action="{:url('info')}">
+    <section class="vbox">
+        <section class="scrollable  wrapper w-f">
+            <section class="panel panel-default">
+                <div class="panel-body">
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">菜单名称</label>
+                        <div class="col-sm-3 must">
+                            <input name="title" class="input-large" type="text" value="{$row.title}">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">显示图标</label>
+                        <div class="col-sm-4 ">
+                            <div class="defUpImgBox" data-toggle="uploaderImg">
+                                <img id="img_imgurl" src="{$row.imgurl|default='__STATIC__/main/img/image.png'}">
+                                <input id="input_imgurl" type="hidden"  name="imgurl"  value="{$row.imgurl}">
+                                <div class="tips">点击上传</div>
+                            </div>
+                                <span class="help-inline">图片尺寸：280*280像素</span>
+                        </div>
+                    </div>
+
+                    <div class="line line-dashed line-lg pull-in"></div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">链接类型</label>
+                        <div class="col-sm-2 must">
+                            <select id="bind_type" name="bind_type" onChange="showUrlType(this,0);" class="input-medium"
+                                    style="width:200px;">
+                                <option>请选择</option>
+                                {$WeixinReplyType|raw}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">绑定关联</label>
+                        <div class="col-sm-10 " id="bind_url_box">
+                            <input name="data" id="data"  class="input-xlarge" type="hidden"  value="{$row.data}">
+                            <input name="url" id="url" class="input-xlarge" type="text" value="{$row.url}">
+                            <a href="javascript:;"
+                               data-remote="{:url('publics/sys_admin.links/index',['linksfun'=>'assigBack'])}"
+                               data-toggle="ajaxModal" class="type_bding_btn btn btn-sm btn-default" style="{$row['bind_type']=='tel'?'display:none;':''}" id="links_btn">绑定URL</a>
+                            <div id="show_url_info" >{$row.data}</div>
+                        </div>
+                    </div>
+                    <div class="line line-dashed line-lg pull-in"></div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">是否启用</label>
+                        <div class="col-sm-3 ">
+                            <label class=" inline">
+                                <input type="radio" name="status" value="1" {$row['status']|tplckval=1,'checked',true}
+                                />
+                                是
+                            </label>
+                            <label class=" inline">
+                                <input type="radio" name="status" value="2" {$row['status']|tplckval=2,'checked'}/>
+                                否
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">排序</label>
+                        <div class="col-sm-3 ">
+                            <input type="text" name="sort_order" id="sort_order" value="{$row.sort_order|intval}"
+                                   data-rule-required="true" data-rule-maxlength="30" class="input-mini">
+                            <span style="color:red;">（数字越大越靠前）</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </section>
+        <footer class="footer bg-white b-t p-t">
+            <div class="form-group">
+                <div class="col-sm-4 col-sm-offset-1">
+                    <input type="hidden" name="id" value="{$row.id}">
+                    <button type="submit" class="btn btn-primary js_save_submit" data-loading-text="保存中...">保存</button>
+                    <button type="button" class="btn btn-default" data-toggle="back">取消</button>
+                </div>
+            </div>
+        </footer>
+    </section>
+</form>
+{/block}
+{block name="footer" }
+<script type="text/javascript">
+    seajs.use("dist/plupload/init.js")
+
+    function showUrlType(sel) {
+        $("#links_btn").hide();
+        $("#show_url_info").html('');
+        if (sel.value == 'link'){
+            $("#url").val('http://').attr('placeholder','');
+        }else{
+            $("#url").val('').attr('placeholder','请输入电话号码');
+        }
+        if (sel.value != 'tel'){
+            $("#links_btn").show();
+        }
+    }
+    function assigBack(type, type_id, id, title, url) {
+        $("#data").val(title);
+        $("#url").val(url);
+        $("#show_url_info").html(title);
+        $(".modal-dialog .close").trigger("click");
+    }
+</script>
+{/block}

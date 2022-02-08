@@ -1,0 +1,31 @@
+<form class="form-horizontal form-validate form-modal" method="post" action="{:url('sys_admin.checkIdCard/check')}">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">实名审核</h4>
+            </div>
+            <div class="modal-body">
+
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">审核操作：</label>
+                    <div class="col-sm-8 ">
+                        {volist name="checkIDCardStatus" id="val" key="k"}
+                        <label class="radio-inline">
+                            <input type="radio" name="check_id_card" value="{$k-1}" {$userInfo['check_id_card']==$k-1?'checked':''} />
+                             {$val}
+                        </label>
+                        {/volist}
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <input type="hidden" value="{$userInfo.user_id}" name="user_id" />
+                <button type="submit" class="btn btn-primary" data-loading-text="保存中..." disabled>确定修改</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+            </div>
+        </div>
+    </div>
+</form>
+

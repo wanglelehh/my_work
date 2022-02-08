@@ -1,0 +1,100 @@
+<form class="form-horizontal form-validate form-modal" method="post" action="{:url('check')}">
+    <div class="modal-dialog image-list">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">举报详细</h4>
+            </div>
+            <div class="modal-body">
+
+                <div class="form-group">
+                    <div class="col-sm-6">
+                        <label class="col-sm-3 control-label">状态：</label>
+                        <div class="col-sm-5 m-t-mc red">
+                            {$status[$row['status']]}
+                        </div>
+                    </div>
+
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-6">
+                        <label class="col-sm-3 control-label">举报类型：</label>
+                        <div class="col-sm-5 m-t-mc ">
+                            {$reportType[$row['report_type']]}
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <label class="col-sm-3 control-label">举报日期：</label>
+                        <div class="col-sm-5 m-t-mc">
+                            {$row.add_time|dateTpl}
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-6">
+                        <label class="col-sm-3 control-label">举报代理：</label>
+                        <div class="col-sm-5 m-t-mc">
+                            <a href="{:url('sys_admin.users/info',['user_id'=>$row['user_id']])}" data-toggle="wrapperAjax">{$row.user_id}-{$row.user_id|userInfo=true,'real_name'}</a>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <label class="col-sm-3 control-label">被举报代理：</label>
+                        <div class="col-sm-5 m-t-mc">
+                            <a href="{:url('sys_admin.users/info',['user_id'=>$row['report_uid']])}" data-toggle="wrapperAjax">{$row.report_uid}-{$row.report_uid|userInfo=true,'real_name'}</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                        <label class="col-sm-3 control-label">举报备注：</label>
+                        <div class="col-sm-9  ">
+                            <textarea  id="description" style="width:100%; height:80px;">{$row.description}</textarea>
+                        </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">相关证据：</label>
+                    <div class="col-sm-9">
+                        {volist name="$row.imgs" id="img"}
+                        <img src="{$img}" style="width:50px;height: 50px;">
+                        {/volist}
+                    </div>
+                </div>
+
+
+
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">备注：</label>
+                    <div class="col-sm-9">
+                        <textarea name="remark" id="remark" style="width:100%; height:80px;">{$row['remark']}</textarea>
+                    </div>
+                </div>
+                {gt name="row.check_uid" value="0"}
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">操作管理员：</label>
+                    <div class="col-sm-6 m-t-mc">
+                        {$row.check_uid} - {$row.check_uid|adminInfo}
+                    </div>
+                </div>
+                {/gt}
+                {gt name="row.check_time" value="0"}
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">审核时间：</label>
+                    <div class="col-sm-6 m-t-mc">
+                        {$row.check_time|dateTpl}
+                    </div>
+                </div>
+                {/gt}
+
+            </div>
+            <div class="modal-footer">
+                <input type="hidden" name="log_id" value="{$row.log_id|intval}"/>
+                <input type="hidden" name="operating" id="operating" value="note"/>
+                {eq name="row.status" value="0"}
+                    <button type="button" class="btn btn-primary operatbtn" data-type='refuse'>拒绝申请</button>
+                    <button type="button" class="btn btn-primary operatbtn" data-type='ok'>已受理</button>
+                {/eq}
+                <button type="submit" class="btn btn-primary postBtn hide" data-loading-text="保存中..." disabled>保存</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+            </div>
+        </div>
+    </div>
+</form>

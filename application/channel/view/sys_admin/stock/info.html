@@ -1,0 +1,81 @@
+{extend name="mainadmin@layouts/base" /}
+{block name="main" }
+<header class="header  b-b clearfix">
+     <div class="page-breadcrumbs">
+            <ul class="breadcrumb" >
+                <li>
+                    <i class="fa fa-ellipsis-v"></i>
+                    <strong>库存明细</strong>
+                </li>                                  
+            </ul>
+            <a class="pull-right pointer p-r" data-toggle="back" title="返回"><i class="fa fa-reply"></i></a>
+     </div>
+</header>
+
+<section class="scrollable wrapper">
+    <section class="panel panel-default ">
+            <table class="table table-hover table-bordered">
+                <thead>
+                    <tr>
+                        <th width="300">商品名称</th>
+                        <th width="300">规格</th>
+                        <th width="80">单位</th>
+                        <th width="120">云仓库存数</th>
+                        <th width="120">云仓出库总数</th>
+                        <th width="80">操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {volist name="goodsList" id="vo" }
+                    <tr>
+                        {if condition="$vo.skuCount > 0"}
+                            <td rowspan="{$vo.skuCount+1}" >{$vo.goods_name}</td>
+                        {else}
+                            <td>{$vo.goods_name}</td>
+                        {/if}
+                        <td>--</td>
+                        <td>{$goodsUnit[$vo['unit']]['name']}</td>
+                        <td class="{$vo['cloudStockTotal']>0?'green fw700':''}">{$vo.cloudStockTotal}</td>
+                        <td class="{$vo['cloudOutTotal']>0?'red fw700':''}">{$vo.cloudOutTotal}</td>
+
+                        {if condition="$vo.skuCount > 0"}
+                            <td>--</td>
+                        {else}
+                            <td>
+                                <a href="{:url('channel/sys_admin.stock/detail',array('user_id'=>$user_id,'goods_id'=>$vo['goods_id']))}" class="m-xs" title="明细">
+                                    <i class="fa fa-search text-muted"></i>
+                                </a>
+                                <a href="{:url('channel/sys_admin.stock/edit',array('user_id'=>$user_id,'goods_id'=>$vo['goods_id']))}"  data-toggle="ajaxModal" title="调整">
+                                    <i class="fa fa-edit  text-muted"></i>
+                                </a>
+                            </td>
+                        {/if}
+                    </tr>
+                    {volist name="$vo.skuList" id="sku" }
+                    <tr>
+                        <td>{$sku.sku_name}</td>
+                        <td>{$goodsUnit[$vo['unit']]['name']}</td>
+                        <td class="{$sku['cloud_goods_number']>0?'green fw700':''}">{$sku.cloud_goods_number}</td>
+                        <td class="{$sku['cloud_out_number']>0?'red fw700':''}">{$sku.cloud_out_number}</td>
+
+                        <td>
+                            <a href="{:url('channel/sys_admin.stock/detail',array('user_id'=>$user_id,'goods_id'=>$vo['goods_id'],'sku_id'=>$sku['sku_id']))}" class="m-xs" title="明细">
+                                <i class="fa fa-search text-muted"></i>
+                            </a>
+                            <a href="{:url('channel/sys_admin.stock/edit',array('user_id'=>$user_id,'goods_id'=>$vo['goods_id'],'sku_id'=>$sku['sku_id']))}"  data-toggle="ajaxModal" title="调整">
+                                <i class="fa fa-edit  text-muted"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    {/volist}
+                {/volist}
+                </tbody>
+            </table>
+            {empty name="goodsList"}
+                <table class="table table-bordered" width="100%">
+                    <tr><td height="300" align="center" valign="middle" >没有相关数据！</td></tr>
+                </table>
+            {/empty}
+    </section>
+</section>
+{/block}

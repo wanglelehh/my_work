@@ -1,0 +1,311 @@
+{extend name="mainadmin@layouts/base" /}
+{block name="main" }
+<header class="header  b-b clearfix">
+    <div class="page-breadcrumbs">
+        <ul class="breadcrumb">
+            <li>
+                <i class="fa fa-ellipsis-v"></i>
+                <strong>系统设置</strong>
+            </li>
+        </ul>
+    </div>
+</header>
+<form class="form-horizontal form-validate form_vbox" method="post" action="{:url('save')}">
+    <section class="vbox">
+        <section class="scrollable  wrapper w-f">
+            <section class="panel panel-default">
+                <header>
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a href="#basic" data-toggle="tab">基本配置</a></li>
+                        <li><a href="#about_us" data-toggle="tab">关于我们</a></li>
+                        <li><a href="#app" data-toggle="tab" class="hide">APP设置</a></li>
+                        <li><a href="#payment" data-toggle="tab">收款方式</a></li>
+                    </ul>
+                </header>
+
+                <div class="tab-content">
+                    <div class="tab-pane active" id="basic">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">网站名称：</label>
+                            <div class="controls col-sm-4 ">
+                                <input type="text" name="setting[site_name]" placeholder="请输入商城名称" class="input-max"
+                                       data-rule-required="true"
+                                       value="{$setting.site_name}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">网站简介：</label>
+                            <div class="controls col-sm-6">
+                                <textarea  class="input-max" name="setting[description]" style="height: 120px;">{$setting.description}</textarea>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">LOGO：</label>
+                            <div class="controls col-sm-6">
+                                <div class="defUpImgBox" data-toggle="uploaderOne">
+                                    <img id="img_logo" src="{$setting.logo|default='__STATIC__/main/img/image.png'}">
+                                    <input id="input_logo" type="hidden"  name="setting[logo]"  value="{$setting.logo}">
+                                    <div class="tips">点击上传</div>
+                                </div>
+                                <p>
+                                    <span class="help-inline">图片尺寸：320*320像素</span>
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">版权：</label>
+                            <div class="controls col-sm-6">
+                                <input type="text" data-rule-maxlength="55" class="input-max" name="setting[copyright]"
+                                       value="{$setting.copyright}"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">备案编号：</label>
+                            <div class="controls">
+                                <input type="text" data-rule-maxlength="25" class="input-max" name="setting[ipc_no]"
+                                       value="{$setting.ipc_no}"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">联系电话：</label>
+                            <div class="controls ">
+                                <input type="text" data-rule-maxlength="15" class="input-max" name="setting[tel]"
+                                       value="{$setting.tel}"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">公司地址：</label>
+                            <div class="controls col-sm-6 ">
+                                <input type="text" class="input-max" name="setting[address]"
+                                       value="{$setting.address}"/>
+                            </div>
+                        </div>
+
+
+
+                    </div>
+
+                    <div class="tab-pane " id="about_us">
+                        <div class="form-group">
+                            <label class="control-label">是否显示：</label>
+                            <div class="controls">
+                                <label class="radio-inline">
+                                    <input name="setting[about_us_status]" value="0" class="js_undertake"
+                                           type="radio" {$setting['about_us_status']|tplckval='=0','checked',true}>隐藏
+                                </label>
+                                <label class="radio-inline">
+                                    <input name="setting[about_us_status]" value="1" class="js_undertake "
+                                           type="radio" {$setting['about_us_status']|tplckval='=1','checked'}>
+                                    显示
+                                </label>
+                                <label class="radio-inline">
+                                    <span>(隐藏或者显示在手机端个人中心页面)</span>
+                                </label>
+
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+
+                        <div class="form-group publicnote_status">
+                            <label class="control-label">关于我们：</label>
+                            <div class="col-sm-9 " style="padding-left:0px;">
+                                <div style="width: 352px;">
+                                    <div id="setting[about_us]"></div>
+                                    <textarea rows="13" class="hd" data-toggle="ueditor" data-div="setting[about_us]" data-height="450" data-maximumwords="50000" name="setting[about_us]" >{$setting.about_us|raw}</textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane " id="app">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">app名称：</label>
+                            <div class="controls col-sm-4">
+                                <input type="text" data-rule-maxlength="25" class="input-max" name="setting[app_name]"
+                                       value="{$setting.app_name}"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">app图标：</label>
+                            <div class="controls col-sm-6">
+                                <div class="defUpImgBox" data-toggle="uploaderOne">
+                                    <img id="img_app_logo" src="{$setting.app_logo|default='__STATIC__/main/img/image.png'}">
+                                    <input id="input_app_logo" type="hidden"  name="setting[app_logo]"  value="{$setting.app_logo}">
+                                    <div class="tips">点击上传</div>
+                                </div>
+                                <p>
+                                    <span class="help-inline">图片尺寸：100*100像素</span>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">背景图片：</label>
+                            <div class="controls col-sm-6">
+                                <div class="defUpImgBox" data-toggle="uploaderOne">
+                                    <img id="img_app_bg" src="{$setting.app_bg|default='__STATIC__/main/img/image.png'}">
+                                    <input id="input_app_bg" type="hidden"  name="setting[app_bg]"  value="{$setting.app_bg}">
+                                    <div class="tips">点击上传</div>
+                                </div>
+                                <p>
+                                    <span class="help-inline">图片尺寸：380*800像素</span>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">ios链接：</label>
+                            <div class="controls col-sm-4">
+                                <input type="text" data-rule-maxlength="25" class="input-max"
+                                       name="setting[app_ios_path]" value="{$setting.app_ios_path}"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">安卓链接：</label>
+                            <div class="controls col-sm-4">
+                                <div class="js_upload_container">
+                                    <input type="text" name="setting[app_apk_path]" class="input-max"
+                                           value="{$setting.app_apk_path}"/>
+                                    <button type="button" class="btn btn-default js_file_upload"
+                                            data-uploadpath="{:url('uploadApp')}"
+                                            style="position: relative; z-index: 1;">点击上传app
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">下载页面：</label>
+                            <div class="controls col-sm-4 help-inline">
+                                <a href="{:_url('publics/download/app',false,true,true)}" target="_blank">{:_url('publics/download/app',false,true,true)}</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane " id="payment">
+                        <div class="form-group"><b>微信收款信息</b></div>
+                        <div class="form-group">
+                            <label class="control-label">微信收款：</label>
+                            <div class="col-sm-10 ">
+                                <label><input type="radio" name="setting[receive_weixin_usd]" value="0" {$setting['receive_weixin_usd']|tplckval='=0','checked',true}> 关闭</label>
+                                <label><input type="radio" name="setting[receive_weixin_usd]" value="1" {$setting['receive_weixin_usd']|tplckval='=1','checked'}> 开启</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">帐户姓名：</label>
+                            <div class="controls ">
+                                <input type="text" name="setting[receive_weixin_name]" class="input-xlarge"
+                                       value="{$setting.receive_weixin_name}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">微信号：</label>
+                            <div class="controls ">
+                                <input type="text" name="setting[receive_weixin_account]" class="input-xlarge"
+                                       value="{$setting.receive_weixin_account}">
+                            </div>
+                        </div>
+                        <div class="form-group hide">
+                            <label class="col-sm-2 control-label">微信收款二维码：</label>
+                            <div class="controls col-sm-6">
+                                <div class="defUpImgBox" data-toggle="uploaderImg">
+                                    <img id="img_receive_weixin_qrcode" src="{$setting.receive_weixin_qrcode|default='__STATIC__/main/img/image.png'}">
+                                    <input id="input_receive_weixin_qrcode" type="hidden"  name="setting[receive_weixin_qrcode]"  value="{$setting.receive_weixin_qrcode}">
+                                    <div class="tips">点击上传</div>
+                                </div>
+                                <p>
+                                    <span class="help-inline">图片尺寸：150*150像素</span>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="line line-dashed line-lg pull-in"></div>
+                        <div class="form-group"><b>支付宝收款信息</b></div>
+                        <div class="form-group">
+                            <label class="control-label">支付宝收款：</label>
+                            <div class="col-sm-10 ">
+                                <label><input type="radio" name="setting[receive_alipay_usd]" value="0" {$setting['receive_alipay_usd']|tplckval='=0','checked',true}> 关闭</label>
+                                <label><input type="radio" name="setting[receive_alipay_usd]" value="1" {$setting['receive_alipay_usd']|tplckval='=1','checked'}> 开启</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">支付宝帐户姓名：</label>
+                            <div class="controls ">
+                                <input type="text" name="setting[receive_alipay_name]" class="input-xlarge"
+                                       value="{$setting.receive_alipay_name}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">支付宝帐户：</label>
+                            <div class="controls ">
+                                <input type="text" name="setting[receive_alipay_account]" class="input-xlarge"
+                                       value="{$setting.receive_alipay_account}">
+                            </div>
+                        </div>
+                        <div class="form-group hide">
+                            <label class="col-sm-2 control-label">支付宝收款二维码：</label>
+                            <div class="controls col-sm-6">
+                                <div class="defUpImgBox" data-toggle="uploaderImg">
+                                    <img id="img_receive_alipay_qrcode" src="{$setting.receive_alipay_qrcode|default='__STATIC__/main/img/image.png'}">
+                                    <input id="input_receive_alipay_qrcode" type="hidden"  name="setting[receive_alipay_qrcode]"  value="{$setting.receive_alipay_qrcode}">
+                                    <div class="tips">点击上传</div>
+                                </div>
+                                <p>
+                                    <span class="help-inline">图片尺寸：150*150像素</span>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="line line-dashed line-lg pull-in"></div>
+                        <div class="form-group"><b>银行卡收款信息</b></div>
+                        <div class="form-group">
+                            <label class="control-label">银行卡收款：</label>
+                            <div class="col-sm-10 ">
+                                <label><input type="radio" name="setting[receive_bank_usd]" value="0" {$setting['receive_bank_usd']|tplckval='=0','checked',true}> 关闭</label>
+                                <label><input type="radio" name="setting[receive_bank_usd]" value="1" {$setting['receive_bank_usd']|tplckval='=1','checked'}> 开启</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">开户银行：</label>
+                            <div class="controls col-sm-4 ">
+                                <input type="text" name="setting[receive_bank_name]" placeholder="开户银行" class="input-max"
+                                       value="{$setting.receive_bank_name}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">开户支行：</label>
+                            <div class="controls col-sm-4 ">
+                                <input type="text" name="setting[receive_bank_subbranch]" placeholder="开户支行" class="input-max"
+                                       value="{$setting.receive_bank_subbranch}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">持卡人姓名：</label>
+                            <div class="controls col-sm-4 ">
+                                <input type="text" name="setting[receive_bank_user_name]" placeholder="持卡人姓名" class="input-max"
+                                       value="{$setting.receive_bank_user_name}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">银行卡号：</label>
+                            <div class="controls col-sm-4 ">
+                                <input type="text" name="setting[receive_bank_card_number]" placeholder="银行卡号" class="input-max"
+                                       value="{$setting.receive_bank_card_number}">
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+        </section>
+        <footer class="footer bg-white b-t p-t">
+            <div class="form-group">
+                <div class="col-sm-4 col-sm-offset-1">
+                    <button type="submit" class="btn btn-primary js_save_submit" data-loading-text="保存中...">保存
+                    </button>
+                    <button type="button" class="btn btn-default" data-toggle="back">取消</button>
+                </div>
+            </div>
+        </footer>
+    </section>
+</form>
+{/block}
+{block name="footer"}
+<script type="text/javascript">
+    seajs.use("dist/plupload/file.js")
+</script>
+{/block}

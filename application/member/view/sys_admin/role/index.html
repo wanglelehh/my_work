@@ -1,0 +1,71 @@
+{extend name="mainadmin@layouts/base" /}
+{block name="main" }
+
+<header class="header  b-b clearfix">
+
+     <div class="page-breadcrumbs">
+            <ul class="breadcrumb" >
+                <li>
+                    <i class="fa fa-ellipsis-v"></i>
+                    <strong>会员身份</strong>
+                </li>                                  
+            </ul>
+             
+            <a href="{:url('info')}"  title="添加身份" class="btn btn-sm btnbtn-default fr  m-t-md m-r"><i class="fa fa-plus m-r-xs"></i>添加身份</a>
+        </div>
+</header>
+
+<section class="scrollable wrapper  ">
+    <section class="panel panel-default ">
+        <div class="table-responsive " id="list_box">
+            <table class="table  table-hover  m-b-none">
+                <thead>
+                <tr>
+                    <th width="60">级别</th>
+                    <th>身份名称</th>
+                    <th width="160">升级方式</th>
+                    <th width="160">层级人数</th>
+                    <th width="200">层级占比</th>
+                    <th width="120">操作</th>
+                </tr>
+                </thead>
+                <tbody>
+
+                {volist name="data" id="vo" }
+                <tr>
+                    <td>{$vo.level}</td>
+                    <td>{$vo.role_name}</td>
+                    <td>
+                        {if condition="$vo.is_auto == 1"}
+                            满足条件-{$vo.uplevel_fun_name}
+                        {else}
+                            手动调整
+                        {/if}
+                    </td>
+                    <td >{$roleStatc['statc'][$vo['role_id']]['num']}</td>
+                    <td  style="padding-right: 60px;">
+                        <div class="progress progress-xs" style="margin-bottom: 0px;">
+                            <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: {$roleStatc['statc'][$vo['role_id']]['pre']}%">
+                            </div>
+                        </div><span style="position: absolute; top:20%; right: 5px;">{$roleStatc['statc'][$vo['role_id']]['pre']}%</span>
+                    </td>
+                    <td>  <a href="{:url('info',array('role_id'=>$vo['role_id']))}"   class="m-xs" title="编辑">
+                        <i class="fa fa-edit text-muted"></i>
+                    </a>
+                        <a href="{:url('delete',array('role_id'=>$vo['role_id']))}" data-toggle="ajaxRemove" data-msg="确定删除 {$vo.level_name}" class="m-xs" title="删除">
+                            <i class="fa fa-trash-o text-muted"></i>
+                        </a></td>
+                </tr>
+                {/volist}
+                </tbody>
+            </table>
+            {empty name="data"}
+            <table width="100%" >
+                <tr><td height="300" colspan="8" align="center" valign="middle" >没有相关数据！</td></tr>
+            </table>
+            {/empty}
+        </div>
+    </section>
+</section>
+
+{/block}

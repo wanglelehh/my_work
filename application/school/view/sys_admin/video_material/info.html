@@ -1,0 +1,105 @@
+{extend name="mainadmin@layouts/base" /}
+{block name="main" }
+
+<header class="header  b-b clearfix">
+   <div class="page-breadcrumbs">
+          <ul class="breadcrumb">
+              <li>
+                  <i class="fa fa-ellipsis-v"></i>
+                  <strong>{$row['id']>0?"编辑视频":"添加视频"}</strong>
+              </li>
+          </ul>
+       <a class="text-muted pull-right m-r-tm m-t-md pointer" data-toggle="back" title="返回"><i class="fa fa-reply"></i></a>
+      </div>
+</header>
+<form class="form-horizontal form-validate form_vbox" method="post" action="{:url('info')}" style="padding:0;">
+    <section class="vbox">
+        <section class="scrollable  wrapper w-f">
+            <section class="panel panel-default">
+
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label class="control-label">标题：</label>
+                        <div class="col-sm-7">
+                            <input type="text" class="input-max" data-rule-maxlength="40" data-rule-required="true" data-msg-required="课程标题不能为空" name="title" value="{$row.title}">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">图片：</label>
+                        <div class="col-sm-8 ">
+                            <img class="thumb_img"  src="{$row.title_img}" style="max-height: 100px;"/>
+                            <input class="hide" type="text" name="title_img" value="{$row.title_img}"/>
+                            <button class="btn btn-default" type="button" data-toggle="selectimg" data-config="selectimg">选择图片</button>
+                            <span style="color:red;margin-top:0.5rem">* (请上传280*150的图片)</span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label">视频：</label>
+                        <div class="col-sm-6 ">
+                            <div class="js_upload_container">
+                            <input type="text" name="video_url" class="input-max hide" value="{$row.video_url}"/>
+                            <button type="button" class="btn btn-default js_file_upload" data-uploadpath="{:url('uploadVideo')}" style="position: relative; z-index: 1;">点击上传视频
+                            </button>
+                                <span style="color:red;margin-top:0.5rem">只支持上传mp4，大小不能超过{:settings('sys_mode_upfile_limit')}mb，</span>
+                                {if condition="$row.video_url"}
+                                    <a href="{$row.video_url}" target="_blank">查看视频</a>
+                                {/if}
+                            </div>
+                        </div>
+                    </div>
+
+
+                <div class="form-group">
+                    <label class="control-label">视频简介：</label>
+                    <div class="controls">
+                        <textarea name="description" class="input-xxlarge">{$row.description}</textarea>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label">显示状态：</label>
+                    <div class="col-sm-10">
+                        <label>
+                            <input name="is_show" value="1" class="js_inventory" type="radio" {$row['is_show']|tplckval='=1','checked',true}>
+                            显示
+                        </label>
+                        <label>
+                            <input name="is_show" value="0" class="js_inventory" type="radio" {$row['is_show']|tplckval='=0','checked'}>
+                            隐藏
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label">排序：</label>
+                    <div class="controls">
+                        <input type="text" class="input-mini" name="sort_order" data-rule-min="0"
+                               data-rule-number="true" value="{$row['sort_order']}">
+                    </div>
+                </div>
+
+
+               </div>
+
+            </section>
+        </section>
+
+        <footer class="footer bg-white b-t p-t">
+            <div class="form-group">
+                <div class="col-sm-4 col-sm-offset-1">
+                    <input name="id" type="hidden" value="{$row.id|intval}">
+                    <button type="submit" class="btn btn-primary js_save_submit" data-loading-text="保存中...">保存</button>
+                    <button type="button" class="btn btn-default" data-toggle="back">取消</button>
+                </div>
+            </div>
+        </footer>
+    </section>
+</form>
+{/block}
+
+{block name="footer"}
+<script type="text/javascript">
+    seajs.use("dist/plupload/file.js")
+</script>
+{/block}

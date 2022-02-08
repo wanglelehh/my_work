@@ -1,0 +1,285 @@
+{extend name="mainadmin@layouts/base" /}
+{block name="main" }
+
+<header class="header  b-b clearfix">
+   <div class="page-breadcrumbs">
+          <ul class="breadcrumb">
+              <li>
+                  <i class="fa fa-ellipsis-v"></i>
+                  <strong>{$row['id']>0?"编辑文章":"添加文章"}</strong>
+              </li>                                  
+          </ul>
+       <a class="text-muted pull-right m-r-tm m-t-md pointer" data-toggle="back" title="返回"><i class="fa fa-reply"></i></a>
+      </div>
+</header>
+<form class="form-horizontal form-validate form_vbox" method="post" action="{:url('info')}" style="padding:0;">
+    <section class="vbox">
+        <section class="scrollable  wrapper w-f">
+            <section class="panel panel-default">
+                <div class="panel-body ">
+                    <div class="col-sm-7" >
+                        <div class="form-group">
+                            <label class="control-label">文章分组：</label>
+                            <div class="controls w250 must">
+                                <select class="wb80 " name="cid" data-maxcount="3" data-msg-required="请选择文章分组"
+                                        data-toggle="select2" data-placeholder="请选择文章分组" data-width="999px">
+                                    <option value=""></option>
+                                    {$catOpt|raw}
+                                </select>
+                            </div>
+                        </div>
+
+
+                        <div class="line line-dashed line-lg pull-in"></div>
+                        <div class="form-group">
+                            <label class="control-label">文章标题：</label>
+                            <div class="controls">
+                                <input type="text" class="input-xlarge" data-rule-maxlength="40" data-rule-required="true"
+                                       data-msg-required="文章标题不能为空" name="title" value="{$row.title}">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label">标题图片：</label>
+                            <div class="col-sm-8 must">
+                                <div class="defUpImgBox" data-toggle="uploaderOne" data-type="image">
+                                    <img id="img_pic" src="{$row.img_url|default='__STATIC__/main/img/image.png'}">
+                                    <input id="input_pic" type="hidden"  name="img_url"  value="{$row.img_url}">
+                                    <div class="tips">点击上传</div>
+                                </div>
+                                <div style="color:red;margin-top:0.5rem">(请上传500*500的图片)</div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class=" control-label" >视频：</label>
+                            <div class="col-sm-8">
+                                <label class="radio-inline">
+                                    <input type="radio" class="js_radio_undertake"  name="is_video" value="0" {$row.is_video|tplckval='=0','checked',true} >关闭
+                                </label>
+                                <label class="radio-inline">
+                                    <input type="radio" class="js_radio_undertake" data-class="video_box" name="is_video" value="1" {$row.is_video|tplckval='=1','checked'} >开启
+                                </label>
+
+                            </div>
+                        </div>
+                        <div class="radio_undertake_is_video video_box {$row.is_video|tplckval='=0','hide',true}">
+                            <div class="form-group">
+                                <label class=" control-label" >文章视频：</label>
+                                <div class="col-sm-8">
+                                    <div class="js_upload_container">
+                                        <input type="text" id="video_url" name="video_url" class="input-max hide" value="{$row.video_url}"/>
+                                        <button type="button" class="btn btn-default js_file_upload" data-file_type="video" data-uploadpath="{:url('mainAdmin/attachment/uploadVideo')}" style="position: relative; z-index: 1;">点击上传视频
+                                        </button>
+                                        <br>
+                                            <span style="color:red;margin-top:0.5rem">只支持上传mp4，大小不能超过{:settings('sys_mode_upfile_limit')}mb，</span>
+                                            <a href="javascript:;" onclick="payVideo()" >点击显示视频</a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class=" control-label">视频封面：</label>
+                                <div class="controls col-sm-3">
+                                    <div class="defUpImgBox"  data-toggle="uploaderImg" style="width: 130px; height: 130px">
+                                        <img  src="{$row.video_cover|default='__STATIC__/main/img/image.png'}">
+                                        <input type="hidden"  name="video_cover"  value="{$row.video_cover}">
+                                        <div class="tips">点击上传</div>
+                                    </div>
+                                    <span class="help-inline"></span>
+                                </div>
+                                <div class="col-sm-5 hide" id="video_box"><video controls  style="width: 100%"></video></div>
+                            </div>
+                        </div>
+                        <div class="line line-dashed line-lg pull-in"></div>
+                        <div class="form-group">
+                            <div class="controls">
+                                <label class="control-label">关键字：</label>
+                                <input type="text" class="input-xlarge" name="keywords" value="{$row.keywords}">
+                                <span class="help-inline">填写用空格分开</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">文章简介：</label>
+                            <div class="controls col-sm-8">
+                                <textarea name="description" class="input-max">{$row.description}</textarea>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">发布时间：</label>
+                            <div class="input-group w150"><input type="text" class="input-medium" name="add_time"
+                                                                 value="{$row.add_time|dateTpl='Y-m-d H:i',true}" id="solddate"
+                                                                 data-after="#groundingdate" data-offsetday="0"
+                                                                 readonly="readonly" data-toggle="datetimepicker"
+                                                                 data-position="top-right"/><span class="input-group-addon"><i
+                                    class="fa fa-calendar"></i></span></div>
+
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">显示状态：</label>
+                            <div class="col-sm-8">
+                                <label>
+                                    <input name="is_show" value="1" class="js_inventory" type="radio" {$row['is_show']==1?'checked':''}>
+                                    显示
+                                </label>
+                                <label>
+                                    <input name="is_show" value="0" class="js_inventory" type="radio" {$row['is_show']==0?'checked':''}>
+                                    隐藏
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">排序：</label>
+                            <div class="controls">
+                                <input type="text" class="input-mini" name="sort_order" data-rule-min="0"
+                                       data-rule-number="true" value="{$row['sort_order']}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-5" >
+                        <div style="width: 352px;">
+                            <div id="content"></div>
+                            <textarea rows="13" class="hd" data-toggle="ueditor" data-div="content" data-height="450" data-maximumwords="50000" name="content" >{$row.content|raw}</textarea>
+                        </div>
+                        <div >移动端的图片建议宽度为750像素</div>
+                    </div>
+                </div>
+            </section>
+        </section>
+
+        <footer class="footer bg-white b-t p-t">
+            <div class="form-group">
+                <div class="col-sm-4 col-sm-offset-1">
+                    <input name="id" type="hidden" value="{$row.id|intval}">
+                    <button type="submit" class="btn btn-primary js_save_submit" data-loading-text="保存中...">保存</button>
+                    <button type="button" class="btn btn-default" data-toggle="back">取消</button>
+                </div>
+            </div>
+        </footer>
+    </section>
+</form>
+{/block}
+
+{block name="footer" }
+<script type="text/html" id="goodsListTpl">
+    {literal}
+    {{each list as item index}}
+    <tr id="goods_tr_{{item.id}}">
+        <td><input name="goods_id[]" type="hidden" value="{{item.id}}" />{{if item.is_spec==0}}{{item.goods_sn}}{{else}}多规格{{/if}}</td>
+        <td>{{item.goods_name}}</td>
+        <td>{{if item.is_spec==1&&goods_type==1}}{{item.min_price}}~{{item.max_price}}{{else}}{{item.show_price}}{{/if}}</td>
+        <td><a href="javascript:;" title="删除" class="fa fa-remove m-xs" onclick="delLinkGoods('goods',{{item.id}})" >删除</a></td>
+    </tr>
+    {{/each}}
+    {/literal}
+</script>
+<script type="text/javascript">
+    seajs.use("dist/plupload/file.js");
+    //选择绑定类型
+    function showBindType(link_type,bind_data){
+        $(".bind-box").addClass('hide');
+        if (link_type== 'link'){
+            $("#link_data").val('http://');
+            $(".link_box").removeClass('hide');
+        }
+        else if (link_type == 'tel'){
+            $(".tel_box").removeClass('hide');
+        }
+        else if (link_type == 'goods'){
+            $(".goods_box").removeClass('hide');
+        }
+        else if (link_type== 'goods_cate'){
+            $(".goods_cate_box").removeClass('hide');
+        }
+    }
+    /**选择指定商品类型**/
+    function selectGoodsType(type) {
+        $('#goods_box').html('');
+    }
+    /**选择商品**/
+    function selectGoods()
+    {
+        var goods_type = $('input[name=goods_type]:checked').val();
+        if(goods_type==undefined||goods_type==""){
+            return _alert('请选定指定商品类型');
+        }
+        var goodsArr=[];
+        $('#goods_box').find('input').each(function () {
+            goodsArr.push($(this).val());
+        })
+        var title='';
+        if(goods_type==1){
+            title='选择商品';
+            var url = "{:url('shop/sys_admin.goods/selectGoods')}"+"?goods_type="+goods_type+'&goodsArr='+goodsArr+'&'+Math.random();
+        }else if(goods_type==2){
+            title='选择拼团';
+            var url = "{:url('fightgroup/sys_admin.fgGoods/selectFightGroup')}"+"?goods_type="+goods_type+'&goodsArr='+goodsArr+'&'+Math.random();
+        }else if(goods_type==3){
+            var url = "{:url('second/sys_admin.secondGoods/selectSecond')}"+"?goods_type="+goods_type+'&goodsArr='+goodsArr+'&'+Math.random();
+        }
+        layer.open({
+            type: 2,
+            title: title,
+            shadeClose: true,
+            shade: 0.3,
+            area: ['70%', '80%'],
+            content: url,
+        });
+    }
+    /**选择商品回调**/
+    function call_back(goodsList)
+    {
+        layer.closeAll('iframe');
+        $.each(goodsList, function (n, value) {
+            var html='';
+            html+='<tr id="goods_tr_'+value.goods_id+'">';
+            html+='<td><input name="goods_id[]" type="hidden" value="'+value.goods_id+'" />'+value.goods_sn+'</td>';
+            html+='<td>'+value.goods_name+'</td>';
+            html+='<td>'+value.shop_price+'</td>';
+            html+='<td><a href="javascript:;" title="删除" class="fa fa-remove m-xs" onclick="delLinkGoods(\'goods\','+value.goods_id+')" >删除</a></td>';
+            html+='</tr>';
+            $('#goods_box').append(html);
+        });
+    }
+    /**删除商品**/
+    function delLinkGoods(select_type, goods_id) {
+        $('#' + select_type + '_tr_' + goods_id).remove();
+    }
+    function assigBack(type, type_id, id, title, url) {
+        $("#link").val(url);
+        $(".modal-dialog .close").trigger("click");
+    }
+
+    function initGoodsList(id,goods_type){
+        if(id<1)return false;
+        var arr = new Object();
+        arr.id=id;
+        var res = jq_ajax('{:url("getSelectedGoodsList")}', arr);
+        if(res.code==0){
+            return false;
+        }
+        res.goods_type=goods_type;
+        console.log(res)
+        $('#goods_box').html(template("goodsListTpl", res));
+    }
+
+    //初始化数据
+    $(function () {
+        var link_type ="{$row['link_type']}";
+        showBindType(link_type);
+        //加载已选商品
+        if(link_type=='goods'){
+            var id = "{$row['id']}";
+            var goods_type = "{$row['link_data']['goods_type']}";
+            initGoodsList(id,goods_type);
+        }
+    })
+    function payVideo() {
+        var video = $('#video_url').val();
+        if (video == ''){
+            return _alert('请上传视频后再操作.');
+        }
+        $('#video_box').removeClass('hide');
+        $('#video_box').find('video').attr('src',video);
+    }
+</script>
+{/block}

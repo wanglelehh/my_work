@@ -1,0 +1,40 @@
+{extend name="mainadmin@layouts/base" /}
+{block name="main" }
+
+<header class="header  b-b clearfix">
+    <form id="forms" class="talbe-search form-inline "  method="post" action="{:url('getList')}" >
+     <div class="page-breadcrumbs">
+            <ul class="breadcrumb" >
+                <li>
+                    <i class="fa fa-ellipsis-v"></i>
+                    <strong>实名认证</strong>
+                </li>                                  
+            </ul>
+
+             <select name="check_id_card_status"  style="width: 130px;" data-toggle="select2"  data-notsearch="true" data-placeholder="按自定义筛选" data-chang="submit">
+                 {volist name="checkIDCardStatus" id="val" }
+                        <option value="{$key}" {$search['check_id_card_status']==$key?'selected':''}>{$val}</option>
+                 {/volist}
+              </select>
+
+              <input type="text" class="form-control input-large" value="{$search.keyword}" name="keyword" placeholder="会员ID/帐号/手机号码" data-rule-required="true" />
+              <button class="btn btn-sm btn-default-iq" type="submit" title="搜索"><i class="fa fa-search"></i></button>
+        </div>
+    </form>
+</header>
+
+<section class="scrollable wrapper w-f ">
+    <section class="panel panel-default ">
+        <div class="table-responsive image-list" id="list_box">
+            {include file="sys_admin/check_id_card/list" /}
+        </div>
+    </section>
+</section>
+<script>
+    function ExportList(){
+        $('input[name="export"]').val('1');
+        $('#forms').submit();
+        $('input[name="export"]').val('0');
+    }
+</script>
+{/block}

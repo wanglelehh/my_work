@@ -1,0 +1,71 @@
+{extend name="mainadmin@layouts/base" /}
+{block name="main" }
+
+<header class="header  b-b clearfix">
+    <form id="forms" class="talbe-search form-inline "  method="post" action="{:url('getList')}" >
+     <div class="page-breadcrumbs flex">
+            <ul class="breadcrumb" >
+                <li>
+                    <i class="fa fa-ellipsis-v"></i>
+                    <strong>用户充值</strong>
+                </li>                                  
+            </ul>
+         <div  class="relative flex_bd">
+             <div class="search-main">
+                 <div class="search-main-box">
+                   <select name="status"  style="width: 100px;" data-toggle="select2" data-notsearch="true" data-chang="submit"  >
+                     <option value="-1">所有状态</option>
+                     {$userRechargeTypeOpt|raw}
+                    </select>
+                     <select name="pay_id"  style="width: 100px;" data-toggle="select2" data-notsearch="true" data-chang="submit"  >
+                     <option value="">所有方式</option>
+                     {volist name="payList" id="vo" }
+                        {eq name="vo.is_recharge" value="1"}
+                            <option value="{$vo.pay_id}" {$search['pay_id']==$vo['pay_id']?'selected':''}>{$vo.pay_name}</option>
+                        {/eq}
+                     {/volist}
+                    </select>
+                   <div class="form-group">
+                        <a class="btn btn-default " data-toggle="reportrange" data-change="submit">
+                            <i class="fa fa-calendar fa-lg"></i>
+                            <small>充值时间</small>
+                            <span></span> <b class="caret"></b>
+                            <input class="hide" type="text" value="{$start_date} - {$end_date}" id="reportrange" name="reportrange" />
+                        </a>
+                  </div>
+                  <input type="text" class="form-control input-medium" value="{$search.keyword}" name="keyword" placeholder="会员ID/姓名/手机号码" data-rule-required="true" />
+                  <button class="btn btn-sm btn-default-iq" type="submit" title="搜索"><i class="fa fa-search"></i></button>
+                 </div>
+             </div>
+             <i class="search_icon fa fa-chevron-down hide"></i>
+         </div>
+         <div>
+             <a href="#" class="btn statc_btn" data-toggle="ajaxModal"><i class="fa fa-pie-chart"></i>查看统计</a>
+            <button class="btn" type="submit" id="export_btn" ><i class="fa fa-cloud-download"></i>导出报表</button>
+         </div>
+    </div>
+</form>
+</header>
+
+<section class="scrollable wrapper w-f ">
+    <section class="panel panel-default ">
+        <div class="table-responsive " id="list_box">
+            {include file="sys_admin/recharge/list" /}
+        </div>
+    </section>
+</section>
+<script type="text/javascript">
+    $('.statc_btn').click(function () {
+        var reportrange = window.btoa($('#reportrange').val());
+        $(this).attr('href','{:_url("statc",["reportrange"=>"【reportrange】"])}');
+    })
+    $('#export_btn').click(function(){
+        $('.talbe-search').append('<input type="hidden" name="is_export" id="is_export" value="1">').submit();
+        $('#is_export').remove();
+    })
+    $(document).on('click','.operatbtn',function(){
+        $('#operating').val($(this).data('type'));
+        $('.postBtn').click();
+    })
+</script>
+{/block}

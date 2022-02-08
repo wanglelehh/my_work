@@ -1,0 +1,48 @@
+<div class="form-group">
+    <div class="col-sm-12">
+        <span class="m-l-lg">奖励总计：{$rewardTotal}</span>
+        <a href="javascript:;" onclick="refreshReward(this)"  class="btn  btn-sm fr" data-text="重新计算奖项" >重新计算奖项</a>
+    </div>
+</div>
+<table class="table table-bordered ">
+    <tr>
+        <th>奖项名称</th>
+        <th>奖励会员</th>
+        <th>奖励会员层级</th>
+        <th>奖励金额</th>
+        <th>支付者</th>
+        <th>记录时间</th>
+        <th>状态</th>
+    </tr>
+    {volist name="$list" id="vo"}
+    <tr>
+        <td>{$vo.reward_name}</td>
+        <td>{$vo.to_uid} - {$vo.to_uid|userInfo=true,'real_name'}</td>
+        <td>{$roleList[$vo['to_role_id']]['role_name']}</td>
+        <td>{$vo.reward_money} <span class="fa fa-question-circle reward_info_btn" data-id="{$vo.id}"></span></td>
+        <td>
+            {if condition="$vo.payer_uid > 0"}
+                供货代理
+            {else/}
+                厂家
+            {/if}
+        </td>
+        <td>
+            {$vo['add_time']|dateTpl}
+        </td>
+        <td>
+        {$status[$vo['status']]}
+        </td>
+    </tr>
+    <tr id="reward_info_{$vo.id}" style="display: none;">
+        <td colspan="18" >
+            奖励详情：{$vo.reward_info}
+        </td>
+    </tr>
+    {/volist}
+</table>
+{empty name="$list"}
+<table width="100%" >
+    <tr><td height="300" colspan="8" align="center" valign="middle" >没有相关数据！</td></tr>
+</table>
+{/empty}

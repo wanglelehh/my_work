@@ -1,0 +1,32 @@
+<table class="table table-bordered  table-hover ">
+<thead >
+ <thead>
+        <tr>
+           <th  data-sort-name="id" style="width: 100px;">ID</th>
+            <th  style="width: 100px;">类型</th>
+            <th >关键词</th>
+            <th class="col-sm-1 mn70">操作</th>
+        </tr>
+    </thead>
+<tbody>
+
+{volist name="data.list" id="vo" }
+ <tr>
+       <td>{$vo.id}</td>
+       <td>{$vo.type==0?'前端':'后端'}</td>
+       <td>{$vo.keyword}</td>
+       <td>
+           <a href="{:url('info',array('id'=>$vo['id']))}" data-toggle="ajaxModal" class="m-xs" title="编辑"><i class="fa fa-edit text-muted"></i></a>
+           <a href="{:url('del',array('id'=>$vo['id']))}" data-toggle="ajaxRemove" data-msg="确定删除 {$vo.keyword}？" class="m-xs" title="删除">
+                <i class="fa fa-trash text-muted"></i>
+           </a>
+       </td>
+</tr>
+{/volist} 
+</tbody>
+</table>
+{empty name="data.list"}
+<table width="100%" >
+ 	<tr><td height="300" colspan="8" align="center" valign="middle" >没有相关数据！</td></tr>
+</table>
+{/empty}  

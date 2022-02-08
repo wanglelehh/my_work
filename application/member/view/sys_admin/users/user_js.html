@@ -1,0 +1,154 @@
+<script type="text/html" id="superiorlist">
+    {{each list as item index}}
+    <div class="form-group" style=" margin-left:0px;">
+        <div class="col-sm-8">
+            <a href="{:_url('member/sys_admin.users/info',['user_id'=>'[[item.user_id]]'])}" data-toggle="wrapperAjax">
+                {{item.level}}级 - 用户ID:{{item.user_id}} - 昵称：{{item.nick_name}} - 身份：{{item.role_name}}</a>
+        </div>
+    </div>
+    {{/each}}
+</script>
+<script type="text/html" id="evalStatTpl">
+    <header class="panel-heading bg-light">
+        团队购买统计(包括个人)，时间：{{reportrange}}，总共【{{buy_user_num}}】会员下单：【{{order_num}}】张,订单金额：【￥{{order_amount}}】，产生佣金：【{{dividend_amount}}】
+    </header>
+
+    <div class="form-group m-t">
+        <table class="table  table-hover  m-b-none">
+            <thead>
+            <tr>
+                <th>商品名称</th>
+                <th width="150">购买数量</th>
+                <th width="150">平均单价</th>
+                <th width="150">总金额</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{each buyGoods as item index}}
+            <tr>
+                <td>{{item.goods_name}}</td>
+                <td>{{item.num}}</td>
+                <td>{{item.price / item.num}}</td>
+                <td>{{item.price}}</td>
+            </tr>
+            {{/each}}
+            </tbody>
+        </table>
+    </div>
+    <header class="panel-heading bg-light">
+        个人统计，时间：{{reportrange}}，总共下单：【{{nowUser.order_num}}】张,订单金额：【￥{{nowUser.order_amount}}】，产生佣金：【{{nowUser.dividend_amount}}】
+    </header>
+    <div class="form-group m-t">
+        <table class="table  table-hover  m-b-none">
+            <thead>
+            <tr>
+                <th>商品名称</th>
+                <th width="150">购买数量</th>
+                <th width="150">平均单价</th>
+                <th width="150">总金额</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{each nowUser.buyGoods as item index}}
+            <tr>
+                <td>{{item.goods_name}}</td>
+                <td>{{item.num}}</td>
+                <td>{{item.price / item.num}}</td>
+                <td>{{item.price}}</td>
+            </tr>
+            {{/each}}
+            </tbody>
+        </table>
+    </div>
+</script>
+<script type="text/html" id="optloglist">
+    {{each list as item index}}
+    <tr>
+        <td>{{item.log_id}}</td>
+        <td>{{item.admin_info}}</td>
+        <td>{{item.log_time}}</td>
+        <td>{{item.log_info}}</td>
+    </tr>
+    {{/each}}
+</script>
+<script type="text/html" id="upLevelloglist">
+    {{each list as item index}}
+    <tr>
+        <td>{{item.log_id}}</td>
+        <td>{{item.admin_info}}</td>
+        <td>{{item.log_time}}</td>
+        <td>{{item.log_info}}</td>
+    </tr>
+    {{/each}}
+</script>
+<script type="text/javascript">
+    $(document).on('click','.superior_tab',function () {
+        var _user_id = $(this).data('user_id');
+        if ($('#tabSuperior_'+_user_id).find('.superior_box').html() == '') {
+            getSuperiorList(_user_id);
+        }
+    })
+    $(document).on('click','.chain_tab',function () {
+        var _user_id = $(this).data('user_id');
+        if ($('#team_chain_user_info').html() == ''){
+            $('#MyTree2').tree({
+                dataSource: new DataSourceTree({
+                    data: getTeamList(_user_id)
+                }),
+                multiSelect: true,
+                iconSelect:true,
+                loadingHTML: '<div class="tree-loading"><i class="fa fa-rotate-right fa-spin"></i></div>'
+            });
+        }
+    })
+    $(document).on('click','.optlog_tab',function(){
+        var _user_id = $(this).data('user_id');
+        if ($('#tabOptLogBox_'+_user_id).find('tbody').html() == ''){
+            getOptLogList(_user_id);
+        }
+    })
+    $(document).on('click','.uplevellog_tab',function(){
+        var _user_id = $(this).data('user_id');
+        if ($('#tabUpLevelLogBox_'+_user_id).find('tbody').html() == ''){
+            getUpLevelLogList(_user_id);
+        }
+    })
+    //加载上级
+    function getSuperiorList(uid) {
+        jq_ajax('{:url("sys_admin.users/getSuperiorList")}', 'user_id=' + uid, function (res) {
+            if (res.list.length < 1) {
+                $('#tabSuperior_'+uid).find('.superior_box').html('<div class="m-b">没有相关上级.</div>');
+                return false;
+            }
+            $('#tabSuperior_'+uid).find('.superior_box').html(template('superiorlist', res));
+        });
+    }
+
+    //执行统计
+    $('.evalStat').click(function () {
+        var _user_id = $(this).data('user_id');
+        jq_ajax('{:url("evalStat")}', 'user_id='+_user_id+'&reportrange=' + $('#reportrange_'+_user_id).val(), function (res) {
+            $('#evalStatBox').html(template('evalStatTpl', res));
+        })
+    })
+    //加载操作日志
+    function getOptLogList(uid){
+        jq_ajax('{:url("sys_admin.users/getOptLogList")}','user_id='+uid,function(res){
+            if (res.data.list.length > 0) {
+                $('#tabOptLogBox_'+uid).find('tbody').html(template('optloglist', res.data));
+            } else {
+                $('#tabOptLogBox_'+uid).find('tbody').html('<tr><td colspan="10" align="center" style="height:150px;">暂无相关日志.</td></tr>')
+            }
+        });
+    }
+    //加载升级日志
+    function getUpLevelLogList(uid){
+        jq_ajax('{:url("sys_admin.users/getUpLevelLogList")}','user_id='+uid,function(res){
+            if (res.data.list.length > 0) {
+                $('#tabUpLevelLogBox_'+uid).find('tbody').html(template('upLevelloglist', res.data));
+            } else {
+                $('#tabUpLevelLogBox_'+uid).find('tbody').html('<tr><td colspan="10" align="center" style="height:150px;">暂无相关日志.</td></tr>')
+            }
+        });
+    }
+</script>

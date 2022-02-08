@@ -1,0 +1,64 @@
+{extend name="mainadmin@layouts/base" /}
+{block name="main" }
+
+<header class="header  b-b clearfix">
+    <form id="forms" class="talbe-search form-inline "  method="post" action="{:url('getList')}" >
+     <div class="page-breadcrumbs flex">
+            <ul class="breadcrumb" >
+                <li>
+                    <i class="fa fa-ellipsis-v"></i>
+                    <strong>奖励明细</strong>
+                </li>                                  
+            </ul>
+         <div  class="relative flex_bd">
+             <div class="search-main">
+                 <div class="search-main-box">
+                   <select name="status"  style="width: 100px;" data-toggle="select2" data-notsearch="true"  data-chang="submit"  >
+                       <option value="-1">所有状态</option>
+                       {volist name="$status" id="val"}
+                        <option value="{$key}">{$val}</option>
+                       {/volist}
+                    </select>
+
+                 <select name="reward_type"  style="width: 100px;" data-toggle="select2" data-notsearch="true" data-chang="submit"  >
+                     <option value="">所有奖励</option>
+                     {volist name="rewardList" id="val"}
+                        <option value="{$key}">{$val}</option>
+                     {/volist}
+                 </select>
+                   <div class="form-group">
+                        <a class="btn btn-default " data-toggle="reportrange" data-change="submit">
+                            <i class="fa fa-calendar fa-lg"></i>
+                            <small>产生时间</small>
+                            <span></span> <b class="caret"></b>
+                            <input class="hide" type="text" value="{$start_date} - {$end_date}" id="reportrange" name="reportrange" />
+                        </a>
+                  </div>
+                  <input type="text" class="form-control input-medium" value="{$search.keyword}" name="keyword" placeholder="会员ID/姓名/手机号码" data-rule-required="true" />
+                  <button class="btn btn-sm btn-default-iq" type="submit" title="搜索"><i class="fa fa-search"></i></button>
+                 </div>
+             </div>
+             <i class="search_icon fa fa-chevron-down hide"></i>
+         </div>
+    </div>
+</form>
+</header>
+
+<section class="scrollable wrapper w-f ">
+    <section class="panel panel-default ">
+        <div class="table-responsive " id="list_box">
+            {include file="sys_admin/reward_log/list" /}
+        </div>
+    </section>
+</section>
+<script type="text/javascript">
+    $(document).on('click','.reward_info_btn',function(){
+        var id = $(this).data('id');
+        if($('#reward_info_'+id).is(':visible')){
+            $('#reward_info_'+id).hide();
+        }else{
+            $('#reward_info_'+id).show();
+        }
+    })
+</script>
+{/block}

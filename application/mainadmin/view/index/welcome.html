@@ -1,0 +1,59 @@
+{extend name="mainadmin@layouts/base" /}
+{block name="main" }
+<header class="header  b-b clearfix">
+    <div class="page-breadcrumbs">
+        <ul class="breadcrumb">
+            <li>
+                <i class="fa fa-ellipsis-v"></i>
+                <strong>系统首页</strong>&nbsp;
+            </li>
+        </ul>
+    </div>
+</header>
+<section class="scrollable  wrapper">
+
+    <section class="panel">
+        {if condition="$isClearSetTip == true"}
+        <header class="panel-heading font-bold red">
+            检测到网站发现变化，是否要清理相关配置，<a href="{:url('mainadmin/backup_db/clear')}" class="btn btn-sm" >前往清理</a>
+        </header>
+        {/if}
+        <div class="panel-body">
+            <div>
+                <b>{$adminInfo['user_name']}</b> {$helloInfo}欢迎登陆：{:settings('site_name')} - 后台管理系统 【<a href="javascript:void(0)" onclick="window.top.menuCAClick('{:url('mainAdmin/edit_pwd/index')}',this, 'pageModifyPassword')">修改密码</a>】
+            </div>
+            <div class="m-t">
+                你上次登陆时间：{$adminInfo['login_time']|dateTpl='Y-m-d H:i:s',true}
+            </div>
+            <div class="m-t">
+                你的级别：{$adminInfo['role_id']|adminRole}
+            </div>
+        </div>
+    </section>
+    <section class="panel">
+        <header class="panel-heading bg-light">系统信息</header>
+        <div class="panel-body">
+
+            <div>
+                当前系统时间：{:date('Y-m-d H:i:s')}
+            </div>
+            <div class="m-t">
+                服务器环境：<?=$_SERVER['SERVER_SOFTWARE']?>
+            </div>
+            <div class="m-t">
+                PHP运行环境：<?=PHP_SAPI.' PHP/'.PHP_VERSION?>
+            </div>
+            <div class="m-t">
+                上传文件最大限制：<?=ini_get('upload_max_filesize')?>
+            </div>
+            {if condition="$islzasyn == 0"}
+            <div class="m-t red">
+               <i class="fa fa-times-circle m-r"></i>没有安装异步扩展.
+            </div>
+            {/if}
+        </div>
+    </section>
+</section>
+{/block}
+{block name="footer"}
+{/block}

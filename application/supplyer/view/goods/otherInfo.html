@@ -1,0 +1,29 @@
+<div class="col-sm-7" >
+<div class="form-group">
+    <label class="col-sm-2 control-label">商品标签：</label>
+    <div class="col-sm-6" >
+        <input type="text" class="input-max" data-rule-maxlength="40" name="goodsTag" value="{$goodsTag}" >
+    </div>
+    <span class="help-inline">用空格分隔</span>
+</div>
+<div class="form-group">
+    <label class="col-sm-2 control-label">关键字：</label>
+    <div class="col-sm-6" >
+        <input type="text" class="input-max" data-rule-maxlength="40" name="keywords" value="{$row.keywords}" >
+    </div>
+    <span class="help-inline">用空格分隔</span>
+</div>
+<div class="form-group">
+      <label class="col-sm-2 control-label">简单描述：</label>
+      <div class="col-sm-8">
+        <textarea name="description"  style=" width:80%; height:100px;">{$row.description}</textarea>
+      </div>
+</div>
+</div>
+<div class="col-sm-5" >
+    <div style="width: 352px;">
+        <div id="m_goods_desc"></div>
+        <textarea rows="13" class="hd" data-toggle="ueditor" data-div="m_goods_desc" data-height="450" data-maximumwords="50000" name="m_goods_desc" >{$row.m_goods_desc|raw}</textarea>
+    </div>
+    <div >移动端的图片建议宽度为750像素</div>
+</div>

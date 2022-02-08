@@ -1,0 +1,278 @@
+{extend name="mainadmin@layouts/base" /}
+{block name="head" }
+<link rel="stylesheet" href="__STATIC__/js/jquery/jquery_ui/jquery-ui.css">
+<script src="__STATIC__/js/jquery/jquery_ui/jquery-ui.js"></script>
+
+{/block}
+{block name="main" }
+<header class="header  b-b clearfix">
+     <div class="page-breadcrumbs">
+            <ul class="breadcrumb" >
+                <li>
+                    <i class="fa fa-ellipsis-v"></i>
+                    <strong>相关设置</strong>
+                </li>                                  
+            </ul>
+      </div>
+</header>
+<form class="form-horizontal form-validate form_vbox" id="_form" method="post" action="{:url('save')}">
+    <section class="vbox">
+        <section class="scrollable  wrapper w-f">
+            <section class="panel panel-default">
+                <header>
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a href="#basic" data-toggle="tab">基本配置</a></li>
+                        <li><a href="#kdnset" data-toggle="tab">快递鸟配置</a></li>
+                        <li><a href="#kd100set" data-toggle="tab">快递100配置</a></li>
+                    </ul>
+                </header>
+                <div class="tab-content">
+                    <div class="tab-pane active" id="basic">
+
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">快递查询接口：</label>
+                            <div class="controls">
+                                <select class="input-max" name="shop_shippping_view_fun">
+                                    <option value="">选择快递查询接口</option>
+                                    {volist name="shippingFunction" id="val"}
+                                    <option value="{$val.function}" {$setting[
+                                    'shop_shippping_view_fun'] == $val['function']?'selected':''} >{$val.name}</option>
+                                    {/volist}
+                                </select>
+                            </div>
+                        </div>
+                        {if condition="$setting.sys_model_supplyer == 1"}
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">运费模板：</label>
+                            <div class="controls">
+                                <label class="radio-inline">
+                                    <input name="shipping_tmp_supplyer" value="0" {$setting['shipping_tmp_supplyer']==0?'checked':''}
+                                    type="radio">平台统一设置
+                                </label>
+                                <label class="radio-inline">
+                                    <input name="shipping_tmp_supplyer" value="1" {$setting['shipping_tmp_supplyer']==1?'checked':''}
+                                    type="radio" >供应商自行配置
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">运费计算：</label>
+                            <div class="controls">
+                                <label class="radio-inline">
+                                    <input name="shipping_fee_type" value="0" {$setting['shipping_fee_type']==0?'checked':''}
+                                    type="radio">统一计算(拆单，根据商品金额比例分配运费)
+                                </label>
+                                <br>
+                                <label class="radio-inline">
+                                    <input name="shipping_fee_type" value="1" {$setting['shipping_fee_type']==1?'checked':''}
+                                    type="radio" >按供应商独立计算(供应商可以自行设置运费模板)
+                                </label>
+                            </div>
+                        </div>
+                        {else/}
+                        <input name="shipping_fee_type" value="0" type="hidden">
+                        <input name="shipping_tmp_supplyer" value="0" type="hidden">
+                        {/if}
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">运费累加计算：</label>
+                            <div class="controls">
+                                <label class="radio-inline">
+                                    <input name="shipping_fee_plus" value="0" {$setting['shipping_fee_plus']==0?'checked':''}
+                                    type="radio">不累加(按算出最贵的运费模板，按最贵的计算)
+                                </label>
+                                <br>
+                                <label class="radio-inline">
+                                    <input name="shipping_fee_plus" value="1" {$setting['shipping_fee_plus']==1?'checked':''}
+                                    type="radio" >累加(按运费模板累加计算)
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="tab-pane" id="kdnset">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">电商ID（快递鸟）：</label>
+                            <div class="controls">
+                                <input type="text" name="kdn_appid" value="{$setting.kdn_appid}" style="width: 300px;">
+                                <span class="help-line"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">电商加密私钥（快递鸟）：</label>
+                            <div class="controls">
+                                <input type="text" name="kdn_apikey" value="{$setting.kdn_apikey}"
+                                       style="width: 300px;"> <span class="help-line"></span>
+                            </div>
+                        </div>
+                        {if condition="$setting.sys_model_kdn_print == 1"}
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">邮政编码：</label>
+                            <div class="controls">
+                                <input type="text" name="kdn_postcode" value="{$setting.kdn_postcode}"
+                                       style="width: 300px;"> <span class="help-line"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">接口地址（快递鸟）：</label>
+                            <div class="controls">
+                                <input type="text" name="kdn_apiurl" value="{$setting.kdn_apiurl}"
+                                       style="width: 300px;">
+                                <span class="help-line"></span>
+                                <select onchange="$('input[name=kdn_apiurl]').val($(this).val());">
+                                    <option value="">请选择接口地址</option>
+                                    <option value="http://api.kdniao.com/api/Eorderservice">正式地址</option>
+                                    <option value="http://testapi.kdniao.com:8081/api/EOrderService">测试地址</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">寄件人名称（快递鸟）：</label>
+                            <div class="controls">
+                                <input type="text" name="kdn_name" value="{$setting.kdn_name}"> <span
+                                    class="help-line"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">联系电话（快递鸟）：</label>
+                            <div class="controls">
+                                <input type="text" name="kdn_phone" value="{$setting.kdn_phone}"> <span
+                                    class="help-line"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">地区（快递鸟）：</label>
+                            <div class="controls">
+                                <input type="text" name="kdn_province" class="input-mini" style="text-align: center"
+                                       value="{$setting.kdn_province}"> <span class="help-line">省</span>
+                                <input type="text" name="kdn_city" class="input-mini" style="text-align: center"
+                                       value="{$setting.kdn_city}"> <span class="help-line">市</span>
+                                <input type="text" name="kdn_area" class="input-mini" style="text-align: center"
+                                       value="{$setting.kdn_area}"> <span class="help-line">区</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">详情地址（快递鸟）：</label>
+                            <div class="controls">
+                                <input type="text" name="kdn_address" value="{$setting.kdn_address}"
+                                       style="width: 300px;"> <span class="help-line"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">打印机模式：</label>
+                            <div class="controls">
+                                <label class="radio-inline">
+                                    <input name="kdn_print_type" value="1" {$setting['kdn_print_type']==1||empty($setting['kdn_print_type'])?'checked':''}
+                                    type="radio">一联单模式
+                                </label>
+                                <label class="radio-inline">
+                                    <input name="kdn_print_type" value="2" {$setting['kdn_print_type']==2?'checked':''}
+                                    type="radio" >二联单模式
+                                </label>
+                                <span class="help-line">面单模板请在物流管理处设置模板id</span>
+                            </div>
+                        </div>
+                        {/if}
+                    </div>
+                    <div class="tab-pane" id="kd100set">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">电商授权key：</label>
+                            <div class="controls">
+                                <input type="text" name="kd100_key" value="{$setting.kd100_key}" style="width: 300px;">
+                                <span class="help-line"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">电商授权customer：</label>
+                            <div class="controls">
+                                <input type="text" name="kd100_customer" value="{$setting.kd100_customer}" style="width: 300px;">
+                                <span class="help-line"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane" id="cnset">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">电商ID（菜鸟）：</label>
+                            <div class="controls">
+                                <input type="text" name="cn_appid" value="{$setting.cn_appid}" style="width: 300px;">
+                                <span class="help-line"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">电商加密私钥（菜鸟）：</label>
+                            <div class="controls">
+                                <input type="text" name="cn_apikey" value="{$setting.cn_apikey}" style="width: 300px;">
+                                <span class="help-line"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">邮政编码：</label>
+                            <div class="controls">
+                                <input type="text" name="cn_postcode" value="{$setting.cn_postcode}"
+                                       style="width: 300px;"> <span class="help-line"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">接口地址（菜鸟）：</label>
+                            <div class="controls">
+                                <input type="text" name="cn_apiurl" value="{$setting.cn_apiurl}" style="width: 300px;">
+                                <span class="help-line"></span>
+                                <select onchange="$('input[name=cn_apiurl]').val($(this).val());">
+                                    <option value="">请选择接口地址</option>
+                                    <option value="http://api.kdniao.com/api/Eorderservice">正式地址</option>
+                                    <option value="http://testapi.kdniao.com:8081/api/EOrderService">测试地址</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">寄件人名称（菜鸟）：</label>
+                            <div class="controls">
+                                <input type="text" name="cn_name" value="{$setting.cn_name}"> <span
+                                    class="help-line"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">联系电话（菜鸟）：</label>
+                            <div class="controls">
+                                <input type="text" name="cn_phone" value="{$setting.cn_phone}"> <span
+                                    class="help-line"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">地区（菜鸟）：</label>
+                            <div class="controls">
+                                <input type="text" name="cn_province" class="input-mini" style="text-align: center"
+                                       value="{$setting.cn_province}"> <span class="help-line">省</span>
+                                <input type="text" name="cn_city" class="input-mini" style="text-align: center"
+                                       value="{$setting.cn_city}"> <span class="help-line">市</span>
+                                <input type="text" name="cn_area" class="input-mini" style="text-align: center"
+                                       value="{$setting.cn_area}"> <span class="help-line">区</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">详情地址（菜鸟）：</label>
+                            <div class="controls">
+                                <input type="text" name="cn_address" value="{$setting.cn_address}"
+                                       style="width: 300px;"> <span class="help-line"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+        </section>
+        <footer class="footer bg-white b-t p-t">
+            <div class="form-group">
+                <div class="col-sm-4 col-sm-offset-1">
+                    <button type="submit" class="btn btn-primary js_save_submit" data-loading-text="保存中...">保存
+                    </button>
+                    <button type="button" class="btn btn-default" data-toggle="back">取消</button>
+                </div>
+            </div>
+        </footer>
+    </section>
+</form>
+{/block}
+{block name="footer" }
+{/block}

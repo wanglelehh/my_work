@@ -1,0 +1,23 @@
+<form class="form-horizontal form-validate " method="post" action="{:url('importFile')}" enctype="multipart/form-data">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">导入发货订单</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                        <label class="col-sm-3 control-label">上传文件：</label>
+                        <div class="col-sm-5 m-t-mc">
+                            <input type="file" name="excel">
+                            <span class="red">xls/xlsx 格式</span>
+                        </div>
+                    </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary postBtn " data-loading-text="导入中..." >导入</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+            </div>
+        </div>
+    </div>
+</form>

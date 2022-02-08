@@ -1,0 +1,146 @@
+{extend name="mainadmin@layouts/base" /}
+{block name="head" }
+<link href="__STATIC__/main/css/stylesheets/uploadify/uploadify.min.css" rel="stylesheet"/>
+<link href="__STATIC__/main/css/stylesheets/page/goods.css?v=1" rel="stylesheet"/>
+<link rel="stylesheet" href="__STATIC__/js/jquery/jquery_ui/jquery-ui.css">
+<script src="__STATIC__/js/jquery/jquery_ui/jquery-ui.js"></script>
+<style>
+
+</style>
+{/block}
+{block name="main" }
+
+<header>
+    <div class="page-breadcrumbs">
+        <ul class="breadcrumb">
+            <li>
+                <i class="fa fa-ellipsis-v"></i>
+                <strong>分销设置</strong>
+            </li>
+        </ul>
+        <div style="float:right; padding-right:10px;">
+            <a class="refresh" id="refresh-toggler" href=""><i class="fa fa-refresh"></i></a>
+        </div>
+    </div>
+</header>
+<form class="form-horizontal form-validate form_vbox" id="_form" method="post" action="{:url('save')}">
+    <section class="vbox">
+        <section class="scrollable  wrapper w-f">
+            <section class="panel panel-default ">
+                <header>
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a href="#basic" data-toggle="tab">基本配置</a></li>
+
+                        <li><a href="#background" data-toggle="tab">分享海报</a></li>
+                    </ul>
+                </header>
+
+                <div class="tab-content ">
+                    <div class="tab-pane active" id="basic">
+                        <div class="form-group m-t">
+                            <label class=" control-label">身份升级机制：</label>
+                            <div class="controls">
+                                <label class="radio-inline">
+                                    <input name="level_up_type" value="0" {$Dividend['level_up_type']==0?'checked':''}
+                                    type="radio">
+                                    逐级升级
+                                </label>
+                                <label class="radio-inline">
+                                    <input name="level_up_type" value="1" {$Dividend['level_up_type']==1?'checked':''}
+                                    type="radio">
+                                    可跨级升级（满条件即可）
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group m-t">
+                            <label class=" control-label">是否开启推荐：</label>
+                            <div class="controls">
+                                <label class="radio-inline">
+                                    <input name="status" value="0" {$Dividend['status']==0?'checked':''} type="radio"
+                                    >停用
+                                </label>
+                                <label class="radio-inline">
+                                    <input name="status" value="1" {$Dividend['status']==1?'checked':''} type="radio">启用
+                                </label>
+                                <span class="help-inline">（停用后，将不执行推荐关系绑定）</span>
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label class=" control-label">佣金到帐时间：</label>
+                            <div class="col-sm-8 controls">
+                                <strong>{$shop_after_sale_limit==0?'订单签收到帐':$shop_after_sale_limit.'天'}</strong>
+                                <span class="help-inline">（与订单申请售后时间一致，即签收后过了此时间即到帐，如需修改请前往【平台-商城设置】中修改）</span>
+
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                    <div class="tab-pane " id="background">
+
+                        <div class="form-group">
+                            <label class="col-sm-1 control-label">海报背景图片：</label>
+                            <div class="col-sm-10">
+                                <div class="js_upload_container">
+                                    <div class="js_file_upload ">
+                                        <button type="button" class="btn btn-default js_new_upload"
+                                                 data-count="10" data-submitname="ShareBg"
+                                                data-uploadpath="{:url('uploadShareBg')}"
+                                                data-delpath="{:url('removeImg')}"
+                                                style="position: relative; z-index: 1;">上传图片
+                                        </button>
+                                        <span class="maroon">*</span>
+                                        <span class="help-inline"><small>建议尺寸：建议尺寸580*870px，JPG、PNG格式，图片小于2MB，最多10张 (可拖拽图片调整显示顺序) </small></span>
+                                    </div>
+                                    <div class="uploadify-queue js_file_upload_queue">
+                                    </div>
+                                    <ul class="ipost-list ui-sortable js_fileList share_img_list" data-required="true">
+                                        {volist name="share_bg" id="shbg" }
+                                        <li class="imgbox" data-path="{$shbg}">
+                                            <a class="item_new_close item_close" href="javascript:void(0)"
+                                               data-delpath="{:url('removeImg')}" title="删除"></a>
+                                            <span class="item_box"><img src="{$shbg}"></span>
+                                            <input type="hidden" name="ShareBg[path][]" value="{$shbg}">
+                                        </li>
+                                        {/volist}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="line line-dashed line-lg pull-in " style="width:99%;"></div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">分享文本：</label>
+                                    <div class="controls">
+                                        <textarea name="setting[share_hb_text]" data-rule-required="true" data-rule-maxlength="26" class="input-xxlarge" style="height: 60px">{$setting.share_hb_text}</textarea>
+                                        <div class="help-inline">1、{网站名称}为自动替换为【系统】-【系统设置】中的网站名称：{$setting.site_name}；<br>2、长度不能超26个字。</div>
+                                    </div>
+                                </div>
+                        </div>
+                    </div>
+                </div>
+
+            </section>
+        </section>
+        <footer class="footer bg-white b-t p-t">
+            <div class="form-group">
+                <div class="controls  col-sm-offset-1">
+                    <button type="submit" class="btn btn-primary" data-loading-text="保存中...">保存</button>
+                </div>
+            </div>
+        </footer>
+    </section>
+</form>
+
+<script type="text/javascript">
+
+</script>
+
+{/block}
+{block name="footer" }
+<script type="text/javascript">
+    seajs.use(["dist/plupload/init.js", "dist/goods/init.js"])
+</script>
+{/block}

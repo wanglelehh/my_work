@@ -1,0 +1,81 @@
+{extend name="mainadmin@layouts/base" /}
+{block name="main" }
+
+<header class="header  b-b clearfix">
+    <div class="page-breadcrumbs">
+        <ul class="breadcrumb">
+            <li>
+                <i class="fa fa-ellipsis-v"></i>
+                <strong>会员详情</strong>
+            </li>
+        </ul>
+        <a class="text-muted pull-right pointer p-r m-t-md" data-toggle="back" title="返回"><i
+                class="fa fa-reply"></i></a>
+    </div>
+</header>
+<section class="scrollable  wrapper">
+    <section class="panel panel-default">
+        <form class="form-horizontal form-validate" method="post" action="{:url('info')}" style="padding:0;">
+        {include file="sys_admin/users/user_info" /}
+        </form>
+    </section>
+</section>
+<script src="__STATIC__/js/fuelux/treeview/tree-custom.min.js"></script>
+
+<script type="text/javascript">
+    function getTeamList(pid){
+        var value;
+        $.ajax({
+            async : false,
+            type : "POST",
+            url : '{:url("sys_admin.TeamTree/getTeamList")}',
+            data : {
+                pid : pid
+            }
+        }).done(function(res){
+            value = res.data;
+        });
+        return value;
+    }
+    function getUserInfo(uid) {
+        if (uid < 1){
+            return false;
+        }
+        jq_ajax('{:url("sys_admin.TeamTree/info")}','user_id='+uid,function(res){
+            if (res.code == 0){
+                return _alert(res.msg);
+            }
+            $('#team_chain_user_info').html(res.data.content);
+        });
+    }
+    var DataSourceTree = function (options) {
+        this._data = options.data;
+    };
+    DataSourceTree.prototype = {
+        data: function (options, callback) {
+            if (typeof(options.additionalParameters) == 'undefined'){
+                var self = this;
+                var data = $.extend(true, [], self._data);
+                getUserInfo(self._data[0].additionalParameters.user_id);
+                callback({ data: data });
+                $('.tree').find('.tree-folder').eq(1).find('.tree-folder-header').addClass('tree_bg');
+            }else{
+                var data = getTeamList(options.additionalParameters.user_id);
+                callback({ data: data });
+            }
+        }
+    };
+
+
+
+    $(document).on('click','.tree-folder-name',function(e){
+        var data = $(this).data();
+        $('.tree-folder-header').removeClass('tree_bg');
+        $(this).parent().addClass('tree_bg');
+        getUserInfo(data.additionalParameters.user_id)
+    })
+</script>
+
+{include file="sys_admin/users/user_js" /}
+{/block}
+

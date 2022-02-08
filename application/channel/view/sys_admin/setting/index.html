@@ -1,0 +1,416 @@
+{extend name="mainadmin@layouts/base" /}
+{block name="main" }
+<header class="header  b-b clearfix">
+    <div class="page-breadcrumbs">
+        <ul class="breadcrumb">
+            <li>
+                <i class="fa fa-ellipsis-v"></i>
+                <strong>基础配置</strong>
+            </li>
+        </ul>
+
+    </div>
+</header>
+<form class="form-horizontal form-validate form-modal form_vbox" method="post" action="{:url('save')}">
+    <section class="vbox">
+        <section class="scrollable  wrapper w-f">
+            <section class="panel panel-default">
+                <header>
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a href="#basic" data-toggle="tab">基本配置</a></li>
+                        <li><a href="#payment" data-toggle="tab">支付设置</a></li>
+                        <li><a href="#withdraw" data-toggle="tab">提现设置</a></li>
+                        <li><a href="#contract" data-toggle="tab">PDF代理合同</a></li>
+                    </ul>
+                </header>
+
+                <div class="tab-content">
+                    <div class="tab-pane active" id="basic">
+                        <div class="widget-body">
+
+                            <div class="form-group ">
+                                <label class="control-label">平台邀请码：</label>
+                                <div class="controls">
+                                    <input type="text" name="channel_token" id="channel_token" class="input-xlarge" data-rule-required="true"
+                                           data-rule-required="true"   value="{$setting.channel_token}">
+                                    <span class="maroon">*</span></div>
+                                <button class="btn btn-default" type="button" onclick="getRandstr('channel_token',15,'Z')">生成随机码</button>
+                            </div>
+                           
+                            <div class="form-group">
+                                <label class="control-label">联系人：</label>
+                                <div class="controls">
+                                    <input type="text" name="channel_real_name" class="input-xlarge"
+                                           data-rule-required="true" value="{$setting.channel_real_name}">
+                                    <span class="maroon">*</span></div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label">联系电话：</label>
+                                <div class="controls">
+                                    <input type="text" name="channel_mobile" class="input-xlarge"
+                                           data-rule-required="true" value="{$setting.channel_mobile}">
+                                    <span class="maroon">*</span></div>
+                            </div>
+                            <div class="line line-dashed line-lg pull-in"></div>
+                            <div class="form-group">
+                                <label class="control-label">用户注册时：</label>
+                                <div class="col-sm-4 m-t-md">
+                                    <label class="fl">
+                                        <input class="checkbox-slider colored-orange rand_amount" name="channel_sms_register"
+                                               type="checkbox"
+                                               value="1" {$setting['channel_sms_register']|tplckval='=1','checked'}>
+                                        <span class="text"></span>
+                                    </label>
+                                    <span class="fl">用户注册时使用短信验证</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label">用户登陆时：</label>
+                                <div class="col-sm-4 m-t-md">
+                                    <label class="fl">
+                                        <input class="checkbox-slider colored-orange rand_amount" name="channel_sms_login" type="checkbox"
+                                               value="1" {$setting['channel_sms_login']|tplckval='=1','checked'}>
+                                        <span class="text"></span>
+                                    </label>
+                                    <span class="fl">用户登陆时使用短信验证</span>
+                                </div>
+
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label">找回密码时：</label>
+                                <div class="col-sm-8 m-t-md">
+                                    <label class="fl">
+                                        <input class="checkbox-slider colored-orange rand_amount" name="channel_sms_forget_pw"
+                                               type="checkbox" value="1" {$setting['channel_sms_forget_pw']|tplckval='=1','checked'}>
+                                        <span class="text"></span>
+                                    </label>
+                                    <span class="fl">用户找回密码时使用短信验证，关闭将无法找回密码</span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="tab-pane " id="payment">
+                        <div class="form-group">
+                            <label class="control-label">收款设置：</label>
+                            <div class="col-sm-10">
+                                <label><input type="radio" name="channel_receive_payment_set" value="0" {$setting['channel_receive_payment_set']|tplckval='=0','checked',true}> 平台统一收款</label>
+                                <label><input type="radio" name="channel_receive_payment_set" value="1" {$setting['channel_receive_payment_set']|tplckval='=1','checked'}> 线下转帐上级</label>
+                                <div class="help-inline">
+                                    <span class="red">* 请不要随意修改此项，会影响结算处理</span><br>
+                                    * 平台统一收款，平台结算到代理余额.<br>
+                                    * 线下转帐为向上级打款，其它支付方式则向平台打款，平台结算到代理余额.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">订单支付方式：</label>
+                            <div class="col-sm-10">
+                                {volist name="pay_list" id="pay"}
+                                   <label><input type="checkbox" name="channel_order_payment[]" value="{$pay.pay_code}" {:in_array($pay['pay_code'],$setting['channel_order_payment'])?'checked':''}> {$pay.pay_name}</label>
+                                {/volist}
+                                <label><input type="checkbox" name="channel_order_payment[]" value="goodsMoney" {:in_array('goodsMoney',$setting['channel_order_payment'])?'checked':''}> 货款支付</label>
+                             </div>
+                         </div>
+                        <div class="form-group">
+                            <label class="control-label">充值支付方式：</label>
+                            <div class="col-sm-10">
+                                {volist name="pay_list" id="pay"}
+                                    {if condition="$pay.is_recharge == 1"}
+                                    <label><input type="checkbox" name="channel_recharge_payment[]" value="{$pay.pay_code}" {:in_array($pay['pay_code'],$setting['channel_recharge_payment'])?'checked':''}> {$pay.pay_name}</label>
+                                    {/if}
+                                {/volist}
+                                <div class="help-inline">* 充值统一平台收款.</div>
+                            </div>
+                        </div>
+                        <div class="line line-dashed line-lg pull-in"></div>
+                        <div class="form-group"><b>支付宝收款信息</b></div>
+                        <div class="form-group">
+                            <label class="control-label">支付宝收款：</label>
+                            <div class="col-sm-10 ">
+                                <label><input type="radio" name="channel_alipay_usd" value="0" {$setting['channel_alipay_usd']|tplckval='=0','checked',true}> 关闭</label>
+                                <label><input type="radio" name="channel_alipay_usd" value="1" {$setting['channel_alipay_usd']|tplckval='=1','checked'}> 开启</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">帐户姓名：</label>
+                            <div class="col-sm-10 ">
+                                <input type="text" name="channel_alipay_name" class="input-xlarge"
+                                       value="{$setting.channel_alipay_name}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">支付宝帐户：</label>
+                            <div class="col-sm-10 ">
+                                <input type="text" name="channel_alipay_account" class="input-xlarge"
+                                       value="{$setting.channel_alipay_account}">
+                            </div>
+                        </div>
+                        <div class="form-group hide">
+                            <label class="control-label">支付宝收款：</label>
+                            <div class="col-sm-10 ">
+                                <div class="defUpImgBox" data-toggle="uploaderOne" >
+                                    <img  src="{$setting.channel_alipay_qrcode|default='__STATIC__/main/img/image.png'}">
+                                    <input  type="hidden"  name="channel_alipay_qrcode"  value="{$setting.channel_alipay_qrcode}">
+                                    <div class="tips">点击上传</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="line line-dashed line-lg pull-in"></div>
+                        <div class="form-group"><b>微信收款信息</b></div>
+                        <div class="form-group">
+                            <label class="control-label">微信收款：</label>
+                            <div class="col-sm-10 ">
+                                <label><input type="radio" name="channel_weixin_usd" value="0" {$setting['channel_weixin_usd']|tplckval='=0','checked',true}> 关闭</label>
+                                <label><input type="radio" name="channel_weixin_usd" value="1" {$setting['channel_weixin_usd']|tplckval='=1','checked'}> 开启</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">帐户姓名：</label>
+                            <div class="col-sm-10 ">
+                                <input type="text" name="channel_weixin_name" class="input-xlarge"
+                                       value="{$setting.channel_weixin_name}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">微信号：</label>
+                            <div class="col-sm-10 ">
+                                <input type="text" name="channel_weixin_account" class="input-xlarge"
+                                       value="{$setting.channel_weixin_account}">
+                            </div>
+                        </div>
+                        <div class="form-group hide">
+                            <label class="control-label">微信收款：</label>
+                            <div class="col-sm-10 ">
+                                <div class="defUpImgBox" data-toggle="uploaderOne" >
+                                    <img  src="{$setting.channel_weixin_qrcode|default='__STATIC__/main/img/image.png'}">
+                                    <input  type="hidden"  name="channel_weixin_qrcode"  value="{$setting.channel_weixin_qrcode}">
+                                    <div class="tips">点击上传</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="line line-dashed line-lg pull-in"></div>
+                        <div class="form-group"><b>银行卡收款信息</b></div>
+                        <div class="form-group">
+                            <label class="control-label">银行卡收款：</label>
+                            <div class="col-sm-10 ">
+                                <label><input type="radio" name="channel_bank_usd" value="0" {$setting['channel_bank_usd']|tplckval='=0','checked',true}> 关闭</label>
+                                <label><input type="radio" name="channel_bank_usd" value="1" {$setting['channel_bank_usd']|tplckval='=1','checked'}> 开启</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">开户银行：</label>
+                            <div class=" col-sm-4 ">
+                                <input type="text" name="channel_bank_name" placeholder="开户银行" class="input-max"
+                                       value="{$setting.channel_bank_name}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">开户支行：</label>
+                            <div class=" col-sm-4 ">
+                                <input type="text" name="channel_bank_subbranch" placeholder="开户支行" class="input-max"
+                                       value="{$setting.channel_bank_subbranch}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">持卡人姓名：</label>
+                            <div class=" col-sm-4 ">
+                                <input type="text" name="channel_bank_user_name" placeholder="持卡人姓名" class="input-max"
+                                       value="{$setting.channel_bank_user_name}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">银行卡号：</label>
+                            <div class="controls col-sm-4 ">
+                                <input type="text" name="channel_bank_card_number" placeholder="银行卡号" class="input-max"
+                                       value="{$setting.channel_bank_card_number}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane " id="withdraw">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">是否开启提现：</label>
+                            <div class="controls">
+                                <label class="radio-inline">
+                                    <input name="withdraw_status" value="1" {$setting['withdraw_status']==1?'checked':''}
+                                    type="radio">开启
+                                </label>
+                                <label class="radio-inline">
+                                    <input name="withdraw_status" value="0" {$setting['withdraw_status']==0?'checked':''}
+                                    type="radio" >关闭
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group ">
+                            <label class="col-sm-2 control-label">开启提现周期：</label>
+                            <div class="controls">
+                                <input name="withdraw_week_1" value="0" type="hidden">
+                                <input name="withdraw_week_2" value="0" type="hidden">
+                                <input name="withdraw_week_3" value="0" type="hidden">
+                                <input name="withdraw_week_4" value="0" type="hidden">
+                                <input name="withdraw_week_5" value="0" type="hidden">
+                                <input name="withdraw_week_6" value="0" type="hidden">
+                                <input name="withdraw_week_0" value="0" type="hidden">
+                                <label class="radio-inline">
+                                    <input name="withdraw_week_1" value="1" type="checkbox" {$setting['withdraw_week_1']==1?'checked':''}>星期一
+                                </label>
+                                <label class="radio-inline">
+                                    <input name="withdraw_week_2" value="1" type="checkbox" {$setting['withdraw_week_2']==1?'checked':''}>星期二
+                                </label>
+                                <label class="radio-inline">
+                                    <input name="withdraw_week_3" value="1" type="checkbox" {$setting['withdraw_week_3']==1?'checked':''}>星期三
+                                </label>
+                                <label class="radio-inline">
+                                    <input name="withdraw_week_4" value="1" type="checkbox" {$setting['withdraw_week_4']==1?'checked':''}>星期四
+                                </label>
+                                <label class="radio-inline">
+                                    <input name="withdraw_week_5" value="1" type="checkbox" {$setting['withdraw_week_5']==1?'checked':''}>星期五
+                                </label>
+                                <label class="radio-inline">
+                                    <input name="withdraw_week_6" value="1" type="checkbox" {$setting['withdraw_week_6']==1?'checked':''}>星期六
+                                </label>
+                                <label class="radio-inline">
+                                    <input name="withdraw_week_0" value="1" type="checkbox" {$setting['withdraw_week_0']==1?'checked':''}>星期天
+                                </label>
+                                <span class="help-line"> </span>
+                            </div>
+                        </div>
+                        <div class="form-group ">
+                            <label class="col-sm-2 control-label">每天开放时间：</label>
+                            <div class="controls">
+                                <input type="text" value="{$setting['withdraw_day_start']}" min=0  size="10" data-rule-required="true" data-rule-integer="true" name="withdraw_day_start"> 点 -
+                                <input type="text" value="{$setting['withdraw_day_stop']}" min=0  size="10" data-rule-required="true" data-rule-integer="true" name="withdraw_day_stop"> 点
+                                <span class="help-line"> 24小时制,例如晚上九点请写21</span>
+                            </div>
+                        </div>
+                        <div class="form-group ">
+                            <label class="col-sm-2 control-label">最低提现金额：</label>
+                            <div class="controls">
+                                <input type="text" value="{$setting['channel_withdraw_min_money']}" min=0 size="10"
+                                       data-rule-required="true" data-rule-integer="true" name="channel_withdraw_min_money">
+                                <span class="help-line"> 金额必须达到最低提现金额，才能申请提现</span>
+                            </div>
+                        </div>
+                        <div class="form-group ">
+                            <label class="col-sm-2 control-label">最高提现金额：</label>
+                            <div class="controls">
+                                <input type="text" value="{$setting['channel_withdraw_max_money']}" min=0 size="10"
+                                       data-rule-required="true" data-rule-integer="true" name="channel_withdraw_max_money">
+                                <span class="help-line"> 单次提现金额不能超过此金额，才能申请提现</span>
+                            </div>
+                        </div>
+                        <div class="form-group ">
+                            <label class="col-sm-2 control-label">提现手续费：</label>
+                            <div class="controls">
+                                <input type="text" value="{$setting['channel_withdraw_fee']}" min=0 size="10"
+                                       data-rule-required="true" data-rule-ismoney="true" name="channel_withdraw_fee">
+                                <span class="help-line"> %（注：如填1就是 代表每笔提现，收取提现金额1%的手续费）</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">手续费扣除方式：</label>
+                            <div class="controls">
+                                <label class="radio-inline">
+                                    <input name="channel_withdraw_fee_type" value="1" {$setting['channel_withdraw_fee_type']==1?'checked':''}
+                                    type="radio">内扣
+                                </label>
+                                <label class="radio-inline">
+                                    <input name="channel_withdraw_fee_type" value="0" {$setting['channel_withdraw_fee_type']==0?'checked':''} type="radio"
+                                    >外扣
+                                </label>
+                                <span class="help-line"> %（注：例如手续费8%,外扣:提100扣108余额到账100,内扣提100扣100余额到账92）</span>
+                            </div>
+                        </div>
+                        <div class="form-group ">
+                            <label class="col-sm-2 control-label">最低手续费：</label>
+                            <div class="controls">
+                                <input type="text" value="{$setting['channel_withdraw_fee_min']}" min=0 size="10"
+                                       data-rule-required="true" data-rule-ismoneyy="true" name="channel_withdraw_fee_min">
+                                <span class="help-line"> （注：单笔手续费计算出来小于该值时，则取该值）</span>
+                            </div>
+                        </div>
+                        <div class="form-group ">
+                            <label class="col-sm-2 control-label">最高手续费：</label>
+                            <div class="controls">
+                                <input type="text" value="{$setting['channel_withdraw_fee_max']}" min=0 size="10"
+                                       data-rule-required="true" data-rule-ismoney="true" name="channel_withdraw_fee_max">
+                                <span class="help-line"> （注：单笔手续费计算出来大于该值时，则取该值,为0时则不限）</span>
+                            </div>
+                        </div>
+                        <div class="form-group ">
+                            <label class="col-sm-2 control-label">每日累计提现次数：</label>
+                            <div class="controls">
+                                <input type="text" value="{$setting['channel_withdraw_num']|intval}" min=0 size="10"
+                                       data-rule-required="true" data-rule-ismoney="true" name="channel_withdraw_num">
+                                <span class="help-line"> （注：单人每日累计提现次数达到该值时，本日将不支持继续提现,为0时则不限）</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tab-pane " id="contract">
+                        <div class="form-group">
+                            <label class="control-label">代理合同：</label>
+                            <div class="col-sm-9 " style="padding-left:0px;">
+                                    <div id="channel_contract"></div>
+                                    <textarea rows="13" class="hd" data-toggle="ueditor" data-div="channel_contract" data-height="450" data-maximumwords="50000" name="channel_contract" >{$setting['channel_contract']|raw}</textarea>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">甲方姓名：</label>
+                            <div class=" col-sm-4 ">
+                                <input type="text" name="channel_contract_first_party" placeholder="甲方姓名" class="input-max"
+                                       value="{$setting.channel_contract_first_party}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">合同盖章：</label>
+                            <div class="col-sm-9 ">
+                                <div class="defUpImgBox" data-toggle="uploaderImg">
+                                    <img  src="{$setting.channel_contract_seal|default=''}">
+                                    <input  type="hidden"  name="channel_contract_seal"  value="{$setting.channel_contract_seal}">
+                                    <div class="tips">点击上传</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">盖章定位：</label>
+                            <div class="col-sm-9 ">
+                                left：<input type="text" class="input-small" min="0" data-rule-required="true" data-rule-integer="true" name="channel_contract_seal_x" value="{$setting.channel_contract_seal_x|intval}" aria-required="true">px
+                                top：<input type="text" class="input-small"  min="0" data-rule-required="true" data-rule-integer="true" name="channel_contract_seal_y" value="{$setting.channel_contract_seal_y|intval}" aria-required="true">px
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">预览效果：</label>
+                            <div class="col-sm-9 ">
+                                <a href="{:url('testPdfContract')}" target="_blank" class="btn btn-primary">点击预览效果，请保存后操作</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </section>
+        <footer class="footer bg-white b-t p-t">
+            <div class="form-group">
+                <div class="col-sm-4 col-sm-offset-1">
+                    <button type="submit" class="btn btn-primary js_save_submit" data-loading-text="保存中...">保存</button>
+                    <button type="button" class="btn btn-default" data-toggle="back">取消</button>
+                </div>
+            </div>
+        </footer>
+    </section>
+</form>
+{/block}
+
+{block name="footer" }
+<script type="text/javascript">
+function getRandstr(_id,length,lastStr){
+    jq_ajax('/publics/api.index/getRandstr','length='+length,function (res) {
+        if (res.code == 0){
+            _alert(res.msg);
+            return false;
+        }
+        $('#'+_id).val(res.str+lastStr);
+    });
+}
+</script>
+{/block}

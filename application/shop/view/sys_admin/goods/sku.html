@@ -1,0 +1,460 @@
+{literal}
+<input type="hidden" id="spec_data" name="spec_data" value="">
+<script type="text/html" id="specifications_template">
+<div class="panel panel-default m-t bg-light" data-toggle="specifications">
+	<div class="panel-body lt">
+		 {{if data.length<1}}
+		<span class="help-inline js_nospe_tips">暂无规格数据，请先添加规格</span>
+		<div class="line line-dashed line-lg pull-in js_nospe_tips"></div>
+		{{/if}}
+		{{each data as item index}}
+		<div id="js_specifications_{{item.id}}" >
+            {{if is_supplyer == 0}}
+			<p class="js_specifica" data-name="{{item.name}}" data-id="{{item.id}}"><strong>{{item.name}}</strong>
+
+			</p>
+            {{/if}}
+			<div id="specvals_{{item.id}}" data-id="{{item.id}}" data-toggle="specvals" class="m-b">
+				{{each item.all_val as zitem zindex}}
+				<label class="checkbox-inline " style="min-width:30px;width: auto" id="spe_{{zitem.key}}" onclick="{{if is_supplyer==1}}return false;{{/if}} ">
+					<input type="checkbox" value="{{zitem.key}}" data-code="{{zitem.code}}" title="{{zitem.val}}" {{specifications_checked item.id zitem.key}} /><span class="diy--checkbox diy--radioInput"></span>{{zitem.val}}
+				</label>
+				{{/each}}
+			</div>
+		</div>
+
+
+		<div class="line line-dashed line-lg pull-in"></div>
+		{{/each}}
+
+
+	</div>
+</div>
+
+</script>
+
+<script type="text/html" id="specifications_table_template">
+	<table class="table table-bordered bg-light table-hover ">
+		<thead>
+			<tr>
+				{{each ths as th index}}
+				<th class="mn90 ">{{th.name}}
+
+				</th>
+				{{/each}}
+				<th class="mn70">上架</th>
+				<th class="mn130">商品编码<span class="maroon">*</span></th>
+				<th class="mn130">库存<span class="maroon">*</span></th>
+				<th class="mn90">售价<span class="maroon">*</span></th>
+				<th class="mn90">市场价</th>
+				<th class="mn80">重量（g）</th>
+				<th class="mn80">操作</th>
+			</tr>
+		</thead>
+		<tbody>
+			{{each trs as tr index}}
+			<tr  class="lt {{tr.sku_id?'':'red'}}" >
+				{{each tr.tds as td zindex}}
+				{{if td.rowspan > 1 && tr.index % td.rowspan == 0}}
+					<td rowspan="{{td.rowspan}}" >
+						{{td.val}}
+					</td>
+				{{/if}}
+				{{if td.rowspan ==1 && tr.isExcept == 0}}
+				<td>
+					{{td.val}}
+				</td>
+				{{/if}}
+
+				{{/each}}
+				{{if tr.isExcept == 0}}
+				<td >
+					<a href="javascript:;" class="{{tr.isSale?'active':''}}" data-index="{{tr.index}}" data-toggle="set_is_sale" ><i class="fa fa-check text-success text-active"></i><i class="fa fa-times text-danger text"></i></a>
+				</td>
+				<td>
+					<label>{{tr.ProductSn}}</label>
+				</td>
+				<td>
+					{{tr.Store}}
+					{{if tr.addStore && tr.addStore != 0}}
+					<span class="red">{{if tr.addStore>0}}+{{/if}} {{tr.addStore}}</span>
+					{{/if}}
+				</td>
+				<td>
+					{{tr.Price}}
+				</td>
+
+				<td>
+                    {{tr.MarketPrice}}
+				</td>
+
+				<td>
+                    {{tr.Weight}}
+				</td>
+				<td class="mn80">
+					<label><a href="spec_edit_template" data-index="{{tr.index}}" data-toggle="edit_spec"><i class="fa fa-edit"></i></a></label>
+				</td>
+				{{/if}}
+			</tr>
+			{{/each}}
+		</tbody>
+	</table>
+	<div class="m-t-md" data-toggle="diff_spec_box"></div>
+</script>
+
+<script type="text/html" id="diff_spec_table_template">
+	{{if products.length > 0}}
+	失效商品：{{products.length}}，<a href="javascript:;" data-toggle="diff_spec_display">【查看】</a>
+	{{/if}}
+	<table id="diff_spec_table" class="table table-bordered bg-light hd m-t-md">
+		<thead>
+		<tr>
+			<th class="mn130">规格</th>
+			<th class="mn130">商品编码</th>
+			<th class="mn80">库存</th>
+			<th class="mn80">售价</th>
+			<th class="mn80">市场价</th>
+			<th class="mn80">重量（g）</th>
+		</tr>
+		</thead>
+		{{each products as tr index}}
+		<tr>
+			<td>{{tr.sku_name}}</td>
+			<td><label>{{tr.ProductSn}}</label></td>
+			<td>{{tr.Store}}</td>
+			<td>{{tr.Price}}</td>
+			<td>{{tr.MarketPrice}}</td>
+			<td>{{tr.Weight}}</td>
+		</tr>
+		{{/each}}
+	</table>
+</script>
+<script type="text/html" id="spec_more_template">
+	<div class="form-group">
+		<label class="col-sm-1 control-label">总计：</label>
+		<div class="col-sm-8 ">
+			<label>{{allGoodsNum}}件子商品，<span class="help-inline">sku超过40个将以此模式展示</span></label>
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-sm-1 control-label">筛选：</label>
+		<div class="col-sm-9 ">
+			{{each SpecificationsList as spec index}}
+			<select id="search_spec_{{index}}" data-toggle="search_spec">
+				<option value="0">选择{{spec.name}}</option>
+				{{each spec.all_val as val}}
+				<option value="{{val.key}}">{{val.val}}</option>
+				{{/each}}
+			</select>
+			{{/each}}
+		</div>
+	</div>
+	<div class="m-t-md" data-toggle="search_spec_box"></div>
+	<div class="m-t-md" data-toggle="diff_spec_box"></div>
+</script>
+<script type="text/html" id="search_spec_template">
+	商品总数：{{products.length}}
+	{{if products.length > 0}}
+	<table  class="table table-bordered table-hover bg-light  m-t-md">
+		<thead>
+		<tr>
+			<th class="mn130">规格</th>
+			<th class="mn70">上架</th>
+			<th class="mn130">商品编码<span class="maroon">*</span></th>
+			<th class="mn80">库存<span class="maroon">*</span></th>
+			<th class="mn80">售价<span class="maroon">*</span></th>
+			<th class="mn80">市场价</th>
+			<th class="mn80">重量（g）</th>
+			<th class="mn80">操作</th>
+		</tr>
+		</thead>
+		{{each products as tr index}}
+		<tr class="{{tr.sku_id?'':'red'}}">
+			<td>{{tr.sku_name}}</td>
+			<td >
+				<a href="javascript:;" class="{{tr.isSale?'active':''}}" data-index="{{tr.index}}" data-toggle="set_is_sale" ><i class="fa fa-check text-success text-active"></i><i class="fa fa-times text-danger text"></i></a>
+			</td>
+			<td>
+				<label>{{tr.ProductSn}}</label>
+			</td>
+			<td>{{tr.Store}}
+				{{if tr.addStore && tr.addStore != 0}}
+				<span class="red">{{if tr.addStore>0}}+{{/if}} {{tr.addStore}}</span>
+				{{/if}}
+			</td>
+			<td>{{tr.Price}}</td>
+			<td>{{tr.MarketPrice}}</td>
+			<td>{{tr.Weight}}</td>
+			<td class="mn80">
+				<label><a href="spec_edit_template" data-index="{{tr.index}}" data-toggle="edit_spec"><i class="fa fa-edit"></i></a></label>
+			</td>
+		</tr>
+		{{/each}}
+	</table>
+	{{/if}}
+
+</script>
+<script type="text/html" id="specimgs_table_template">
+	{{if skuImg.length > 0}}
+	<div class="form-group">
+		<label class="col-sm-1 control-label">商品图片：</label>
+		<div class="col-sm-10 ">
+			{{each skuImg as sku}}
+			<div class="fl text-center m-r-md">
+				<div style="width: 80px; height: 80px; margin: 0px auto;"><img src="{{skuImgList[sku.key]?skuImgList[sku.key]:'__STATIC__/main/img/image.png'}}"  style="max-width: 100%;max-height: 100%;"></div>
+				{{sku.val}}
+				<i class="fa fa-edit" data-toggle="uploaderOne" data-uploadpath="{{uploadpath}}" data-data="{'sku':'{{sku.key}}','gid':'{{goods_id}}'}"></i>
+			</div>
+			{{/each}}
+		</div>
+	</div>
+	{{/if}}
+	{{each selVal as sku}}
+	<div class="form-group">
+		<label class="col-sm-1 control-label">{{sku.name}}图片：</label>
+		<div class="col-sm-10 m-t-md">
+			{{each sku._all_val as val}}
+			<div class="fl text-center m-r-md">
+				<div style="width: 80px; height: 80px; margin: 0px auto;"><img src="{{skuImgList[val.key]?skuImgList[val.key]:'__STATIC__/main/img/image.png'}}"  style="max-width: 100%;max-height: 100%;"></div>
+				{{val.val}}
+				<i class="fa fa-edit" data-toggle="uploaderOne" data-uploadpath="{{uploadpath}}" data-data="{'sku':'{{val.key}}','gid':'{{goods_id}}'}"></i>
+			</div>
+			{{/each}}
+		</div>
+	</div>
+	{{/each}}
+</script>
+<script type="text/html" id="spec_edit_template">
+	<div class="modal-dialog">
+		<form class="form-horizontal form-validate form-modal" id="edit_spec_form"   method="post" >
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4 class="modal-title">修改商品</h4>
+				</div>
+				<div class="modal-body">
+					<div class="form-group">
+						<label class="control-label">规格：</label>
+						<div class="col-sm-6 ">
+							<input type="hidden" name="index" value="{{index}}">
+							<input type="hidden" name="sku_id" value="{{sku_id}}">
+							<label>
+								{{sku_name}}
+							</label>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="control-label">状态：</label>
+						<div class="col-sm-6 ">
+							<label class="radio-inline">
+								<input name="isSale" value="1" {{isSale==1?'checked':''}} type="radio" ><span class="diy--radioInput"></span>上架
+							</label>
+							<label class="radio-inline">
+								<input name="isSale" value="0" {{isSale==0?'checked':''}}  type="radio" ><span class="diy--radioInput"></span>下架
+							</label>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="control-label">商品编码：</label>
+						<div class="col-sm-6 ">
+							<label>
+								<input type="text" class="input-large"  data-rule-required="true" name="ProductSn" value="{{ProductSn}}" >
+							</label>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="control-label">库存：</label>
+						<div class="col-sm-6 ">
+							<label>
+								{{if sku_id}}
+								{{Store}} + <input type="text" class="input-small" data-rule-number="true" data-rule-required="true" name="addStore" value="{{addStore?addStore:0}}" >
+								{{else}}
+								<input type="text" class="input-small" data-rule-number="true" data-rule-required="true" name="Store" value="{{Store}}" >
+								{{/if}}
+							</label>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label class="control-label">售价：</label>
+						<div class="col-sm-6 ">
+							<label>
+								<input type="text" class="input-small" data-rule-ismoney="true" data-rule-required="true" name="Price" value="{{Price}}" >
+							</label>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="control-label">市场价：</label>
+						<div class="col-sm-6 ">
+							<label>
+								<input type="text" class="input-small" data-rule-ismoney="true" name="MarketPrice" value="{{MarketPrice}}" >
+							</label>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="control-label">重量：</label>
+						<div class="col-sm-6 ">
+							<label>
+								<input type="text" class="input-small" data-rule-ismoney="true" name="Weight" value="{{Weight}}" >（g）
+							</label>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="submit" class="btn btn-primary" data-notsubmit="true" data-toggle="edit_spec_submit"  data-loading-text="保存中..." >保存</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+				</div>
+			</div>
+		</form>
+	</div>
+</script>
+<script type="text/html" id="batch_create_spec_sn">
+	<div class="modal-dialog">
+		<form class="form-horizontal form-validate form-modal" id="batch_create_spec_sn_form" method="post" >
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4 class="modal-title">批量生成编号</h4>
+				</div>
+				<div class="modal-body">
+					<div class="form-group">
+						<label class="control-label">款号：</label>
+						<div class="col-sm-6 ">
+							<input type="text" class="input-small" data-rule-required="true" name="model_number" value="">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="control-label">规格：</label>
+						<div class="col-sm-9 ">
+							{{each SpecificationsList as item}}
+							<select name="create_index">
+								<option value="-1">请选择</option>
+								{{each SpecificationsList as item index}}
+								 <option value="{{index}}">{{item.name}}</option>
+								{{/each}}
+							</select>
+							{{/each}}
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="submit" class="btn btn-primary" data-notsubmit="true" data-toggle="batch_create_spec_sn_submit" data-loading-text="生成中..." >生成编号</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+				</div>
+			</div>
+		</form>
+	</div>
+</script>
+<script type="text/html" id="batch_edit_spec_info">
+	<div class="modal-dialog">
+		<form class="form-horizontal form-validate form-modal" id="batch_edit_spec_info_form" method="post" >
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4 class="modal-title">批量设置商品</h4>
+				</div>
+				<div class="modal-body">
+
+					<div class="form-group">
+						<label class="control-label">指定规格：</label>
+						<div class="col-sm-9 ">
+							{{each SpecificationsList as spec index}}
+							<select name="edit_spec">
+								<option value="0">选择{{spec.name}}</option>
+								{{each spec.all_val as val}}
+								<option value="{{val.key}}">{{val.val}}</option>
+								{{/each}}
+							</select>
+							{{/each}}
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="control-label">对应商品：</label>
+						<div class="col-sm-6 ">
+							<label class="radio-inline">
+								<input name="goods_type" value="0" checked  type="radio" ><span class="diy--radioInput"></span>全部
+							</label>
+							<label class="radio-inline">
+								<input name="goods_type" value="1" type="radio" ><span class="diy--radioInput"></span>新增
+							</label>
+						</div>
+					</div>
+					{{if is_supplyer == 0}}
+					<div class="form-group">
+						<label class="control-label">库存：</label>
+						<div class="col-sm-8">
+							<label>
+								<input type="text" class="input-small" data-rule-integer="true"  name="Store" value="" ><span class="help-inline">非新增，设置库存为当前商品库存 + 当前值</span>
+							</label>
+						</div>
+					</div>
+					{{/if}}
+					<div class="form-group">
+						<label class="control-label">售价：</label>
+						<div class="col-sm-6 ">
+							<label>
+								<input type="text" class="input-small" data-rule-ismoney="true" name="Price" value="" >
+							</label>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="control-label">市场价：</label>
+						<div class="col-sm-6 ">
+							<label>
+								<input type="text" class="input-small" data-rule-ismoney="true"  name="MarketPrice" value="" >
+							</label>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="control-label">重量：</label>
+						<div class="col-sm-6 ">
+							<label>
+								<input type="text" class="input-small" data-rule-ismoney="true"  name="Weight" value="" >（g）
+							</label>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="submit" class="btn btn-primary" data-notsubmit="true" data-toggle="batch_edit_spec_info_submit" data-loading-text="处理中..." >设置</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+				</div>
+			</div>
+		</form>
+	</div>
+</script>
+{/literal}
+
+<script type="text/javascript">
+window.goods_data = {
+	  shelves:true,
+      is_supplyer: {$is_supplyer|intval},
+   	  goods_id: {$row.goods_id|intval},
+	  specifications: {$specifications|raw},
+	  products: {$products|raw},
+	  skuImgList: {$skuImgList|raw},
+	  uploadpath: '{:url("mainAdmin/Attachment/goodsUpload")}'
+}
+window.goods_setting = {
+	specifications_path: '{:url("sys_admin.skuCustom/skuByCategory",["supplyer_id"=>$row["supplyer_id"]])}'
+}
+
+$(function () {
+    $(document).on('click', ".delete_sku_img", function () {
+        var _this = $(this),
+            obj = _this.parent().find('.defUpImgBox'),
+            img_id = obj.find('input').attr('data-img_id');
+        if (img_id < 1) return false;
+        jq_ajax('{:url("mainAdmin/Attachment/removeImg")}', 'id=' +img_id, function (res) {
+            if (res.code == 0) {
+                _alert(res.msg);
+                return false;
+            }
+            obj.find('input').val('').data('img_id',0);
+            obj.find('img').attr('src','__STATIC__/main/img/image.png');
+            obj.find('.tips').html('点击上传');
+
+        });
+    })
+})
+</script>
+

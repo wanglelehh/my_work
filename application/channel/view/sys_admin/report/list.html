@@ -1,0 +1,33 @@
+<table class="table table-bordered  ">
+    <thead class="flip-content bordered-palegreen">
+    <tr>
+        <th width="150">举报代理</th>
+        <th width="150">被报代理</th>
+        <th >举报类型</th>
+        <th width="100">状态</th>
+        <th width="150">举报时间</th>
+        <th width="150">审核时间</th>
+        <th width="80">操作</th>
+    </tr>
+    </thead>
+    <tbody>
+    {volist name="data.list" id="vo" }
+    <tr>
+        <td><a href="{:url('sys_admin.users/info',['user_id'=>$vo['user_id']])}" data-toggle="wrapperAjax">{$vo.user_id} - {$vo.user_id|userInfo=true,'real_name'}</a></td>
+        <td><a href="{:url('sys_admin.users/info',['user_id'=>$vo['report_uid']])}" data-toggle="wrapperAjax">{$vo.report_uid} - {$vo.report_uid|userInfo=true,'real_name'}</a></td>
+        <td>{$reportType[$vo['report_type']]}</td>
+        <td>{$status[$vo['status']]}</td>
+        <td>{$vo['add_time']|dateTpl}</td>
+        <td>{$vo['check_time']|dateTpl}</td>
+        <td >
+            <a href="{:url('info',['log_id'=>$vo['log_id']])}"  title="编辑" class="fa fa-edit m-xs" data-toggle="ajaxModal"></a>
+        </td>
+    </tr>
+    {/volist}
+    </tbody>
+</table>
+{empty name="data.list"}
+<table width="100%" >
+ 	<tr><td height="300" colspan="8" align="center" valign="middle" >没有相关数据.</td></tr>
+</table>
+{/empty}

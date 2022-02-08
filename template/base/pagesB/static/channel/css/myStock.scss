@@ -1,0 +1,105 @@
+.search_box {
+	width: 100%;
+	display: -webkit-box;
+	display: -webkit-flex;
+	display: flex;
+	-webkit-box-align: center;
+	-webkit-align-items: center;
+	align-items: center;
+	-webkit-box-pack: justify;
+	-webkit-justify-content: space-between;
+	justify-content: space-between;
+	box-sizing: border-box;
+	.allClass {
+		position: relative;
+		margin-left: 20rpx;
+		float: left;
+		padding-right: 20rpx;
+		font-weight: 700;
+		
+	}
+	.allClass .cateName{
+		white-space:nowrap;
+		overflow: hidden;
+	}
+	.allClass:after {
+		content: "";
+		position: absolute;
+		top: 40%;
+		right: -10rpx;
+		border: 10rpx solid #000000;
+		border-bottom-color: transparent;
+		/* 设置透明背景色 */
+		border-left-color: transparent;
+		border-right-color: transparent;
+	}
+	
+	.allClass.active:after {
+		border-top-color: transparent;
+		/* 设置透明背景色 */
+		border-bottom-color: #000;
+		border-left-color: transparent;
+		border-right-color: transparent;
+		top: 20%;
+	}
+}
+.goods-list{
+	height: calc(100% - 250rpx);
+}
+.goods-item {
+	display: flex;
+	padding: 20rpx;
+	background-color: #FFFFFF;
+	margin-top: 20rpx;
+	.image {
+		display: block;
+		width: 150rpx;
+		height: 150rpx;
+		border-radius: 3px;
+		overflow: hidden;
+		image {
+			width: 100%;
+			height: 100%;
+			opacity: 1;
+		}
+	}
+	.info{
+		padding-left: 20rpx;
+		flex: 1;
+		padding-right: 30rpx;
+		.goods-name{
+			height: 80rpx;
+			overflow: hidden;
+		}
+		.text-main{
+			color: $font-color-base;
+			.btn{
+				color: $font-color-base;
+			}
+		}
+	}
+}	
+.goods-sku{
+	padding-top: 10rpx;
+	padding-bottom: 10rpx;
+	.sku-name{
+		display: block;
+		line-height: 50rpx;
+	}
+	.sku-stock{
+		color: $font-color-light;
+		font-size: 23rpx;
+	}
+	.btn{
+		float: right;
+		color: $font-color-base;
+		margin-top: 10rpx;
+	}
+	
+}
+.pickup-box .sku-stock{
+	flex: 1;
+	text-align: right;
+	color: $font-color-light;
+	font-size: 23rpx;
+}

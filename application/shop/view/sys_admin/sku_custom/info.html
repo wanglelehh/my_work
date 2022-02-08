@@ -1,0 +1,147 @@
+<div class="modal-dialog">
+<form class="form-horizontal form-validate form-modal" method="post" action="{:url('info')}">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            {if condition="$row.speid > 0"}
+            <h4 class="modal-title">{$row['id'] > 0?'编辑属性':'添加属性'}</h4>
+            {else}
+            <h4 class="modal-title">{$row['id'] > 0?'编辑规格':'添加规格'}</h4>
+            {/if}
+        </div>
+        <div class="modal-body">
+            <input type="hidden" name="model_id" value="{$row.model_id}">
+            <input type="hidden" name="speid" value="{$row.speid}">
+            {if condition="$row.speid > 0"}
+            <div class="form-group">
+                <label class="control-label">所属规格：</label>
+                <div class="col-sm-6 ">
+                    <label >{$psku.val}</label>
+                </div>
+            </div>
+            {/if}
+              <div class="form-group">
+                  <label class="control-label">{$row['speid']<1?'规格名称':'属性名称'}：</label>
+                  <div class="col-sm-6 must">
+                      <input type="text" class="input-xlarge"  data-rule-required="true" name="val" value="{$row.val}" >
+                  </div>
+              </div>
+
+            {if condition="$row.speid == 0"}
+            <div class="form-group">
+                <label class="control-label">图片：</label>
+                <div class="col-sm-2controls">
+                    {volist name="imgType" id="val" }
+                    <label class="radio-inline">
+                        <input name="img_type" value="{$key}" {$row['img_type']==$key?'checked':''}  type="radio" >{$val}
+                    </label>
+                    {/volist}
+                </div>
+                <div class="clearfix"></div>
+            </div>
+            {/if}
+            <div class="form-group">
+                <label class="control-label">排序：</label>
+                <div class="col-sm-3 must">
+                    <input type="text" class="input-small"  data-rule-number="true" data-rule-required="true" name="sort_order" value="{$row.sort_order|intval}" >
+                </div>
+            </div>
+            <div class="form-group">
+                      <label class="control-label">状态：</label>
+                      <div class="col-sm-2controls">
+                        <label class="radio-inline">
+                            <input name="status" value="1" {$row['status']|tplckval='=1','checked',true}  type="radio" >
+                            正常
+                        </label>
+                        <label class="radio-inline">
+                            <input name="status" value="0" {$row['status']|tplckval='=0','checked'}  type="radio" >停用
+                        </label>
+                      </div>
+                      <div class="clearfix"></div>
+             </div>
+            {if condition="$row.speid > 0"}
+            <div class="form-group">
+                <label class="control-label">对应编码：</label>
+                <div class="col-sm-6 ">
+                    <input type="text" class="input-small" name="code" value="{$row.code}" >
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label">关联规格：</label>
+                <div class="col-sm-8 ">
+                   <select id="spec_a" style="width: 120px" onchange="changeSpec()">
+                       <option value="0">选择规格</option>
+                       {volist name="modelList" id="vo"}
+                            <option value="{$vo.id}" data-all_val="{$vo.all_val|json_encode}" >{$vo.val}</option>
+                       {/volist}
+                   </select>
+                    <select id="spec_b" style="width: 120px" onchange="selectSpec()">
+                        <option value="0">选择属性</option>
+                    </select>
+                </div>
+            </div>
+            <span class="help-inline">设置关联规格，则只生成关联的规格商品（不设置则全部生成）</span>
+            <div class="form-group">
+                <div class="col-sm-offset-2" id="selectSpecList">
+                    <table>
+                        {volist name="row.link_spec" id="vo"}
+                        {assign name="volist_key" value="$key"}
+                        <tr id="link_spec{$key}">
+                            <td>{$modelList[$key][val]}：</td>
+                            <td class="list">
+                                {volist name="vo" id="val"}
+                                <label class="m-r">{$modelList[$volist_key][all_val][$val]}<input type="hidden" name="link_spec[{$volist_key}][]" value="{$val}"><i class="fa fa-times m-l-md" onclick="delSelSpec(this)"></i></label>
+                                {/volist}
+                            </td>
+                        </tr>
+                        {/volist}
+                    </table>
+                </div>
+            </div>
+            {/if}
+        </div>
+        <div class="modal-footer">
+            <input  type="hidden" name="id" value="{$row.id|intval}"/>
+            <button type="submit" class="btn btn-primary" data-loading-text="保存中..." disabled>保存</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+        </div>
+    </div>
+    </form>
+</div>
+<script type="text/javascript">
+    function changeSpec() {
+        $('#spec_b').html('<option value="0">选择属性</option>');
+        if ($('#spec_a').val() < 1){
+            return false;
+        }
+        var all_val = $('#spec_a').find("option:selected").data('all_val');
+        $.each(all_val, function(i,v){
+            $('#spec_b').append('<option value="'+i+'">'+v+'</option>');
+        })
+    }
+    function selectSpec() {
+        var spec_a_id =  $('#spec_a').find("option:selected").val();
+        var spec_b_id = $('#spec_b').find("option:selected").val();
+        var isrep = false;
+        $('#selectSpecList').find('input').each(function(){
+            if (spec_b_id == $(this).val()) return isrep = true;
+        })
+        if (isrep == true){
+            return false;
+        }
+        if ($('#link_spec'+spec_a_id).length < 1){
+            var spec_a_name = $('#spec_a').find("option:selected").text();
+            $('#selectSpecList table').append('<tr id="link_spec'+spec_a_id+'"><td>'+spec_a_name+'：</td><td class="list"></td></tr>');
+        }
+        var spec_b_name = $('#spec_b').find("option:selected").text();
+
+        $('#link_spec'+spec_a_id).find('.list').append('<label class="m-r">'+spec_b_name+'<input type="hidden" name="link_spec['+spec_a_id+'][]" value="'+spec_b_id+'"><i class="fa fa-times m-l-md" onclick="delSelSpec(this)"></i></label>');
+    }
+    function delSelSpec(obj) {
+        if ($(obj).parents('.list').find('label').length <= 1){
+            $(obj).parents('tr').remove();
+        }else{
+            $(obj).parent().remove();
+        }
+    }
+</script>

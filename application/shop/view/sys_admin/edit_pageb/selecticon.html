@@ -1,0 +1,230 @@
+<style>
+    #selectIcon .modal-dialog {width: 750px;}
+    #selectIcon .modal-body {padding: 10px;}
+    #selectIcon .main {height: 420px; overflow-y: auto;}
+    #selectIcon .main nav {height: 60px; width: 80px; margin: 5px; display: block; float: left; cursor: pointer;}
+    #selectIcon .main nav .icon {font-size: 30px; height: 38px; width: 80px; display: block; text-align: center; line-height: 42px;}
+    #selectIcon .main nav .text {font-size: 10px; height: 22px; width: 80px; display: block; text-align: center; line-height: 16px;}
+    #selectIcon .main nav:hover {background: #f6f6f6;}
+</style>
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button data-dismiss="modal" class="close" type="button">×</button>
+            <h4 class="modal-title">选择图标</h4>
+        </div>
+        <div class="modal-body">
+            <div class="main">
+                <nav data-class="icon-share-square"><span class="icon icon-share-square"></span><span class="text">share-square</span></nav>
+                <nav data-class="icon-level"><span class="icon icon-level"></span><span class="text">level</span></nav>
+                <nav data-class="icon-woman"><span class="icon icon-woman"></span><span class="text">woman</span></nav>
+                <nav data-class="icon-man"><span class="icon icon-man"></span><span class="text">man</span></nav>
+                <nav data-class="icon-arrow-left-double"><span class="icon icon-arrow-left-double"></span><span class="text">arrow-left-double</span></nav>
+                <nav data-class="icon-arrow-right-double"><span class="icon icon-arrow-right-double"></span><span class="text">arrow-right-double</span></nav>
+                <nav data-class="icon-chat"><span class="icon icon-chat"></span><span class="text">chat</span></nav>
+                <nav data-class="icon-chat-fill"><span class="icon icon-chat-fill"></span><span class="text">chat-fill</span></nav>
+                <nav data-class="icon-red-packet"><span class="icon icon-red-packet"></span><span class="text">red-packet</span></nav>
+                <nav data-class="icon-red-packet-fill"><span class="icon icon-red-packet-fill"></span><span class="text">red-packet-fill</span></nav>
+                <nav data-class="icon-order"><span class="icon icon-order"></span><span class="text">order</span></nav>
+                <nav data-class="icon-checkbox-mark"><span class="icon icon-checkbox-mark"></span><span class="text">checkbox-mark</span></nav>
+                <nav data-class="icon-arrow-up-fill"><span class="icon icon-arrow-up-fill"></span><span class="text">arrow-up-fill</span></nav>
+                <nav data-class="icon-arrow-down-fill"><span class="icon icon-arrow-down-fill"></span><span class="text">arrow-down-fill</span></nav>
+                <nav data-class="icon-backspace"><span class="icon icon-backspace"></span><span class="text">backspace</span></nav>
+                <nav data-class="icon-photo"><span class="icon icon-photo"></span><span class="text">photo</span></nav>
+                <nav data-class="icon-photo-fill"><span class="icon icon-photo-fill"></span><span class="text">photo-fill</span></nav>
+                <nav data-class="icon-lock"><span class="icon icon-lock"></span><span class="text">lock</span></nav>
+                <nav data-class="icon-lock-fill"><span class="icon icon-lock-fill"></span><span class="text">lock-fill</span></nav>
+                <nav data-class="icon-lock-open"><span class="icon icon-lock-open"></span><span class="text">lock-open</span></nav>
+                <nav data-class="icon-lock-opened-fill"><span class="icon icon-lock-opened-fill"></span><span class="text">lock-opened-fill</span></nav>
+                <nav data-class="icon-hourglass"><span class="icon icon-hourglass"></span><span class="text">hourglass</span></nav>
+                <nav data-class="icon-hourglass-half-fill"><span class="icon icon-hourglass-half-fill"></span><span class="text">hourglass-half-fill</span></nav>
+                <nav data-class="icon-home"><span class="icon icon-home"></span><span class="text">home</span></nav>
+                <nav data-class="icon-home-fill"><span class="icon icon-home-fill"></span><span class="text">home-fill</span></nav>
+                <nav data-class="icon-fingerprint"><span class="icon icon-fingerprint"></span><span class="text">fingerprint</span></nav>
+                <nav data-class="icon-cut"><span class="icon icon-cut"></span><span class="text">cut</span></nav>
+                <nav data-class="icon-star"><span class="icon icon-star"></span><span class="text">star</span></nav>
+                <nav data-class="icon-star-fill"><span class="icon icon-star-fill"></span><span class="text">star-fill</span></nav>
+                <nav data-class="icon-share"><span class="icon icon-share"></span><span class="text">share</span></nav>
+                <nav data-class="icon-share-fill"><span class="icon icon-share-fill"></span><span class="text">share-fill</span></nav>
+                <nav data-class="icon-volume"><span class="icon icon-volume"></span><span class="text">volume</span></nav>
+                <nav data-class="icon-volume-fill"><span class="icon icon-volume-fill"></span><span class="text">volume-fill</span></nav>
+                <nav data-class="icon-volume-off"><span class="icon icon-volume-off"></span><span class="text">volume-off</span></nav>
+                <nav data-class="icon-volume-off-fill"><span class="icon icon-volume-off-fill"></span><span class="text">volume-off-fill</span></nav>
+                <nav data-class="icon-trash"><span class="icon icon-trash"></span><span class="text">trash</span></nav>
+                <nav data-class="icon-trash-fill"><span class="icon icon-trash-fill"></span><span class="text">trash-fill</span></nav>
+                <nav data-class="icon-rewind-right"><span class="icon icon-rewind-right"></span><span class="text">rewind-right</span></nav>
+                <nav data-class="icon-rewind-right-fill"><span class="icon icon-rewind-right-fill"></span><span class="text">rewind-right-fill</span></nav>
+                <nav data-class="icon-rewind-left"><span class="icon icon-rewind-left"></span><span class="text">rewind-left</span></nav>
+                <nav data-class="icon-rewind-left-fill"><span class="icon icon-rewind-left-fill"></span><span class="text">rewind-left-fill</span></nav>
+                <nav data-class="icon-shopping-cart"><span class="icon icon-shopping-cart"></span><span class="text">shopping-cart</span></nav>
+                <nav data-class="icon-shopping-cart-fill"><span class="icon icon-shopping-cart-fill"></span><span class="text">shopping-cart-fill</span></nav>
+                <nav data-class="icon-question"><span class="icon icon-question"></span><span class="text">question</span></nav>
+                <nav data-class="icon-question-circle"><span class="icon icon-question-circle"></span><span class="text">question-circle</span></nav>
+                <nav data-class="icon-question-circle-fill"><span class="icon icon-question-circle-fill"></span><span class="text">question-circle-fill</span></nav>
+                <nav data-class="icon-plus"><span class="icon icon-plus"></span><span class="text">plus</span></nav>
+                <nav data-class="icon-plus-circle"><span class="icon icon-plus-circle"></span><span class="text">plus-circle</span></nav>
+                <nav data-class="icon-plus-circle-fill"><span class="icon icon-plus-circle-fill"></span><span class="text">plus-circle-fill</span></nav>
+                <nav data-class="icon-tags"><span class="icon icon-tags"></span><span class="text">tags</span></nav>
+                <nav data-class="icon-tags-fill"><span class="icon icon-tags-fill"></span><span class="text">tags-fill</span></nav>
+                <nav data-class="icon-pause"><span class="icon icon-pause"></span><span class="text">pause</span></nav>
+                <nav data-class="icon-pause-circle"><span class="icon icon-pause-circle"></span><span class="text">pause-circle</span></nav>
+                <nav data-class="icon-pause-circle-fill"><span class="icon icon-pause-circle-fill"></span><span class="text">pause-circle-fill</span></nav>
+                <nav data-class="icon-play-circle"><span class="icon icon-play-circle"></span><span class="text">play-circle</span></nav>
+                <nav data-class="icon-play-circle-fill"><span class="icon icon-play-circle-fill"></span><span class="text">play-circle-fill</span></nav>
+                <nav data-class="icon-map"><span class="icon icon-map"></span><span class="text">map</span></nav>
+                <nav data-class="icon-map-fill"><span class="icon icon-map-fill"></span><span class="text">map-fill</span></nav>
+                <nav data-class="icon-phone"><span class="icon icon-phone"></span><span class="text">phone</span></nav>
+                <nav data-class="icon-phone-fill"><span class="icon icon-phone-fill"></span><span class="text">phone-fill</span></nav>
+                <nav data-class="icon-list"><span class="icon icon-list"></span><span class="text">list</span></nav>
+                <nav data-class="icon-list-dot"><span class="icon icon-list-dot"></span><span class="text">list-dot</span></nav>
+                <nav data-class="icon-man-delete"><span class="icon icon-man-delete"></span><span class="text">man-delete</span></nav>
+                <nav data-class="icon-man-add"><span class="icon icon-man-add"></span><span class="text">man-add</span></nav>
+                <nav data-class="icon-man-add-fill"><span class="icon icon-man-add-fill"></span><span class="text">man-add-fill</span></nav>
+                <nav data-class="icon-person-delete-fill"><span class="icon icon-person-delete-fill"></span><span class="text">person-delete-fill</span></nav>
+                <nav data-class="icon-info"><span class="icon icon-info"></span><span class="text">info</span></nav>
+                <nav data-class="icon-info-circle"><span class="icon icon-info-circle"></span><span class="text">info-circle</span></nav>
+                <nav data-class="icon-info-circle-fill"><span class="icon icon-info-circle-fill"></span><span class="text">info-circle-fill</span></nav>
+                <nav data-class="icon-minus"><span class="icon icon-minus"></span><span class="text">minus</span></nav>
+                <nav data-class="icon-minus-circle"><span class="icon icon-minus-circle"></span><span class="text">minus-circle</span></nav>
+                <nav data-class="icon-minus-circle-fill"><span class="icon icon-minus-circle-fill"></span><span class="text">minus-circle-fill</span></nav>
+                <nav data-class="icon-mic"><span class="icon icon-mic"></span><span class="text">mic</span></nav>
+                <nav data-class="icon-mic-off"><span class="icon icon-mic-off"></span><span class="text">mic-off</span></nav>
+                <nav data-class="icon-grid"><span class="icon icon-grid"></span><span class="text">grid</span></nav>
+                <nav data-class="icon-grid-fill"><span class="icon icon-grid-fill"></span><span class="text">grid-fill</span></nav>
+                <nav data-class="icon-eye"><span class="icon icon-eye"></span><span class="text">eye</span></nav>
+                <nav data-class="icon-eye-fill"><span class="icon icon-eye-fill"></span><span class="text">eye-fill</span></nav>
+                <nav data-class="icon-eye-off"><span class="icon icon-eye-off"></span><span class="text">eye-off</span></nav>
+                <nav data-class="icon-file-text"><span class="icon icon-file-text"></span><span class="text">file-text</span></nav>
+                <nav data-class="icon-file-text-fill"><span class="icon icon-file-text-fill"></span><span class="text">file-text-fill</span></nav>
+                <nav data-class="icon-edit-pen"><span class="icon icon-edit-pen"></span><span class="text">edit-pen</span></nav>
+                <nav data-class="icon-edit-pen-fill"><span class="icon icon-edit-pen-fill"></span><span class="text">edit-pen-fill</span></nav>
+                <nav data-class="icon-email"><span class="icon icon-email"></span><span class="text">email</span></nav>
+                <nav data-class="icon-email-fill"><span class="icon icon-email-fill"></span><span class="text">email-fill</span></nav>
+                <nav data-class="icon-download"><span class="icon icon-download"></span><span class="text">download</span></nav>
+                <nav data-class="icon-checkmark"><span class="icon icon-checkmark"></span><span class="text">checkmark</span></nav>
+                <nav data-class="icon-checkmark-circle"><span class="icon icon-checkmark-circle"></span><span class="text">checkmark-circle</span></nav>
+                <nav data-class="icon-checkmark-circle-fill"><span class="icon icon-checkmark-circle-fill"></span><span class="text">checkmark-circle-fill</span></nav>
+                <nav data-class="icon-clock"><span class="icon icon-clock"></span><span class="text">clock</span></nav>
+                <nav data-class="icon-clock-fill"><span class="icon icon-clock-fill"></span><span class="text">clock-fill</span></nav>
+                <nav data-class="icon-close"><span class="icon icon-close"></span><span class="text">close</span></nav>
+                <nav data-class="icon-close-circle"><span class="icon icon-close-circle"></span><span class="text">close-circle</span></nav>
+                <nav data-class="icon-close-circle-fill"><span class="icon icon-close-circle-fill"></span><span class="text">close-circle-fill</span></nav>
+                <nav data-class="icon-calendar"><span class="icon icon-calendar"></span><span class="text">calendar</span></nav>
+                <nav data-class="icon-calendar-fill"><span class="icon icon-calendar-fill"></span><span class="text">calendar-fill</span></nav>
+                <nav data-class="icon-car"><span class="icon icon-car"></span><span class="text">car</span></nav>
+                <nav data-class="icon-car-fill"><span class="icon icon-car-fill"></span><span class="text">car-fill</span></nav>
+                <nav data-class="icon-bell"><span class="icon icon-bell"></span><span class="text">bell</span></nav>
+                <nav data-class="icon-bell-fill"><span class="icon icon-bell-fill"></span><span class="text">bell-fill</span></nav>
+                <nav data-class="icon-bookmark"><span class="icon icon-bookmark"></span><span class="text">bookmark</span></nav>
+                <nav data-class="icon-bookmark-fill"><span class="icon icon-bookmark-fill"></span><span class="text">bookmark-fill</span></nav>
+                <nav data-class="icon-attach"><span class="icon icon-attach"></span><span class="text">attach</span></nav>
+                <nav data-class="icon-play-right"><span class="icon icon-play-right"></span><span class="text">play-right</span></nav>
+                <nav data-class="icon-play-right-fill"><span class="icon icon-play-right-fill"></span><span class="text">play-right-fill</span></nav>
+                <nav data-class="icon-play-left"><span class="icon icon-play-left"></span><span class="text">play-left</span></nav>
+                <nav data-class="icon-play-left-fill"><span class="icon icon-play-left-fill"></span><span class="text">play-left-fill</span></nav>
+                <nav data-class="icon-error"><span class="icon icon-error"></span><span class="text">error</span></nav>
+                <nav data-class="icon-error-circle"><span class="icon icon-error-circle"></span><span class="text">error-circle</span></nav>
+                <nav data-class="icon-error-circle-fill"><span class="icon icon-error-circle-fill"></span><span class="text">error-circle-fill</span></nav>
+                <nav data-class="icon-wifi"><span class="icon icon-wifi"></span><span class="text">wifi</span></nav>
+                <nav data-class="icon-wifi-off"><span class="icon icon-wifi-off"></span><span class="text">wifi-off</span></nav>
+                <nav data-class="icon-skip-back-left"><span class="icon icon-skip-back-left"></span><span class="text">skip-back-left</span></nav>
+                <nav data-class="icon-skip-forward-right"><span class="icon icon-skip-forward-right"></span><span class="text">skip-forward-right</span></nav>
+                <nav data-class="icon-search"><span class="icon icon-search"></span><span class="text">search</span></nav>
+                <nav data-class="icon-setting"><span class="icon icon-setting"></span><span class="text">setting</span></nav>
+                <nav data-class="icon-setting-fill"><span class="icon icon-setting-fill"></span><span class="text">setting-fill</span></nav>
+                <nav data-class="icon-more-dot-fill"><span class="icon icon-more-dot-fill"></span><span class="text">more-dot-fill</span></nav>
+                <nav data-class="icon-more-circle"><span class="icon icon-more-circle"></span><span class="text">more-circle</span></nav>
+                <nav data-class="icon-more-circle-fill"><span class="icon icon-more-circle-fill"></span><span class="text">more-circle-fill</span></nav>
+                <nav data-class="icon-bag"><span class="icon icon-bag"></span><span class="text">bag</span></nav>
+                <nav data-class="icon-bag-fill"><span class="icon icon-bag-fill"></span><span class="text">bag-fill</span></nav>
+                <nav data-class="icon-arrow-upward"><span class="icon icon-arrow-upward"></span><span class="text">arrow-upward</span></nav>
+                <nav data-class="icon-arrow-downward"><span class="icon icon-arrow-downward"></span><span class="text">arrow-downward</span></nav>
+                <nav data-class="icon-arrow-leftward"><span class="icon icon-arrow-leftward"></span><span class="text">arrow-leftward</span></nav>
+                <nav data-class="icon-arrow-rightward"><span class="icon icon-arrow-rightward"></span><span class="text">arrow-rightward</span></nav>
+                <nav data-class="icon-arrow-up"><span class="icon icon-arrow-up"></span><span class="text">arrow-up</span></nav>
+                <nav data-class="icon-arrow-down"><span class="icon icon-arrow-down"></span><span class="text">arrow-down</span></nav>
+                <nav data-class="icon-arrow-left"><span class="icon icon-arrow-left"></span><span class="text">arrow-left</span></nav>
+                <nav data-class="icon-arrow-right"><span class="icon icon-arrow-right"></span><span class="text">arrow-right</span></nav>
+                <nav data-class="icon-rmb"><span class="icon icon-rmb"></span><span class="text">rmb</span></nav>
+                <nav data-class="icon-rmb-circle"><span class="icon icon-rmb-circle"></span><span class="text">rmb-circle</span></nav>
+                <nav data-class="icon-rmb-circle-fill"><span class="icon icon-rmb-circle-fill"></span><span class="text">rmb-circle-fill</span></nav>
+                <nav data-class="icon-thumb-up"><span class="icon icon-thumb-up"></span><span class="text">thumb-up</span></nav>
+                <nav data-class="icon-thumb-up-fill"><span class="icon icon-thumb-up-fill"></span><span class="text">thumb-up-fill</span></nav>
+                <nav data-class="icon-thumb-down"><span class="icon icon-thumb-down"></span><span class="text">thumb-down</span></nav>
+                <nav data-class="icon-thumb-down-fill"><span class="icon icon-thumb-down-fill"></span><span class="text">thumb-down-fill</span></nav>
+                <nav data-class="icon-coupon"><span class="icon icon-coupon"></span><span class="text">coupon</span></nav>
+                <nav data-class="icon-coupon-fill"><span class="icon icon-coupon-fill"></span><span class="text">coupon-fill</span></nav>
+                <nav data-class="icon-kefu-ermai"><span class="icon icon-kefu-ermai"></span><span class="text">kefu-ermai</span></nav>
+                <nav data-class="icon-server-fill"><span class="icon icon-server-fill"></span><span class="text">server-fill</span></nav>
+                <nav data-class="icon-server-man"><span class="icon icon-server-man"></span><span class="text">server-man</span></nav>
+                <nav data-class="icon-scan"><span class="icon icon-scan"></span><span class="text">scan</span></nav>
+                <nav data-class="icon-warning"><span class="icon icon-warning"></span><span class="text">warning</span></nav>
+                <nav data-class="icon-warning-fill"><span class="icon icon-warning-fill"></span><span class="text">warning-fill</span></nav>
+                <nav data-class="icon-google"><span class="icon icon-google"></span><span class="text">google</span></nav>
+                <nav data-class="icon-google-circle-fill"><span class="icon icon-google-circle-fill"></span><span class="text">google-circle-fill</span></nav>
+                <nav data-class="icon-chrome-circle-fill"><span class="icon icon-chrome-circle-fill"></span><span class="text">chrome-circle-fill</span></nav>
+                <nav data-class="icon-ie"><span class="icon icon-ie"></span><span class="text">ie</span></nav>
+                <nav data-class="icon-IE-circle-fill"><span class="icon icon-IE-circle-fill"></span><span class="text">IE-circle-fill</span></nav>
+                <nav data-class="icon-github-circle-fill"><span class="icon icon-github-circle-fill"></span><span class="text">github-circle-fill</span></nav>
+                <nav data-class="icon-android-fill"><span class="icon icon-android-fill"></span><span class="text">android-fill</span></nav>
+                <nav data-class="icon-android-circle-fill"><span class="icon icon-android-circle-fill"></span><span class="text">android-circle-fill</span></nav>
+                <nav data-class="icon-apple-fill"><span class="icon icon-apple-fill"></span><span class="text">apple-fill</span></nav>
+                <nav data-class="icon-camera"><span class="icon icon-camera"></span><span class="text">camera</span></nav>
+                <nav data-class="icon-camera-fill"><span class="icon icon-camera-fill"></span><span class="text">camera-fill</span></nav>
+                <nav data-class="icon-pushpin"><span class="icon icon-pushpin"></span><span class="text">pushpin</span></nav>
+                <nav data-class="icon-pushpin-fill"><span class="icon icon-pushpin-fill"></span><span class="text">pushpin-fill</span></nav>
+                <nav data-class="icon-minus-square-fill"><span class="icon icon-minus-square-fill"></span><span class="text">minus-square-fill</span></nav>
+                <nav data-class="icon-plus-square-fill"><span class="icon icon-plus-square-fill"></span><span class="text">plus-square-fill</span></nav>
+                <nav data-class="icon-heart"><span class="icon icon-heart"></span><span class="text">heart</span></nav>
+                <nav data-class="icon-heart-fill"><span class="icon icon-heart-fill"></span><span class="text">heart-fill</span></nav>
+                <nav data-class="icon-reload"><span class="icon icon-reload"></span><span class="text">reload</span></nav>
+                <nav data-class="icon-account"><span class="icon icon-account"></span><span class="text">account</span></nav>
+                <nav data-class="icon-account-fill"><span class="icon icon-account-fill"></span><span class="text">account-fill</span></nav>
+                <nav data-class="icon-minus-people-fill"><span class="icon icon-minus-people-fill"></span><span class="text">minus-people-fill</span></nav>
+                <nav data-class="icon-plus-people-fill"><span class="icon icon-plus-people-fill"></span><span class="text">plus-people-fill</span></nav>
+                <nav data-class="icon-integral"><span class="icon icon-integral"></span><span class="text">integral</span></nav>
+                <nav data-class="icon-integral-fill"><span class="icon icon-integral-fill"></span><span class="text">integral-fill</span></nav>
+                <nav data-class="icon-zhihu"><span class="icon icon-zhihu"></span><span class="text">zhihu</span></nav>
+                <nav data-class="icon-zhihu-circle-fill"><span class="icon icon-zhihu-circle-fill"></span><span class="text">zhihu-circle-fill</span></nav>
+                <nav data-class="icon-gift"><span class="icon icon-gift"></span><span class="text">gift</span></nav>
+                <nav data-class="icon-gift-fill"><span class="icon icon-gift-fill"></span><span class="text">gift-fill</span></nav>
+                <nav data-class="icon-zhifubao"><span class="icon icon-zhifubao"></span><span class="text">zhifubao</span></nav>
+                <nav data-class="icon-zhifubao-circle-fill"><span class="icon icon-zhifubao-circle-fill"></span><span class="text">zhifubao-circle-fill</span></nav>
+                <nav data-class="icon-weixin-fill"><span class="icon icon-weixin-fill"></span><span class="text">weixin-fill</span></nav>
+                <nav data-class="icon-weixin-circle-fill"><span class="icon icon-weixin-circle-fill"></span><span class="text">weixin-circle-fill</span></nav>
+                <nav data-class="icon-twitter"><span class="icon icon-twitter"></span><span class="text">twitter</span></nav>
+                <nav data-class="icon-twitter-circle-fill"><span class="icon icon-twitter-circle-fill"></span><span class="text">twitter-circle-fill</span></nav>
+                <nav data-class="icon-taobao"><span class="icon icon-taobao"></span><span class="text">taobao</span></nav>
+                <nav data-class="icon-taobao-circle-fill"><span class="icon icon-taobao-circle-fill"></span><span class="text">taobao-circle-fill</span></nav>
+                <nav data-class="icon-weibo"><span class="icon icon-weibo"></span><span class="text">weibo</span></nav>
+                <nav data-class="icon-weibo-circle-fill"><span class="icon icon-weibo-circle-fill"></span><span class="text">weibo-circle-fill</span></nav>
+                <nav data-class="icon-qq-fill"><span class="icon icon-qq-fill"></span><span class="text">qq-fill</span></nav>
+                <nav data-class="icon-qq-circle-fill"><span class="icon icon-qq-circle-fill"></span><span class="text">qq-circle-fill</span></nav>
+                <nav data-class="icon-moments"><span class="icon icon-moments"></span><span class="text">moments</span></nav>
+                <nav data-class="icon-moments-circel-fill"><span class="icon icon-moments-circel-fill"></span><span class="text">moments-circel-fill</span></nav>
+                <nav data-class="icon-qzone"><span class="icon icon-qzone"></span><span class="text">qzone</span></nav>
+                <nav data-class="icon-qzone-circle-fill"><span class="icon icon-qzone-circle-fill"></span><span class="text">qzone-circle-fill</span></nav>
+                <nav data-class="icon-facebook"><span class="icon icon-facebook"></span><span class="text">facebook</span></nav>
+                <nav data-class="icon-facebook-circle-fill"><span class="icon icon-facebook-circle-fill"></span><span class="text">facebook-circle-fill</span></nav>
+                <nav data-class="icon-baidu"><span class="icon icon-baidu"></span><span class="text">baidu</span></nav>
+                <nav data-class="icon-baidu-circle-fill"><span class="icon icon-baidu-circle-fill"></span><span class="text">baidu-circle-fill</span></nav>
+
+
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button data-dismiss="modal" class="btn btn-default" type="button">关闭</button>
+        </div>
+        <script>
+            $(function(){
+
+                $("#selectUrl").find('#selectUrlTab a').click(function(e) {
+                    $('#tab').val($(this).attr('href'));
+                    e.preventDefault();
+                    $(this).tab('show');
+                });
+
+
+            });
+        </script>
+    </div>

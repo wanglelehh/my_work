@@ -1,0 +1,171 @@
+{extend name="mainadmin@layouts/base" /}
+{block name="main" }
+
+<header class="header  b-b clearfix">
+    <form id="forms" class="talbe-search form-inline "  method="post" action="{:url('getList')}" >
+     <div class="page-breadcrumbs">
+            <ul class="breadcrumb" >
+                <li>
+                    <i class="fa fa-ellipsis-v"></i>
+                    <strong>区域代理</strong>
+                </li>                                  
+            </ul>
+         <select name="role_id"  style="width: 130px;" data-toggle="select2"  data-notsearch="true" data-placeholder="按自定义筛选" data-chang="submit">
+             <option value="-1">所有会员</option>
+             {$roleOpt|raw}
+         </select>
+         <input type="text" class="form-control input-medium" value="{$search.keyword}" name="keyword" placeholder="会员ID/帐号/手机号码" data-rule-required="true" />
+         <button class="btn btn-sm btn-default-iq" type="submit" title="搜索"><i class="fa fa-search"></i></button>
+            <a href="{:url('add')}"  title="添加" data-toggle="ajaxModal" class="btn btn-sm btnbtn-default fr  m-t-md m-r"><i class="fa fa-plus m-r-xs"></i>添加</a>
+        </div>
+    </form>
+</header>
+
+<section class="scrollable wrapper w-f ">
+    <section class="panel panel-default ">
+        <div class="table-responsive " id="list_box">
+            {include file="sys_admin/region_agent/list" /}
+        </div>
+    </section>
+</section>
+{/block}
+{block name="footer"}
+<script type="text/html" id="region_tpl_main">
+    <div class="pop-area" >
+        {{each def as item index}}
+        <div  class="pop-area-row ng-scope" >
+            <div class="pop-area-provinces">
+                <div class="pop-area-region">
+                    <label class="ng-binding">
+                        {{item.name}}
+                    </label>
+                </div>
+                {{each plist[index] as itemb indexb}}
+                <div class="pop-area-province ng-scope" >
+                    <label class="ng-binding">
+                        <input type="checkbox" name="sel_region[]" class="ng-pristine ng-untouched ng-valid input-show" region_name="{{itemb.name}}" value="{{itemb.id}}" onchange="changeCheck(this,2)">
+                        <span id="region_name_{{itemb.id}}">{{itemb.name}}</span>
+                    </label>
+                    <span class="_middle pop-area-cities-count ng-binding"></span>
+                    <span class="_middle pop-area-citiesb-count ng-binding"></span>
+                    <div class="_middle pop-area-province-arrow" onclick="toggleProvince(this)" >
+                        <span  class="caret ng-scope"></span>
+                    </div>
+                </div>
+
+                {{/each}}
+                {{each plist[index] as itemb indexb}}
+                <div class="pop-area-cities ng-scope" style="display:none;"  >
+                    {{each clist[itemb.id] as itemc indexc}}
+                    <div class="pop-area-city ng-scope">
+                        <label class="ng-binding">
+                            <input type="checkbox" name="sel_region[]" pid="{{itemc.pid}}" level="3" region_name="{{itemc.name}}" class="ng-pristine ng-untouched ng-valid input-show" value="{{itemc.id}}" onchange="changeCheck(this,3)">
+                            {{itemc.name}}
+                        </label>
+                        <span class="_middle pop-area-district-count ng-binding"></span>
+                        <div class="_middle pop-area-city-arrow" onclick="toggleCity(this)" >
+                            <span  class="caret ng-scope"></span>
+                        </div>
+                    </div>
+                    {{/each}}
+                    {{each clist[itemb.id] as itemc indexc}}
+                    <div class="pop-area-districts ng-scope" style="display:none;"  >
+                        {{each dlist[itemc.id] as itemd indexd}}
+                        <div class="pop-area-district ng-scope">
+                            <label class="ng-binding">
+                                <input type="checkbox" name="sel_region[]" pid="{{itemd.pid}}" level="4" region_name="{{itemd.name}}" class="ng-pristine ng-untouched ng-valid input-show" value="{{itemd.id}}" onchange="changeCheck(this,4)">
+                                {{itemd.name}}
+                            </label>
+                        </div>
+                        {{/each}}
+                    </div>
+                    {{/each}}
+                </div>
+                {{/each}}
+            </div>
+        </div>
+        {{/each}}
+    </div>
+</script>
+<script type="text/javascript">
+    var d_region = {$d_region|json_encode|raw};
+    function open_region(sel_region,other_sel_region){
+        $('#region_box').html(template('region_tpl_main',d_region));
+        sel_region = sel_region.split(",");
+        other_sel_region = other_sel_region.split(",");
+        $("input[name='sel_region[]']").each(function(){
+            if (in_array($(this).val(),sel_region)){
+                $(this).attr("checked",true);
+                level = $(this).attr('level');
+                if (level > 0) changeCheck(this,level);
+            }
+            else if(in_array($(this).val(),other_sel_region)){
+                $(this).attr("disabled",true);
+            }
+        })
+    }
+    function in_array(_search,array){
+        for(var i in array){
+            if(array[i]==_search) return true;
+        }
+        return false;
+    }
+    //点击选择事件方法
+    function changeCheck(obj,type){
+        var i = 0,checked_num=0,element,cities;
+        if (type == 3){
+            cities = $(obj).parents(".pop-area-cities");
+            i = $(".pop-area-cities").index(cities);
+            element = $('.pop-area-cities-count').eq(i);
+            checked_num = $(cities).find('.pop-area-city input:checked').length;
+            (checked_num > 0) ? element.html('('+checked_num+')'):element.html('');
+        }else if (type == 4){
+            cities = $(obj).parents(".pop-area-districts");
+            i = $(".pop-area-districts").index(cities);
+            element = $('.pop-area-district-count').eq(i);
+            checked_num = $(cities).find('.pop-area-district input:checked').length;
+            if (checked_num > 0){
+                element.html('('+checked_num+')')
+                cities = $(obj).parents(".pop-area-cities");
+                i = $(".pop-area-cities").index(cities);
+                element = $('.pop-area-citiesb-count').eq(i);
+                checked_num = $(cities).find('.pop-area-district input:checked').length;
+                (checked_num > 0) ? element.html('('+checked_num+')'):element.html('');
+            }else{
+                element.html('');
+            }
+
+
+        }
+    }
+    //显示城市
+    function toggleProvince(obj){
+        var i = $('.pop-area-province-arrow').index(obj);
+        var element = $('.pop-area-cities').eq(i);
+        var caret = $(obj).find('.caret');
+        $('.caret').removeClass('caret-2');
+        if (element.is(":visible")){
+            element.hide();
+        }else{
+            $('.pop-area-cities').hide();
+            caret.addClass('caret-2');
+            element.show();
+        }
+    }
+    //显示区域
+    function toggleCity(obj){
+        var i = $('.pop-area-city-arrow').index(obj);
+        var element = $('.pop-area-districts').eq(i);
+        var caret = $(obj).find('.caret');
+        $('.pop-area-city-arrow .caret').removeClass('caret-2');
+        if (element.is(":visible")){
+            element.hide();
+        }else{
+            $('.pop-area-districts').hide();
+            caret.addClass('caret-2');
+            element.show();
+        }
+    }
+
+</script>
+{/block}

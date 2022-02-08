@@ -1,0 +1,226 @@
+{extend name="mainadmin@layouts/base" /}
+{block name="head" }
+<link rel="stylesheet" href="__STATIC__/js/jquery/jquery_ui/jquery-ui.css">
+<script src="__STATIC__/js/jquery/jquery_ui/jquery-ui.js"></script>
+
+{/block}
+{block name="main" }
+<header class="header  b-b clearfix">
+     <div class="page-breadcrumbs">
+            <ul class="breadcrumb" >
+                <li>
+                    <i class="fa fa-ellipsis-v"></i>
+                    <strong>商城设置</strong>
+                </li>                                  
+            </ul>
+      </div>
+</header>
+<form class="form-horizontal form-validate form_vbox" id="_form" method="post" action="{:url('save')}">
+    <section class="vbox">
+        <section class="scrollable  wrapper w-f">
+            <section class="panel panel-default">
+                <header>
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a href="#basic" data-toggle="tab">基本配置</a></li>
+                        {if condition="$setting.sys_model_shop_bonus == 1"}
+                        <li><a href="#bonus" data-toggle="tab">优惠券设置</a></li>
+                        {/if}
+                        {if condition="$setting.sys_model_shop_fightgroup == 1 && $setting.sys_model_shop_favour == 1"}
+                        <li><a href="#favour" data-toggle="tab">限时优惠/拼团设置</a></li>
+                        {elseif condition="setting.sys_model_shop_favour == 1"}
+                        <li><a href="#favour" data-toggle="tab">限时优惠</a></li>
+                        {/if}
+                    </ul>
+                </header>
+                <div class="tab-content">
+                    <div class="tab-pane active" id="basic">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">搜索栏默认词：</label>
+                            <div class="controls">
+                                <input type="text" name="shop_index_search_text" value="{$setting.shop_index_search_text}"
+                                       class="input-large"> <span class="help-line"></span>
+                            </div>
+                        </div>
+                        <div class="line line-dashed line-lg pull-in" style="width:99%;"></div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">超时取消：</label>
+                            <div class="controls">
+                                <select name="shop_order_auto_cancel" style="width:200px;">
+                                    <option value="0" {$setting['shop_order_auto_cancel']==0?'selected':''}>不执行自动取消</option>
+                                    <option value="15" {$setting['shop_order_auto_cancel']==15?'selected':''}>15 分钟</option>
+                                    <option value="30" {$setting['shop_order_auto_cancel']==30?'selected':''}>30 分钟</option>
+                                    {for start="1" end="24" name="time" }
+                                    <option value="{$time * 60}" {$setting['shop_order_auto_cancel']==$time * 60?'selected':''}>{$time} 小时</option>
+                                    {/for}
+                                </select> <span class="help-line">下单成功后超过指定时间未支付自动取消订单</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">自动签收：</label>
+                            <div class="controls">
+                                <select name="shop_auto_sign_limit">
+                                    {for start="1" end="31" name="day" }
+                                    <option value="{$day}" {$setting['shop_auto_sign_limit']==$day?'selected':''}>{$day} 天</option>
+                                    {/for}
+                                </select> <span class="help-line">发货多少天后订单自动签收</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">申请售后：</label>
+                            <div class="controls">
+                                <select name="shop_after_sale_limit" class="input-max shop_after_sale_limit" >
+                                    <option value="0" {$setting['shop_after_sale_limit']==0?'selected':''}>不启用售后功能</option>
+                                    {for start="1" end="31" name="day" }
+                                    <option value="{$day}" {$setting['shop_after_sale_limit']==$day?'selected':''}>{$day} 天</option>
+                                    {/for}
+                                </select> <span class="help-line">签收后多少天内可申请售后</span>
+                            </div>
+                        </div>
+                        <div id="return_info_box" class="{$setting['shop_after_sale_limit']<1?'hide':''}">
+                            <div class="line line-dashed line-lg pull-in" style="width:99%;"></div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">退货收货人：</label>
+                                <div class="controls">
+                                    <input type="text" name="return_consignee" value="{$setting.return_consignee}"
+                                           class="input-large"> <span class="help-line"></span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">退货联系电话：</label>
+                                <div class="controls">
+                                    <input type="text" name="return_mobile" value="{$setting.return_mobile}"
+                                           class="input-large"> <span class="help-line"></span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">退货地址：</label>
+                                <div class="controls">
+                                    <input type="text" name="return_address" value="{$setting.return_address}"
+                                           class="input-xxlarge"> <span class="help-line"></span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">退货说明：</label>
+                                <div class="controls">
+                                <textarea rows="4" class="input-xxlarge"
+                                          name="return_desc">{$setting.return_desc}</textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="line line-dashed line-lg pull-in" style="width:99%;"></div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">减库存的时机：</label>
+                            <div class="controls">
+                                <label class="radio-inline">
+                                    <input name="shop_reduce_stock" value="0" {$setting['shop_reduce_stock']==0?'checked':''}
+                                    type="radio">下单成功时
+                                </label>
+                                <label class="radio-inline">
+                                    <input name="shop_reduce_stock" value="1" {$setting['shop_reduce_stock']==1?'checked':''}
+                                    type="radio" >支付成功时
+                                </label>
+                            </div>
+                        </div>
+
+
+                    </div>
+
+                    <div class="tab-pane " id="bonus">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">开放优惠券：</label>
+                            <div class="controls">
+                                <label class="radio-inline">
+                                    <input name="shop_used_bonus" value="0" {$setting['shop_used_bonus']<1?'checked':''}
+                                    type="radio">关闭
+                                </label>
+                                <label class="radio-inline">
+                                    <input name="shop_used_bonus" value="1" {$setting['shop_used_bonus']==1?'checked':''}
+                                    type="radio" >开启
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">注册优惠券背景：</label>
+                            <div class="controls col-sm-6">
+                                <div class="defUpImgBox" data-toggle="uploaderOne">
+                                    <img id="img_reg_bonus_bg" src="{$setting.reg_bonus_bg|default='__STATIC__/main/img/image.png'}">
+                                    <input id="input_reg_bonus_bg" type="hidden"  name="reg_bonus_bg"  value="{$setting.reg_bonus_bg}">
+                                    <div class="tips">点击上传</div>
+                                </div>
+                                <p>
+                                    <span class="help-inline">建议图片尺寸：320*320像素</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane " id="favour">
+                        {if condition="$setting.sys_model_shop_favour == 1"}
+                        <header class="panel-heading bg-light">限时优惠相关</header>
+                        <div class="form-group m-t">
+                            <label class="col-sm-2 control-label">档期间隔：</label>
+                            <div class="controls col-lg-3">
+                                <select name="favour_time_cycle" class="input-max">
+                                    <option value="1" {$setting['favour_time_cycle']==1?'selected':''}>1小时一档</option>
+                                    <option value="2" {$setting['favour_time_cycle']==2?'selected':''}>2小时一档</option>
+                                    <option value="3" {$setting['favour_time_cycle']==3?'selected':''}>3小时一档</option>
+                                </select><span class="help-line">设置一个档期为几个小时，此设置变动后，需要重新选择活动的档期，所以需谨慎操作</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">每日活动开始时间：</label>
+                            <div class="controls col-lg-3">
+                                <select name="favour_start_time" class="input-max">
+                                    {for start="0" end="24" name="time" }
+                                    <option value="{$time}" {$setting['favour_start_time']==$time?'selected':''}>{$time}:00</option>
+                                    {/for}
+                                </select> <span class="help-line">*设置每天限时优惠活动的开始时间，此设置变动后，需要重新选择活动的档期，所以需谨慎操作</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">首页显示商品数量：</label>
+                            <div class="controls col-lg-3">
+                                <select name="favour_show_num" class="input-max">
+                                    <option value="0">不限制数量</option>
+                                    {for start="1" end="31" name="num" }
+                                    <option value="{$num}" {$setting['favour_show_num']==$num?'selected':''}>{$num}个</option>
+                                    {/for}
+                                </select> <span class="help-line"></span>
+                            </div>
+                        </div>
+
+                        <div class="line line-dashed line-lg pull-in"></div>
+                        {/if}
+
+                    </div>
+
+
+                </div>
+            </section>
+        </section>
+        <footer class="footer bg-white b-t p-t">
+            <div class="form-group">
+                <div class="col-sm-4 col-sm-offset-1">
+                    <button type="submit" class="btn btn-primary js_save_submit" data-loading-text="保存中...">保存
+                    </button>
+                    <button type="button" class="btn btn-default" data-toggle="back">取消</button>
+                </div>
+            </div>
+        </footer>
+    </section>
+</form>
+{/block}
+{block name="footer" }
+<script type="text/javascript">
+    $('.shop_after_sale_limit').change(function () {
+        var val = $(this).val();
+        if (val > 0){
+            $('#return_info_box').removeClass('hide');
+        }else{
+            $('#return_info_box').addClass('hide');
+        }
+    })
+
+</script>
+{/block}

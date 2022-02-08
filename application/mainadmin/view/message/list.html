@@ -1,0 +1,39 @@
+<table class="table table-bordered table-striped ">
+<thead >
+ <thead>
+        <tr>
+           <th width="80">ID</th>
+            <th >通知标题</th>
+            <th width="150">通知类型</th>
+            <th width="150">发放时间</th>
+            <th width="150">显示结束时间</th>
+            <th width="100">通知状态</th>
+            <th class="col-sm-1 mn70">操作</th>
+        </tr>
+    </thead>
+<tbody>
+
+{volist name="data.list" id="vo" }
+
+ <tr>
+     <td>{$vo.message_id}</td>
+     <td>{$vo.title}</td>
+     <td>{$messageType[$vo['type']]}</td>
+     <td>
+          {$vo.send_time|dateTpl}
+     </td>
+     <td>{$vo.show_end_time|dateTpl}</td>
+     <td align="center">{$vo.status==1?'正常':'失效'}</td>
+     <td>
+         <a href="{:url('info',array('message_id'=>$vo['message_id']))}" class="m-xs" title="编辑"><i class="fa fa-edit text-muted"></i></a>
+     </td>
+ </tr>
+
+{/volist} 
+</tbody>
+</table>
+{empty name="data.list"}
+<table width="100%" >
+ 	<tr><td height="300" colspan="8" align="center" valign="middle" >没有相关数据！</td></tr>
+</table>
+{/empty}  

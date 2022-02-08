@@ -1,0 +1,154 @@
+{extend name="mainadmin@layouts/base" /}
+{block name="main" }
+
+<header class="header  b-b clearfix">
+   <div class="page-breadcrumbs">
+          <ul class="breadcrumb">
+              <li>
+                  <i class="fa fa-ellipsis-v"></i>
+                  <strong>{$row['id']>0?"编辑课程":"添加课程"}</strong>
+              </li>
+          </ul>
+       <a class="text-muted pull-right m-r-tm m-t-md pointer" data-toggle="back" title="返回"><i class="fa fa-reply"></i></a>
+      </div>
+</header>
+<form class="form-horizontal form-validate form_vbox" method="post" action="{:url('info')}" style="padding:0;">
+    <section class="vbox">
+        <section class="scrollable  wrapper w-f">
+            <section class="panel panel-default">
+                <div class="panel-body">
+                    <div class="col-sm-7" >
+                        <div class="form-group">
+                            <label class="control-label">课程标题：</label>
+                            <div class="col-sm-7">
+                                <input type="text" class="input-max" data-rule-maxlength="40" data-rule-required="true" data-msg-required="课程标题不能为空" name="title" value="{$row.title}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">标题图片：</label>
+                            <div class="col-sm-8 ">
+                                <div class="defUpImgBox" data-toggle="uploaderOne" style="width: 180px">
+                                    <img  src="{$row.title_img|default='__STATIC__/main/img/image.png'}">
+                                    <input  type="hidden"  name="title_img"  value="{$row.title_img}">
+                                    <div class="tips">点击上传</div>
+                                </div>
+                                <p>
+                                    <span class="help-inline">图片尺寸：280*150像素</span>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class=" control-label" >视频：</label>
+                            <div class="col-sm-8">
+                                <label class="radio-inline">
+                                    <input type="radio" class="js_radio_undertake"  name="is_video" value="0" {$row.is_video|tplckval='=0','checked',true} >关闭
+                                </label>
+                                <label class="radio-inline">
+                                    <input type="radio" class="js_radio_undertake" data-class="video_box" name="is_video" value="1" {$row.is_video|tplckval='=1','checked'} >开启
+                                </label>
+
+                            </div>
+                        </div>
+                        <div class="radio_undertake_is_video video_box {$row.is_video|tplckval='=0','hide',true}">
+                            <div class="form-group">
+                                <label class=" control-label" >课程视频：</label>
+                                <div class="col-sm-8">
+                                    <div class="js_upload_container">
+                                        <input type="text" id="video_url" name="video_url" class="input-max hide" value="{$row.video_url}"/>
+                                        <button type="button" class="btn btn-default js_file_upload" data-file_type="video" data-uploadpath="{:url('mainAdmin/attachment/uploadVideo')}" style="position: relative; z-index: 1;">点击上传视频
+                                        </button>
+                                        <br>
+                                        <span style="color:red;margin-top:0.5rem">只支持上传mp4，大小不能超过20mb，</span>
+                                        <a href="javascript:;" onclick="payVideo()" >点击显示视频</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class=" control-label">视频封面：</label>
+                                <div class="controls col-sm-3">
+                                    <div class="defUpImgBox"  data-toggle="uploaderImg" style="width: 130px; height: 130px">
+                                        <img  src="{$row.video_cover|default='__STATIC__/main/img/image.png'}">
+                                        <input type="hidden"  name="video_cover"  value="{$row.video_cover}">
+                                        <div class="tips">点击上传</div>
+                                    </div>
+                                    <span class="help-inline"></span>
+                                </div>
+                                <div class="col-sm-5 hide" id="video_box"><video controls  style="width: 100%"></video></div>
+                            </div>
+                        </div>
+                        <div class="line line-dashed line-lg pull-in"></div>
+
+                        <div class="form-group">
+                            <label class="control-label">课程简介：</label>
+                            <div class="controls">
+                                <textarea name="description" class="input-xxlarge">{$row.description}</textarea>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label">显示状态：</label>
+                            <div class="col-sm-8">
+                                <label>
+                                    <input name="is_show" value="1" class="js_inventory" type="radio" {$row['is_show']|tplckval='=1','checked',true}>
+                                    显示
+                                </label>
+                                <label>
+                                    <input name="is_show" value="0" class="js_inventory" type="radio" {$row['is_show']|tplckval='=0','checked'}>
+                                    隐藏
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">阅读数：</label>
+                            <div class="controls">
+                                真实阅读数：{$row['view_num']|intval} + 虚拟量：<input type="text" class="input-mini" name="virtual_num" data-rule-min="0"
+                                       data-rule-number="true" value="{$row['virtual_num']}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">排序：</label>
+                            <div class="controls">
+                                <input type="text" class="input-mini" name="sort_order" data-rule-min="0"
+                                       data-rule-number="true" value="{$row['sort_order']}">
+                                <span class="help-inline">数组越大，排序越前</span>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="col-sm-5" >
+                        <div style="width: 352px;">
+                            <div id="content"></div>
+                            <textarea rows="13" class="hd" data-toggle="ueditor" data-div="content" data-height="450" data-maximumwords="50000" name="content" >{$row.content|raw}</textarea>
+                        </div>
+                        <div >移动端的图片建议宽度为750像素</div>
+                    </div>
+                </div>
+            </section>
+        </section>
+
+        <footer class="footer bg-white b-t p-t">
+            <div class="form-group">
+                <div class="col-sm-4 col-sm-offset-1">
+                    <input name="id" type="hidden" value="{$row.id|intval}">
+                    <button type="submit" class="btn btn-primary js_save_submit" data-loading-text="保存中...">保存</button>
+                    <button type="button" class="btn btn-default" data-toggle="back">取消</button>
+                </div>
+            </div>
+        </footer>
+    </section>
+</form>
+{/block}
+
+{block name="footer"}
+<script type="text/javascript">
+    seajs.use("dist/plupload/file.js");
+    function payVideo() {
+        var video = $('#video_url').val();
+        if (video == ''){
+            return _alert('请上传视频后再操作.');
+        }
+        $('#video_box').removeClass('hide');
+        $('#video_box').find('video').attr('src',video);
+    }
+</script>
+{/block}

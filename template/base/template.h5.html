@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<link rel="shortcut icon" type="image/x-icon" href="static/favicon.ico">
+		<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0,viewport-fit=cover">
+		<title>
+			<%= htmlWebpackPlugin.options.title %>
+		</title>
+		<script>
+			document.addEventListener('DOMContentLoaded', function() {
+				document.documentElement.style.fontSize = document.documentElement.clientWidth / 20 + 'px'
+			})
+			 var ua = navigator.userAgent.toLowerCase();  
+			 if(ua.match(/MicroMessenger/i)=="micromessenger") { 
+				 document.write('<style>uni-page-head{display: none !important;}.diy-fixedsearch{top:0 !important;}uni-page-head[uni-page-head-type=default]~uni-page-wrapper{height: 100% !important;}.navigation{top:0px !important;}</style>');
+			 }
+		</script>
+		<link rel="stylesheet" href="<%= BASE_URL %>static/index.css" />
+		<style>
+		.iframe {
+		    display: block;
+		    margin: 0 auto;
+		    width: 375px;
+		    height: 100%;
+		    border: 1px solid #ddd;
+		}
+		.top_qrcode-container {
+		    height: 180px;
+		    width: 160px;
+		    border: 1px solid #e4e4e4;
+		    border-radius: 5px;
+		    margin-bottom: 20px;
+		    background-color: #fff;
+		    padding: 10px;
+		    text-align: center;
+		    position: fixed;
+		    left: 38%;
+		    top: 100px;
+		    margin-left: 388px;
+		}
+		
+		.top_qrcode-container p {
+		    font-size: 14px;
+		    color: #666;
+		    line-height: 26px;
+		}
+		
+		.top_qrcode-container .qrcode-image {
+		    height: 160px;
+		    width: 160px;
+		}
+		.top_qrcode-container canvas {
+		    height: 158px;
+		    width: 158px;
+		    border: 1px solid #ddd;
+		}
+		</style>
+	</head>
+	<body>
+		<noscript>
+			<strong>本站点必须要开启JavaScript才能运行</strong>
+		</noscript>
+		<div id="app"></div>
+	</body>
+	<script type="text/javascript" src="/a_static/js/ios.js"></script>
+	<script type="text/javascript" src="/a_static/customize/js/jquery/jquery-1.11.1.min.js"></script>
+	<script type="text/javascript" src="/a_static/js/jquery/jquery.qrcode.min.js"></script>
+	<script>
+		  var u = navigator.userAgent;
+		  if (!u.match(/AppleWebKit.*Mobile.*/) || u.indexOf("iPad") > -1) {
+			if (window.frames.length == parent.frames.length) {
+				document.body.innerHTML='<iframe src="'+window.location.href+'" class="iframe" frameborder="0"></iframe><div class="top_qrcode-container"><div class="qrcode-image" id="qrcode"></div><p class="example1">微信“扫一扫”浏览</p></div>';
+				$('#qrcode').qrcode(window.location.href);
+			}
+		  }
+	</script>
+</html>

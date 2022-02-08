@@ -1,0 +1,42 @@
+{extend name="mainadmin@layouts/base" /}
+{block name="main" }
+
+<header class="header  b-b clearfix">
+    <form id="forms" class="talbe-search form-inline "  method="post" action="{:url('getDetailList')}" >
+     <div class="page-breadcrumbs">
+            <ul class="breadcrumb" >
+                <li>
+                    <i class="fa fa-ellipsis-v"></i>
+                    <strong>出入库详情</strong>
+                </li>                                  
+            </ul>
+
+         <select name="operate"  style="width: 90px;" data-toggle="select2" data-notsearch="true" data-chang="submit">
+             <option value="0">全部</option>
+             <option value="1">入库</option>
+             <option value="2">出库</option>
+         </select>
+         <input type="hidden" name="user_id" value="{$user_id}">
+         <input type="hidden" name="goods_id" value="{$goods_id}">
+         <input type="hidden" name="sku_id" value="{$sku_id}">
+         <a href="{:url('info',['user_id'=>$user_id])}" class="text-muted pull-right pointer p-r m-t-md m-l" title="返回"><i class="fa fa-reply"></i></a>
+        </div>
+    </form>
+</header>
+
+<section class="scrollable wrapper w-f ">
+    <div class="panel  ">
+        <table class="table m-b-none" >
+            <tr>
+                <td>{$goods_name} <span class="red">{$sku_name}</span></td>
+            </tr>
+        </table>
+    </div>
+    <section class="panel panel-default ">
+        <div class="table-responsive " id="list_box">
+            {include file="sys_admin/stock/detail_list" /}
+        </div>
+    </section>
+</section>
+
+{/block}

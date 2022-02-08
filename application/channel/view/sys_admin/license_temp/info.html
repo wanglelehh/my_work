@@ -1,0 +1,358 @@
+{extend name="mainadmin@layouts/base" /}
+{block name="head" }
+<link rel="stylesheet" href="__STATIC__/js/jquery/jquery_ui/jquery-ui.css">
+<script src="__STATIC__/js/jquery/jquery_ui/jquery-ui.js"></script>
+<style>
+    @font-face{
+
+        　　font-family:'wryh';
+        　　src:url('__STATIC__/share/wryh.ttc');
+
+    }
+    #temp_bg_box{
+        font-family:'wryh';
+        width:375px;border: 1px solid #000;
+        overflow: hidden;
+        position: relative;
+    }
+    #temp_bg_img{width: 100%;}
+    #temp_bg_box div{position: absolute; z-index: auto; user-select: auto; border: 1px dashed #000;cursor:move;font-weight: bold;}
+    #temp_bg_box .circle{border-radius: 50%;}
+    #temp_bg_box #dom_avatar div,#dom_qrcode div{border:0px;}
+    #temp_bg_box #dom_avatar span{
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-box-align: center;
+        -ms-flex-align: center;
+        align-items: center;
+        -webkit-box-pack: center;
+        -ms-flex-pack: center;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
+        font-size: 12px;
+        background-color: #ddd;
+        overflow: hidden;
+    }
+</style>
+{/block}
+{block name="main" }
+<header class="header  b-b clearfix">
+    <div class="page-breadcrumbs">
+        <ul class="breadcrumb">
+            <li>
+                <i class="fa fa-ellipsis-v"></i>
+                <strong>
+                    {if condition="$tempType == 1"}
+                        {$row['id']<1?'添加模板':'编缉模板'}
+                    {else}
+                        邀请海报
+                    {/if}
+                </strong>
+            </li>
+        </ul>
+        <a class="text-muted pull-right m-r-tm m-t-md pointer" data-toggle="back" title="返回"><i class="fa fa-reply"></i></a>
+    </div>
+</header>
+<form class="form-horizontal form-validate form_vbox" method="post" action="{:url('info')}">
+    <section class="vbox">
+        <section class="scrollable  wrapper w-f">
+            <section class="panel panel-default">
+                <div class="panel-body">
+                    <div class="col-sm-6">
+                        {if condition="$tempType == 1"}
+                        <div class="form-group ">
+                            <label class="col-sm-1 control-label">模板名称：</label>
+                            <div class="col-sm-9">
+                                    <input type="text" name="temp_name" class="input-max"  data-rule-required="true" value="{$row.temp_name}" placeholder="请输入模板名称">
+                            </div>
+                        </div>
+                        {else}
+                            <input type="hidden" name="temp_name" value="邀请海报">
+                        {/if}
+                        <div class="form-group">
+                            <label class="col-sm-1 control-label">背景图片：</label>
+                            <div class="controls col-sm-6">
+                                <div class="defUpImgBox" data-toggle="uploaderOne" data-type="image" data-fun="changeTempBg">
+                                    <img id="img_pic" src="{$row.temp_bg|default='__STATIC__/share/sampleImage.png'}">
+                                    <input id="input_pic" type="hidden"  name="temp_bg"  value="{$row.temp_bg}">
+                                    <div class="tips">点击上传</div>
+                                </div>
+
+                                <div class="help-inline">* 建议尺寸：750*1330</div>
+                            </div>
+                        </div>
+                        {if condition="$tempType == 1"}
+                        <div class="form-group ">
+                            <label class="col-sm-1 control-label">是否默认：</label>
+                            <div class="col-sm-9 m-t-mc">
+                                <label>
+                                <input class="checkbox-slider colored-orange rand_amount"  name="is_default" id="is_default" type="checkbox" value="1" {$row['is_default']==1?'checked':''}>
+                                <span class="text"></span>
+                                </label>
+                            </div>
+                        </div>
+                        {/if}
+                        <div class="form-group ">
+                            <label class="col-sm-1 control-label">模板内容：</label>
+                            <div class="col-sm-9 ">
+                                <select  id="select_dom"  style="width: 130px;" data-toggle="select2" data-notsearch="true" data-change="submit">
+                                   {volist name="$select_dom" id="vo"}
+                                        <option value="{$key}" data-text="{$vo.text}">{$vo.title}</option>
+                                   {/volist}
+                                </select>
+                                <a href="javascript:;" onclick="addDom()" class="btn btn-sm btn-default"><i class="fa fa-plus"></i>添加</a>
+                            </div>
+                        </div>
+                        <header class="panel-heading bg-light m-b">
+                            样式调整
+                        </header>
+                        <div class="form-group style_box dom_type_box hide">
+                            <label class="col-sm-1 control-label">编缉类型：</label>
+                            <div class="controls m-t-md dom_type_name">
+
+                            </div>
+                        </div>
+                        <div class="form-group style_box avatar_box hide">
+                            <label class="col-sm-1 control-label">头像形状：</label>
+                                <div class="controls">
+                                    <label class="radio-inline">
+                                        <input name="avatar_shape" class="avatar_shape" value="0" type="radio">圆形
+                                    </label>
+                                    <label class="radio-inline">
+                                        <input name="avatar_shape" class="avatar_shape" value="1" type="radio" >方形
+                                    </label>
+                                </div>
+                        </div>
+                        <div class="form-group style_box text_box hide">
+                            <label class="col-sm-1 control-label">颜色：</label>
+                            <div class="m-t-md controls minicolors minicolors-theme-bootstrap minicolors-position-bottom minicolors-position-left">
+                                <input type="text" class="form-control colorpicker minicolors-input" style="padding-left: 30px;" data-control="hue" value="" size="7">
+                            </div>
+                        </div>
+                        <div class="form-group style_box text_box hide">
+                            <label class="col-sm-1 control-label">字体大小：</label>
+                            <div class="col-sm-5 " style="margin-top: 12px;">
+                                <div class="sized-slider bg-yellow slider-xs"></div>
+                            </div>
+                        </div>
+                        <div class="form-group style_box text_box hide">
+                            <label class="col-sm-1 control-label">显示标题：</label>
+                            <div class="col-sm-5 ">
+                                <label class="radio-inline">
+                                    <input name="show_title" class="show_title" value="0" type="radio"> 显示
+                                </label>
+                                <label class="radio-inline">
+                                    <input name="show_title"  class="show_title" value="1" type="radio"> 隐藏
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group style_box delete_box hide">
+                            <label class="col-sm-1 control-label"></label>
+                            <a href="javascript:;" onclick="deleteDom()" class="btn  btn-default"><i class="fa fa-trash-o"></i>删除</a>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <button type="button" class="btn btn-primary" id="show_temp_img">点击预览效果，要保存后才能生效</button>
+                        <div id="temp_bg_box">
+                            <img src="{$row.temp_bg|default='__STATIC__/share/sampleImage.png'}" id="temp_bg_img">
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </section>
+        <footer class="footer bg-white b-t p-t">
+            <div class="form-group">
+                <div class="col-sm-4 col-sm-offset-1">
+                    <input type="hidden" id="content" name="content" value="">
+                    <input name="id" type="hidden" value="{$row.id|intval}">
+                    <button type="submit" onclick="setContent()" class="btn btn-primary js_save_submit" data-loading-text="保存中...">保存</button>
+                    <button type="button" class="btn btn-default" data-toggle="back">取消</button>
+                </div>
+            </div>
+        </footer>
+    </section>
+</form>
+{/block}
+
+{block name="footer" }
+<script type="text/javascript">
+    {if condition="$row['id'] > 0"}
+        var tempObj = {$row['content']|raw};
+        $(function(){
+            $.each(tempObj,function (i,v) {
+                addDom(i)
+            })
+        })
+    {else}
+        var tempObj = {};
+    {/if}
+    var selectDom = '';
+    function changeTempBg(data){
+        $('#temp_bg_img').attr("src",data.url);
+    }
+    //添加元素
+    function addDom(selval){
+        var isEdit = true;
+        if (typeof(selval) != 'undefined'){
+            var selObj = $('#select_dom').find("option[value='"+selval+"']");
+            var seltext = selObj.text();
+            var demo_text = selObj.data('text');
+        }else{
+            isEdit = false;
+            var selval = $('#select_dom').val();
+            var seltext = $('#select_dom').find("option:selected").text();
+            var demo_text = $('#select_dom').find("option:selected").data('text');
+            if ($('#temp_bg_box').find('#dom_'+selval).length > 0){
+                return _alert('已存在内容，不能重复添加.',true);
+            }
+        }
+
+        if (selval == 'avatar' || selval == 'qrcode'){
+            if (selval == 'avatar'){
+                if (isEdit == false){
+                    tempObj.avatar = {
+                        'shape':0,
+                        'top':0,
+                        'left':0,
+                        'width':60,
+                        'height':60
+                    };
+                }
+                $('#temp_bg_box').append('<div id="dom_'+selval+'" class="dom_div" data-selval="'+selval+'" data-seltext="'+seltext+'"><span class="circle">'+seltext+'</span></div>');
+            }else{
+                if (isEdit == false) {
+                    tempObj.qrcode = {
+                        'top': 0,
+                        'left': 0,
+                        'width': 80,
+                        'height': 80
+                    };
+                }
+                $('#temp_bg_box').append('<div id="dom_'+selval+'" class="dom_div" data-selval="'+selval+'" data-seltext="'+seltext+'"><img src="__STATIC__/share/qrcode.png" style="width: 100%; height: 100%;"></div>');
+            }
+            $("#dom_"+selval).draggable({containment:'#temp_bg_box',stop: function( event, ui ) {
+                tempObj[selval].top = ui.position.top;
+                tempObj[selval].left = ui.position.left
+            }}).resizable({containment:'#temp_bg_box',stop: function( event, ui ) {
+                $("#dom_"+selval).css({'height':ui.size.width+'px'});
+                tempObj[selval].width = ui.size.width;
+                tempObj[selval].height = ui.position.width
+            }});
+            $("#dom_"+selval).css({
+                'left':tempObj[selval].left+'px',
+                'top':tempObj[selval].top+'px',
+                'width':tempObj[selval].width+'px',
+                'height':tempObj[selval].width+'px',
+            });
+        }else{
+            if (isEdit == false) {
+                tempObj[selval] = {
+                    'top': 0,
+                    'left': 0,
+                    'color': '#000000',
+                    'font_size': '15',
+                    'show_title': 0
+                };
+            }
+            var isHide = tempObj[selval].show_title == 1 ? 'hide' : '';
+            $('#temp_bg_box').append('<div class="dom_div" data-selval="'+selval+'" data-seltext="'+seltext+'" id="dom_'+selval+'"><span class="'+isHide+'">'+seltext+'：</span>'+demo_text+'</div>');
+
+            $("#dom_"+selval).draggable({containment:'#temp_bg_box',stop: function( event, ui ) {
+                tempObj[selval].top = ui.position.top;
+                tempObj[selval].left = ui.position.left
+            }});
+            $("#dom_"+selval).css({
+                'left':tempObj[selval].left+'px',
+                'top':tempObj[selval].top+'px',
+                'color':tempObj[selval].color,
+                'font-size':tempObj[selval].font_size,
+            });
+        }
+        $("#dom_"+selval).trigger('click');
+    }
+    //删除元件
+    function deleteDom(){
+        $("#dom_"+selectDom).remove();
+        $('.style_box').addClass('hide');
+        delete tempObj[selectDom];
+    }
+    //提交前处理
+    function setContent(){
+        $('#content').val(JSON.stringify(tempObj));
+    }
+
+    //头像形状选择
+    $('.avatar_shape').click(function () {
+        if ($(this).val() == 0){
+            if ($("#dom_avatar span").hasClass('circle')){
+                return false;
+            }
+            $("#dom_avatar span").addClass('circle');
+        }else{
+            $("#dom_avatar span").removeClass('circle');
+        }
+        tempObj[selectDom].shape = $(this).val();
+    })
+    //标题显示选择
+    $('.show_title').click(function () {
+        if ($(this).val() == 0){
+            $("#dom_"+selectDom).find('span').removeClass('hide');
+        }else{
+            $("#dom_"+selectDom).find('span').addClass('hide');
+        }
+        tempObj[selectDom].show_title = $(this).val();
+    })
+    //监听颜色变化
+    $(".minicolors-input").on('input propertychange', function() {
+        $("#dom_"+selectDom).css({'color':$(this).val()});
+        tempObj[selectDom].color = $(this).val();
+    });
+    //点击选择元件
+    $('#temp_bg_box').on('click','.dom_div',function(){
+        selectDom =  $(this).data('selval');
+        $('.style_box').addClass('hide');
+        $('.dom_type_name').html($(this).data('seltext'));
+        $('.dom_type_box').removeClass('hide');
+        if (selectDom == 'avatar'){
+            $('.avatar_shape').eq(tempObj.avatar.shape).attr('checked', 'true');
+            $('.avatar_box').removeClass('hide');
+        }else if(selectDom == 'qrcode'){
+            $('.avatar_box').addClass('hide');
+            $('.text_box').addClass('hide');
+        }else{
+            $('.show_title').eq(tempObj[selectDom].show_title).attr('checked', 'true');
+            $('.minicolors-input').val(tempObj[selectDom].color);
+            $('.minicolors-swatch-color').css({'background-color':tempObj[selectDom].color});
+            $('.text_box').removeClass('hide');
+            $(".sized-slider").slider({value:tempObj[selectDom].font_size})
+        }
+        $('.delete_box').removeClass('hide');
+    })
+
+    //字体大小拖动效果
+    $(".sized-slider").slider({
+        min: 12,
+        max: 30,
+        value: 15,
+        step:1,
+        slide: function( event, ui ) {
+            tempObj[selectDom].font_size = ui.value;
+            $("#dom_"+selectDom).css({'font-size':ui.value+'px'});
+        }
+    });
+
+    $('#show_temp_img').click(function () {
+        var obj = this;
+        $(obj).html('预览图生成中..');
+        var data = [];
+        data.content = JSON.stringify(tempObj);
+        data.temp_bg = $('#temp_bg_input').val();
+        jq_ajax('{:url("mergeImg")}',data,function(){
+            $(obj).html('点击预览效果');
+           window.open("/upload/snap_file/test_temp.jpg?"+ Math.random());
+        })
+    })
+</script>
+{/block}

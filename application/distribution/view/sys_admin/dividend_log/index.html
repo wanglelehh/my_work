@@ -1,0 +1,70 @@
+{extend name="mainadmin@layouts/base" /}
+{block name="main" }
+
+<header class="header  b-b clearfix">
+ 	<form id="forms" class="talbe-search form-inline "  method="post" action="{:url('getList')}" >
+     <div class="page-breadcrumbs flex">
+            <ul class="breadcrumb" >
+                <li>
+                    <i class="fa fa-ellipsis-v"></i>
+                    <strong>佣金明细</strong>
+                </li>                                  
+            </ul>
+         <div  class="relative flex_bd">
+             <div class="search-main">
+                 <div class="search-main-box">
+                     <select name="status"  style="width: 120px;" data-toggle="select2"  data-notsearch="true" data-chang="submit">
+                           <option value="-1">所有状态</option>
+                           <option value="99" {$search['status'] == 99?'selected':''}>待返佣金</option>
+                           {volist name="divdend_satus" id="dsval"}
+                                 <option value="{$key}" {$search['status'] == $key?'selected':''}>{$dsval}</option>
+                           {/volist}
+                      </select>
+                     <div class="form-group">
+                         <a class="btn btn-default  " data-toggle="reportrange" data-change="submit">
+                             <i class="fa fa-calendar fa-lg"></i>
+                             <small>记录时间</small>
+                             <span></span> <b class="caret"></b>
+                             <input class="hide" type="text" value="{$start_date} - {$end_date}" id="reportrange" name="reportrange" />
+                         </a>
+                     </div>
+                     <select name="award_id" id="award_id" style="width: 200px;" data-toggle="select2"  data-notsearch="true" data-chang="submit">
+                         <option value="0">所有奖项</option>
+                         {volist name="awardList" id="vo"}
+                         <option value="{$vo.award_id}" >{$vo.award_name}</option>
+                         {/volist}
+                     </select>
+
+                      <input type="text" class="form-control input-medium" value="{$search.keyword}" name="keyword" placeholder="用户ID/订单SN"  />
+                      <button class="btn btn-sm btn-default-iq" type="submit" title="搜索"><i class="fa fa-search"></i></button>
+                 </div>
+             </div>
+             <i class="search_icon fa fa-chevron-down hide"></i>
+         </div>
+         <div>
+            <a href="#" class="btn statc_btn" data-toggle="ajaxModal"><i class="fa fa-pie-chart"></i>查看统计</a>
+            <button class="btn" type="submit" id="export_btn" ><i class="fa fa-cloud-download"></i>导出报表</button>
+         </div>
+      </div>
+    </form>
+</header>
+
+<section class="scrollable wrapper w-f ">
+    <section class="panel panel-default ">
+        <div class="table-responsive " id="list_box">
+            {include file="sys_admin/dividend_log/list" /}
+        </div>
+    </section>
+</section>
+<script type="text/javascript">
+    $('.statc_btn').click(function () {
+        var award_id = $('#award_id').val();
+        var reportrange = window.btoa($('#reportrange').val());
+        $(this).attr('href','{:_url("statc",["award_id"=>"【award_id】","reportrange"=>"【reportrange】"])}');
+    })
+    $('#export_btn').click(function(){
+        $('.talbe-search').append('<input type="hidden" name="is_export" id="is_export" value="1">').submit();
+        $('#is_export').remove();
+    })
+</script>
+{/block}

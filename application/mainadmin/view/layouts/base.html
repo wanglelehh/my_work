@@ -1,0 +1,125 @@
+<?PHP header("Cache-Control:private"); ?>
+{if condition="$isWrapper == 1"}
+{block name="main"}{/block}
+{else/}
+<!DOCTYPE html>
+<html lang="cn" class="app fadeInUp animated">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+    <title><?php echo empty($title)?'后台管理系统':$title;?></title>
+
+    <link rel="icon" type="image/png" href="__STATIC__/favicon.ico"/>
+
+    <link rel="stylesheet" href="__STATIC__/main/css/app.css"/>
+    <!--Basic Styles-->
+    <link href="__STATIC__/main/css/stylesheets/bootstrap.min.css" rel="stylesheet" />
+    <link href="__STATIC__/main/css/inside.css" rel="stylesheet">
+    <link href="__STATIC__/awesome/css/font-awesome.min.css" rel="stylesheet" />
+    <!--Beyond styles-->
+    <link id="beyond-link" href="__STATIC__/main/css/stylesheets/beyond.min.css" rel="stylesheet" type="text/css" />
+    <link href="__STATIC__/main/css/stylesheets/style.min.css" rel="stylesheet" />
+
+
+    <script type="text/javascript" src="__STATIC__/js/jquery/jquery/1.8.3/jquery.min.js"></script>
+    <script src="__STATIC__/js/inside.js"></script>
+
+    <link rel="stylesheet" href="__STATIC__/main/css/public.css"/>
+    <link href="__STATIC__/main/css/stylesheets/daterangepicker/daterangepicker-bs3.min.css" rel="stylesheet" />
+    <script src="__STATIC__/js/jquery.webui-popover.min.js"></script>
+    <link href="__STATIC__/main/css/jquery.webui-popover.min.css" rel="stylesheet" type="text/css" />
+	<script type="text/javascript">
+    	var assets_path="__STATIC__",
+		_version = "1.0.0",
+		uploadJ = "{:url('mainAdmin/attachment/webUploadByEdit')}",
+        webUploadByManagerJ = "{:url('mainAdmin/attachment/webUploadByManager','',false)}",
+		fileManagerJ = "{:url('mainAdmin/attachment/editer_manager')}",
+		searchUserUrl = "{:url('member/sys_admin.users/pubSearch')}",
+		searchGoodsUrl = "{:url('shop/sys_admin.goods/pubSearch')}",
+		regionUrl  = "{:url('publics/api.region/getList')}",
+        selectLinkUrl  = "{:url('publics/sys_admin.links/index')}",
+		order_by = '<?=empty($data["order_by"])?'':$data["order_by"];?>',
+		sort_by = '<?=empty($data["sort_by"])?'':$data["sort_by"];?>',
+		page_size = '';
+    </script>
+    {block name="head"}{/block}
+</head>
+
+
+<body  {block name="body"}{/block}>
+    <!-- 内容区域 start -->
+    	<section class="vbox">
+        	{block name="main"}{/block}
+            {include file="mainadmin@layouts/page" /}
+        </section>
+    <!-- 内容区域 end -->
+<script src="__STATIC__/js/layer/layer.js"></script>
+<script src="__STATIC__/js/art-template.js"></script>
+<script src="__STATIC__/js/app.js"></script>
+<script src="__STATIC__/assets/sea.js"></script>
+<script src="__STATIC__/assets/seajs_config.js"></script>
+<script src="__STATIC__/js/colorpicker/jquery.minicolors.js"></script>
+<script src="__STATIC__/js/jquery/jquery_viewer/viewer-jquery.min.js"></script>
+<link href="__STATIC__/js/jquery/jquery_viewer/viewer.min.css" rel="stylesheet" />
+<script type="text/javascript" src="__STATIC__/js/ueditor/ueditor.config.js"></script>
+<script type="text/javascript" src="__STATIC__/js/ueditor/ueditor.all.min.js"></script>
+<script type="text/javascript" src="__STATIC__/js/ueditor/lang/zh-cn/zh-cn.js"></script>
+
+
+<script type="text/javascript">
+    function refresh(){
+        location.reload();
+    }
+    if (window.frames.length == parent.frames.length) {
+        window.location.href = '/lzadmin.php';
+    }
+
+	seajs.use("dist/application/app.js");
+    //--jQuery MiniColors--颜色选择
+    $('.colorpicker').each(function () {
+        $(this).minicolors({
+            control: $(this).attr('data-control') || 'hue',
+            defaultValue: $(this).attr('data-defaultValue') || '',
+            inline: $(this).attr('data-inline') === 'true',
+            letterCase: $(this).attr('data-letterCase') || 'lowercase',
+            opacity: $(this).attr('data-opacity'),
+            position: $(this).attr('data-position') || 'bottom left',
+            change: function (hex, opacity) {
+                    if (!hex) return;
+                    if (opacity) hex += ', ' + opacity;
+                    try {
+                        console.log(hex);
+                    } catch (e) { }
+            },
+            theme: 'bootstrap'
+        });
+    });
+    $(function () {
+        $('.image-list').viewer({
+            url: 'src',
+        });
+        setTimeout(function (){
+            if ($('.search-main-box').height() > 40){
+                $('.search_icon').removeClass('hide');
+            }
+        },500);
+        $('.search_icon').click(function (){
+            if ($('.search-main').hasClass('search-main-open')){
+                $('.search-main').removeClass('search-main-open');
+                $(this).removeClass('fa-chevron-up').addClass('fa-chevron-down');
+            }else{
+                $('.search-main').addClass('search-main-open');
+                $(this).removeClass('fa-chevron-down').addClass('fa-chevron-up');
+            }
+        })
+    });
+</script>
+{block name="footer"}{/block}
+{/if}
+</body>
+</html>

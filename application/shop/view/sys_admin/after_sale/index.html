@@ -1,0 +1,61 @@
+{extend name="mainadmin@layouts/base" /}
+{block name="main" }
+
+<header class="header  b-b clearfix">
+    <form id="forms" class="talbe-search form-inline "  method="post" action="{:url($is_cancel==true?'trashList':'getList')}" >
+     <div class="page-breadcrumbs flex">
+            <ul class="breadcrumb" >
+                <li>
+                    <i class="fa fa-ellipsis-v"></i>
+                    <strong>{$title}</strong>
+                </li>                                  
+            </ul>
+         <div  class="relative flex_bd">
+             <div class="search-main">
+                 <div class="search-main-box">
+                     <select name="as_type" style="width: 100px;" data-toggle="select2" data-notsearch="true" data-change="submit">
+                         <option value="all" {$as_type=='all'?'selected':''}>全部售后</option>
+                         <option value="platform" {$as_type=='platform'?'selected':''}>平台售后</option>
+                         <option value="supplyer" {$as_type=='supplyer'?'selected':''}>供应商售后</option>
+                     </select>
+                     <div class="form-group">
+                         <a class="btn btn-default " data-toggle="reportrange" data-change="submit">
+                             <i class="fa fa-calendar fa-lg"></i>
+                             <small>售后时间</small>
+                             <span></span> <b class="caret"></b>
+                             <input class="hide" type="text" value="{$start_date} - {$end_date}" id="reportrange" name="reportrange" />
+                         </a>
+                     </div>
+                     <input type="hidden" name="listType" value="{$listType}">
+                     <select name="searchBy" style="width: 100px;" data-toggle="select2" data-notsearch="true">
+                         <option value="as_sn" >售后编号</option>
+                         <option value="order_sn" >订单编号</option>
+                         <option value="shipping_no">退货快递单号</option>
+                         <option value="user_id" >会员ID</option>
+                         <option value="goods_sn">商品SN</option>
+                     </select>
+
+                      <input type="text" class="form-control input-medium" value="{$search.keyword}" name="keyword" placeholder="输入相关内容筛选" data-rule-required="true" />
+                       <button class="btn btn-sm btn-default-iq" type="submit" title="搜索"><i class="fa fa-search"></i></button>
+                 </div>
+             </div>
+             <i class="search_icon fa fa-chevron-down hide"></i>
+         </div>
+    </div>
+</form>
+</header>
+
+<section class="scrollable wrapper w-f ">
+    <section class="panel panel-default ">
+        <div class="table-responsive " id="list_box">
+            {include file="shop@sys_admin/after_sale/list" /}
+        </div>
+
+    </section>
+</section>
+
+{/block}
+
+{block name="footer" }
+
+{/block}

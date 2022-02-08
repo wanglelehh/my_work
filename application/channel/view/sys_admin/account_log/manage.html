@@ -1,0 +1,73 @@
+<form class="form-horizontal form-validate form-modal" method="post" action="{:url('manage')}">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">调节代理帐户</h4>
+            </div>
+            <div class="modal-body">
+            	<div class="form-group m-b-md">
+                    <label class="col-sm-3 control-label">用户ID</label>
+                    <div class=" col-sm-3">
+                       <label>{$userInfo.user_id}</label>
+                    </div>
+                </div>
+                <div class="form-group m-b-md">
+                    <label class="col-sm-3 control-label">注册手机</label>
+                    <div class=" col-sm-3">
+                       <label>{$userInfo.mobile}</label>
+                    </div>
+                </div>
+                <div class="form-group m-b-md">
+                    <label class="col-sm-3 control-label">帐户变动原因</label>
+                    <div class="col-sm-8 must">
+                      <textarea name="change_desc" class="input-max" data-rule-maxlength="100" data-rule-required="true"></textarea>
+                    </div>
+                </div>
+
+
+                <div class="form-group m-b-md">
+                    <label class="col-sm-3 control-label">余额（代理）</label>
+                    <div class="col-sm-8">
+                        <select name="balance_money_type"  style="width: 80px;" data-toggle="select2" data-notsearch="true">
+                            <option value="add"  >增加</option>
+                            <option value="del"  >减少</option>
+                        </select>
+                        <input type="text" class="input-ssmall" name="balance_money" value="0" >
+                        当前值：{$userInfo.account.balance_money|priceFormat}
+                    </div>
+                </div>
+                    <div class="form-group m-b-md">
+                        <label class="col-sm-3 control-label">货款</label>
+                        <div class="col-sm-8">
+                            <select name="goods_money_type"  style="width: 80px;" data-toggle="select2" data-notsearch="true">
+                                <option value="add"  >增加</option>
+                                <option value="del"  >减少</option>
+                            </select>
+                            <input type="text" class="input-ssmall"  name="goods_money" value="0" >
+                            当前值：{$userInfo.account.goods_money|priceFormat}
+                        </div>
+                    </div>
+
+                    <div class="form-group m-b-md ">
+                        <label class="col-sm-3 control-label">保证金</label>
+                        <div class="col-sm-8">
+                            <select name="earnest_money_type"  style="width: 80px;" data-toggle="select2" data-notsearch="true">
+                                <option value="add"  >增加</option>
+                                <option value="del"  >减少</option>
+                            </select>
+                            <input type="text" class="input-ssmall"  name="earnest_money" value="0" >
+                            当前值：{$userInfo.account.earnest_money|intval}
+                        </div>
+                    </div>
+            </div>
+
+               
+            <div class="modal-footer">
+                <input  type="hidden" name="user_id" value="{$userInfo.user_id}"/>
+                <button type="submit" class="btn btn-primary" data-loading-text="提交中..." disabled>提交</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+            </div>
+        </div>
+    </div>
+</form>

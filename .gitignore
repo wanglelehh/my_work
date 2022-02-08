@@ -1,0 +1,8 @@
+/template/base/unpackage
+/Data
+/.idea
+/public/*.htaccess
+/config/database.php
+/runtime
+/public/upload
+/config/database.php

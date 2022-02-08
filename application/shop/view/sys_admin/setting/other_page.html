@@ -1,0 +1,220 @@
+{extend name="mainadmin@layouts/base" /}
+{block name="head" }
+
+{/block}
+{block name="main" }
+<header class="header  b-b clearfix">
+     <div class="page-breadcrumbs">
+            <ul class="breadcrumb" >
+                <li>
+                    <i class="fa fa-ellipsis-v"></i>
+                    <strong>其它页面</strong>
+                </li>                                  
+            </ul>
+      </div>
+</header>
+<form class="form-horizontal form-validate form_vbox" id="_form" method="post" action="{:url('save')}">
+    <section class="vbox">
+        <section class="scrollable  wrapper w-f">
+            <section class="panel panel-default">
+                <header>
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a href="#goodSet" data-toggle="tab">商品详细页设置</a></li>
+                        <li ><a href="#tabarSet" data-toggle="tab">底部导航设置</a></li>
+                        <li class="hide"><a href="#show_ordermessage" data-toggle="tab">首页订单信息轮播配置</a></li>
+                    </ul>
+                </header>
+                <div class="tab-content">
+                    <!--商品设置-->
+                    <div class="tab-pane active" id="goodSet">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">开放商品评论：</label>
+                            <div class="controls">
+                                <label class="radio-inline">
+                                    <input name="shop_goods_comment" value="0" {$setting['shop_goods_comment']<1?'checked':''}
+                                    type="radio">关闭
+                                </label>
+                                <label class="radio-inline">
+                                    <input name="shop_goods_comment" value="1" {$setting['shop_goods_comment']==1?'checked':''}
+                                    type="radio" >开启
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group hide">
+                            <label class="col-sm-2 control-label">开放商品问答：</label>
+                            <div class="controls">
+                                <label class="radio-inline">
+                                    <input name="shop_goods_answer" value="0" {$setting['shop_goods_answer']<1?'checked':''}
+                                    type="radio">关闭
+                                </label>
+                                <label class="radio-inline">
+                                    <input name="shop_goods_answer" value="1" {$setting['shop_goods_answer']==1?'checked':''}
+                                    type="radio" >开启
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">显示商品市场原价：</label>
+                            <div class="controls">
+                                <label class="radio-inline">
+                                    <input name="shop_goods_show_market_price" value="0" {$setting['shop_goods_show_market_price']<1?'checked':''}
+                                    type="radio">隐藏
+                                </label>
+                                <label class="radio-inline">
+                                    <input name="shop_goods_show_market_price" value="1" {$setting['shop_goods_show_market_price']==1?'checked':''}
+                                    type="radio" >显示
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">显示商品销量：</label>
+                            <div class="controls">
+                                <label class="radio-inline">
+                                    <input name="shop_goods_show_sale_num" value="0" {$setting['shop_goods_show_sale_num']<1?'checked':''}
+                                    type="radio">隐藏
+                                </label>
+                                <label class="radio-inline">
+                                    <input name="shop_goods_show_sale_num" value="1" {$setting['shop_goods_show_sale_num']==1?'checked':''}
+                                    type="radio" >显示
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">显示商品收藏量：</label>
+                            <div class="controls">
+                                <label class="radio-inline">
+                                    <input name="shop_goods_show_collect_num" value="0" {$setting['shop_goods_show_collect_num']<1?'checked':''}
+                                    type="radio">隐藏
+                                </label>
+                                <label class="radio-inline">
+                                    <input name="shop_goods_show_collect_num" value="1" {$setting['shop_goods_show_collect_num']==1?'checked':''}
+                                    type="radio" >显示
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">显示商品库存：</label>
+                            <div class="controls">
+                                <label class="radio-inline">
+                                    <input name="shop_goods_show_stock_num" value="0" {$setting['shop_goods_show_stock_num']<1?'checked':''}
+                                    type="radio">隐藏
+                                </label>
+                                <label class="radio-inline">
+                                    <input name="shop_goods_show_stock_num" value="1" {$setting['shop_goods_show_stock_num']==1?'checked':''}
+                                    type="radio" >显示
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <!--底部导航设置-->
+                    <div class="tab-pane" id="tabarSet">
+                        <a href="javascript:;" data-remote="{:url('tabbar')}" data-toggle="ajaxModal" class="btn btn-sm btn-default "><i class="fa fa-plus m-r-xs"></i>添加菜单</a>
+                        <div class="table-responsive m-t-sm" id="list_box" style="width: 600px;">
+                        <table class="table  table-hover m-b-none ">
+                            <thead>
+                            <tr>
+                                <th width="120">菜单名称</th>
+                                <th>图标（未选）</th>
+                                <th>图标（选中）</th>
+                                <th width="100">是否启用</th>
+                                <th width="100">操作</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {volist name="tabbar" id="tab"}
+                            <tr>
+                                <td>{$tab.title}</td>
+                                <td><img src="{$tab.imgurl}" style="max-width:50px;max-width:50px;"/></td>
+                                <td><img src="{$tab.imgurl_sel}" style="max-width:50px;max-width:50px;"/></td>
+                                <td>
+                                    <a href="#"  class="{$tab.status|tplckval='=1','active'}"  data-toggle="class" data-ajax="true"><i class="fa fa-check text-success text-active"></i><i class="fa fa-times text-danger text"></i></a>
+                                </td>
+                                <td>
+                                    <a href="{:url('tabbar',array('id'=>$tab['id']))}" data-toggle="ajaxModal" class="m-xs" title="编辑">
+                                        <i class="fa fa-edit text-muted"></i>
+                                    </a>
+                                    <a href="{:url('del',array('id'=>$g['id']))}" data-toggle="ajaxRemove" data-msg="确定删除该菜单？" class="m-xs" title="删除">
+                                        <i class="fa fa-trash-o text-muted"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            {/volist}
+                            </tbody>
+                        </table>
+                        </div>
+                    </div>
+                    <div class="tab-pane " id="show_ordermessage">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">开启订单轮播：</label>
+                            <div class="controls">
+                                <label class="radio-inline">
+                                    <input name="show_ordermessage_switch" value="0" {$setting['show_ordermessage_switch']<1?'checked':''}
+                                    type="radio">关闭
+                                </label>
+                                <label class="radio-inline">
+                                    <input name="show_ordermessage_switch" value="1" {$setting['show_ordermessage_switch']==1?'checked':''}
+                                    type="radio" >开启
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">显示频率/s：</label>
+                            <div class="controls">
+                                <input type="text" name="show_ordermessage_frequency"
+                                       value="{$setting.show_ordermessage_frequency}"> <span class="help-line"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">获取真订单频率/s:</label>
+                            <div class="controls">
+                                <input type="text" name="show_ordermessage_rfrequency"
+                                       value="{$setting.show_ordermessage_rfrequency}"> <span class="help-line"></span>
+                            </div>
+                            <span class="help-line">秒,真订单获取频率</span>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">假订单命中率:</label>
+                            <div class="controls">
+                                <input type="text" name="show_ordermessage_hit"
+                                       value="{$setting.show_ordermessage_hit}"> <span class="help-line"></span>
+                            </div>
+                            <span class="help-line">%,每次频率刷新显示的命中率(0~100)</span>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">订单提示语:</label>
+                            <div class="controls">
+                                <input type="text" name="show_ordermessage_content"
+                                       value="{$setting.show_ordermessage_content}"> <span class="help-line"></span>
+                            </div>
+                            <span class="help-line">xxx 刚刚下了一条订单</span>
+                        </div>
+                        <div class="form-group">
+                            注意：<br/>显示频率必须要比获取真实频率要小<br/>显示频率不能低于3秒,小于3秒会自动的转换成3秒<br/>显示频率越长，对系统越为友好
+                        </div>
+                       
+                    </div>
+                </div>
+            </section>
+        </section>
+        <footer class="footer bg-white b-t p-t">
+            <div class="form-group">
+                <div class="col-sm-4 col-sm-offset-1">
+                    <button type="submit" class="btn btn-primary js_save_submit" data-loading-text="保存中...">保存
+                    </button>
+                    <button type="button" class="btn btn-default" data-toggle="back">取消</button>
+                </div>
+            </div>
+        </footer>
+    </section>
+</form>
+{/block}
+{block name="footer" }
+<script type="text/javascript">
+seajs.use("dist/plupload/init.js")
+function assigBack(type, type_id, id, title, url) {
+    $("#url").val(url);
+    $("#_ajaxModal .modal-dialog .close").trigger("click");
+}
+</script>
+{/block}

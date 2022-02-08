@@ -1,0 +1,35 @@
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">统计汇总</h4>
+            </div>
+            <div class="modal-body">
+                <table class="table  table-hover  m-b-none">
+                    <thead>
+                    <tr>
+                        <th>提现方式</th>
+                        <th>提现数量</th>
+                        <th>扣除金额</th>
+                        <th>手续费</th>
+                        <th>实际打款</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {volist name="$data" id="vo" }
+                        <tr>
+                        <td>{$withdraw_account_type[$vo['account_type']]}</td>
+                        <td>{$vo.num}</td>
+                        <td>{$vo.realMoney|priceFormat=true}</td>
+                        <td>{$vo.totalFee|priceFormat=true}</td>
+                        <td>{$vo.totalMoney|priceFormat=true}</td>
+                        </tr>
+                    {/volist}
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+               提现总数：{$totalData.num}，累计扣除：{$totalData['realMoney']|priceFormat=true}，累计手续费：{$totalData['totalFee']|priceFormat=true}，累计打款：{$totalData['totalMoney']|priceFormat=true}
+            </div>
+        </div>
+    </div>

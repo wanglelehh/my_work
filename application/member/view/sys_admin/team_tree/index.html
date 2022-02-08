@@ -1,0 +1,120 @@
+{extend name="mainadmin@layouts/base" /}
+{block name="main" }
+
+<header class="header  b-b clearfix">
+        <div class="page-breadcrumbs">
+            <ul class="breadcrumb" >
+                <li>
+                    <i class="fa fa-ellipsis-v"></i>
+                    <strong>团队结构</strong>
+                </li>
+            </ul>
+
+        </div>
+    </form>
+</header>
+
+
+<section class="scrollable wrapper  ">
+    <section class="panel panel-default ">
+            <header class="panel-heading bg-light">
+                当前系统共有用户： {$teamCount|intval}人
+            </header>
+            <div class="col-sm-3 m-t">
+                <div id="MyTree2" class="tree tree-plus-minus">
+                    <div class="tree-folder" style="display: none;">
+                        <div class="tree-folder-header">
+                            <i class="fa fa-folder"></i>
+                            <div class="tree-folder-name"></div>
+                        </div>
+                        <div class="tree-folder-content">
+                        </div>
+                        <div class="tree-loader" style="display: none;"></div>
+                    </div>
+                    <div class="tree-item" style="display: none;">
+                        <i class="tree-dot"></i>
+                        <div class="tree-item-name"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-9 m-t" style=" float: right; ">
+                <form  class="form-horizontal">
+                    <div id="team_user_info">
+
+                    </div>
+                </form>
+            </div>
+            <div class="clearfix m-b"></div>
+    </section>
+</section>
+{/block}
+
+
+{block name="footer" }
+<script src="__STATIC__/js/fuelux/treeview/tree-custom.min.js"></script>
+<script type="text/javascript">
+    function getTeamList(pid){
+        var value = {};
+        $.ajax({
+            async : false,
+            type : "POST",
+            url : '{:url("getTeamList")}',
+            data : {
+                pid : pid
+            }
+        }).done(function(res){
+            value = res.data;
+        });
+        return value;
+    }
+    function getUserInfo(uid) {
+        if (uid < 1){
+            return false;
+        }
+        jq_ajax('{:url("info")}','user_id='+uid,function(res){
+            if (res.code == 0){
+               return _alert(res.msg);
+            }
+            $('#team_user_info').html(res.data.content);
+        });
+    }
+
+    $(function () {
+        var DataSourceTree = function (options) {
+            this._data = options.data;
+        };
+        DataSourceTree.prototype = {
+            data: function (options, callback) {
+                if (typeof(options.additionalParameters) == 'undefined'){
+                    var self = this;
+                    var data = $.extend(true, [], self._data);
+                    getUserInfo(self._data[0].additionalParameters.user_id);
+                    callback({ data: data });
+                    $('.tree').find('.tree-folder').eq(1).find('.tree-folder-header').addClass('tree_bg');
+                }else{
+                    var data = getTeamList(options.additionalParameters.user_id);
+                    callback({ data: data });
+                }
+            }
+        };
+        $('#MyTree2').tree({
+            dataSource: new DataSourceTree({
+                data: getTeamList(0)
+            }),
+            multiSelect: true,
+            iconSelect:true,
+            loadingHTML: '<div class="tree-loading"><i class="fa fa-rotate-right fa-spin"></i></div>'
+        });
+
+        $(document).on('click','.tree-folder-name',function(e){
+            var data = $(this).data();
+            $('.tree-folder-header').removeClass('tree_bg');
+            $(this).parent().addClass('tree_bg');
+            getUserInfo(data.additionalParameters.user_id)
+        })
+    })
+
+
+</script>
+{include file="sys_admin/users/user_js" /}
+{/block}

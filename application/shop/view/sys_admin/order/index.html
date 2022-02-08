@@ -1,0 +1,130 @@
+{extend name="mainadmin@layouts/base" /}
+{block name="main" }
+
+<header class="header  b-b clearfix">
+    <form id="forms" class="talbe-search form-inline "  method="post" action="{:url($is_cancel==true?'trashList':'getList')}" >
+     <div class="page-breadcrumbs flex">
+            <ul class="breadcrumb" >
+                <li>
+                    <i class="fa fa-ellipsis-v"></i>
+                    <strong>{$is_cancel==true?'订单回收列表':'订单列表'}</strong>
+                </li>                                  
+            </ul>
+         <div  class="relative flex_bd">
+             <div class="search-main">
+                 <div class="search-main-box">
+                 {if condition="$is_cancel != true"}
+                 <select name="state" class="state_select" style="width: 150px;" data-toggle="select2" data-notsearch="true"  onchange="state_select(this)" data-chang="submit">
+                     <option value="0" {$search['state']==0?'selected':''} >全部订单</option>
+                     <option value="10" {$search['state']==10?'selected':''} >线下付款待审核</option>
+                     <option value="1" {$search['state']==1?'selected':''} >待确认-无需付款</option>
+                     <option value="2" {$search['state']==2?'selected':''} >待支付</option>
+                     <option value="3" {$search['state']==3?'selected':''} >待发货</option>
+                     <option value="4" {$search['state']==4?'selected':''} >已发货</option>
+                     <option value="5" {$search['state']==5?'selected':''} >已签收</option>
+                     <option value="6" {$search['state']==6?'selected':''} >已退货</option>
+                     <option value="7" {$search['state']==7?'selected':''} >待退款</option>
+                     <option value="8" {$search['state']==8?'selected':''} >已退款</option>
+                 </select>
+                {/if}
+                   <div class="form-group">
+                        <a class="btn btn-default " data-toggle="reportrange" data-change="submit">
+                            <i class="fa fa-calendar fa-lg"></i>
+                            <small>下单时间</small>
+                            <span></span> <b class="caret"></b>
+                            <input class="hide" type="text" type="text" value="{$start_date} - {$end_date}" id="reportrange" name="reportrange" />
+                        </a>
+                  </div>
+
+                 <select name="searchBy" style="width: 100px;" data-toggle="select2" data-notsearch="true" >
+                     <option value="order_sn" >订单编号</option>
+                     <option value="consignee" >收货人</option>
+                     <option value="mobile">联系电话</option>
+                     <option value="goods_sn">商品SN</option>
+                     <option value="user_id" >会员ID</option>
+                 </select>
+
+                  <input type="text" class="form-control input-medium" value="{$search.keyword}" name="keyword" placeholder="输入相关内容筛选" data-rule-required="true" />
+                 <input type="hidden" value="0" name="export">
+                 <input type="hidden" value="{$favour_id}" name="favour_id">
+                 <button class="btn btn-sm btn-default  btn-default-iq" type="submit" title="搜索"><i class="fa fa-search"></i></button>
+                 </div>
+             </div>
+            <i class="search_icon fa fa-chevron-down hide"></i>
+         </div>
+         <div>
+         {if condition="$is_cancel != true"}
+         <a href="javascript:;" onclick="ExportLog()" title="导出" class="btn btn-sm btn-default fr m-t-md m-r"><i class="fa fa-file-excel-o m-r-xs"></i>导出列表</a>
+         <a href="{:url('import')}" title="" class="btn btn-sm btn-default fr m-t-md m-r" data-toggle="ajaxModal"><i class="fa fa-cloud-upload"></i>导入发货订单</a>
+         {/if}
+        {if $error_count > 0}
+        <a href="javascript:" id="error_export_btn" title="" class="btn btn-sm btn-default fr m-t-md m-r"><i class="fa fa-cloud-download"></i>导出失败数据</a>
+        {/if}
+         </div>
+    </div>
+</form>
+</header>
+
+<section class="scrollable wrapper w-f ">
+    <section class="panel panel-default ">
+        <div class="table-responsive " id="list_box">
+            {include file="shop@sys_admin/order/list" /}
+        </div>
+
+    </section>
+</section>
+
+{/block}
+
+{block name="footer" }
+<script type="text/javascript">
+    function state_select(obj){
+        if (typeof(obj) == 'undefined'){
+            var val = $('.state_select').val();
+        }else{
+            var val = obj.options[obj.selectedIndex].value;
+        }
+        if (val == 3){
+            $('.footer_other').html('<label class="m-r" ><input type="checkbox" class="checkboxAll" data-name="order_id"> 全选 </label> ' +
+                '<a href="javascript:;" class="btn btn-sm" data-remote="{:url('batchShipping')}" data-toggle="ajaxModal"><i class="fa fa-truck "></i> 勾选订单批量发货</a>');
+        }else if(val == 4){
+            $('.footer_other').html('<label class="m-r " ><input type="checkbox" class="checkboxAll" data-name="order_id"> 全选 </label> ' +
+                '<a href="javascript:;" class="btn btn-sm " onclick="PrintOrder()"><i class="fa fa-truck"></i> 勾选订单批量打单</a>');
+        }else{
+            $('.footer_other').html('');
+        }
+    }
+    state_select();
+    $('#error_export_btn').click(function(){
+        $(this).hide();
+        window.location.href = "{:url('errorExport')}";
+    })
+    function ExportLog(){
+        $('input[name="export"]').val('1');
+        $('#forms').submit();
+        $('input[name="export"]').val('0');
+    }
+
+    //批量打单
+    function PrintOrder() {
+        var ids = '';
+        $('input[name="order_id"][type="checkbox"]:checked').each(function () {
+            ids == '' ? ids += $(this).val() : ids += ',' + $(this).val();
+        });
+        // var params = {
+        //     id: ids
+        // };
+        var formData = document.createElement("form");
+        formData.style.display = "none";
+        var opt = document.createElement("textarea");
+        opt.name = 'id';
+        opt.value = ids;
+        formData.appendChild(opt);
+        formData.target = "_blank";
+        formData.action = '{:url("shop/sys_admin.order/printPage")}';
+        formData.method = "POST";
+        $(document.body).append(formData);
+        formData.submit();
+    }
+</script>
+{/block}
