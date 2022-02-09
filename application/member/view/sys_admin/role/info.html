@@ -148,7 +148,14 @@
 				<span class="help-inline">{{item.tip}}</span>
 			{{else if item.input == 'text'}}
 			   <input type="text" name="function_val[{{item.name}}]"  class="input-large" data-rule-required="true" value="{{value[item.name]}}"><span class="help-inline">{{item.tip}}</span>
-			{{else if item.input == 'radio'}}
+            {{else if item.input == 'any_product'}}
+            <div class="col-sm-9">
+                <label><input type="radio" name="function_val[{{item.name}}]" value="0" {{value[item.name]==0?'checked':''}}>
+                    否</label>
+                <label><input type="radio" name="function_val[{{item.name}}]" value="1" {{value[item.name]==1?'checked':''}}>
+                    是</label>
+            </div>
+            {{else if item.input == 'radio'}}
 				{{each item.selval as selval index}}
 			      <label><input type="radio"  name="function_val[{{item.name}}]" value="{{index}}" {{value[item.name]==index?'checked':''}}> {{selval}}</label>
 				 {{/each}}

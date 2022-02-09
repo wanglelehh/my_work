@@ -618,4 +618,19 @@ class GoodsModel extends BaseModel
     }
 
 
+    // 获取商品身份价格
+    public function rolePrice($goods_id,$role_id)
+    {
+        $GoodsPricesModel = new GoodsPricesModel();
+        $u_price = 0;
+        //计算分销身份价格
+        if ($role_id > 0) {
+            $map['goods_id'] = $goods_id;
+            $map['type'] = 'role';
+            $map['by_id'] = $role_id;
+            $u_price = $GoodsPricesModel->where($map)->value('price');
+        }
+        return $u_price;
+    }
+
 }

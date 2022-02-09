@@ -3,6 +3,9 @@
 namespace app\shop\model;
 
 use app\BaseModel;
+use app\distribution\model\DividendModel;
+use app\member\model\RoleModel;
+use app\member\model\UsersModel;
 use think\facade\Cache;
 use think\Db;
 
@@ -876,6 +879,19 @@ class OrderModel extends BaseModel
         if ($res !== true) {
             return false;
         }
+
+        //处理（差价补贴、平级奖）
+        if($orderInfo['is_type']==1){
+            trace(12354,'debug');
+            $orderInfo['goodsList']=(new OrderGoodsModel())->where('order_id',$upData['order_id'])->select()->toArray();
+            $res2 = $this->moreAward($orderInfo);
+//            if ($res2 !== true) {
+//                return false;
+//            }
+        }
+        //处理（差价补贴、平级奖）  end
+
+
         $this->_log($orderInfo,$_log);
         if ($is_commit == true){
             Db::commit();// 提交事务
@@ -966,6 +982,159 @@ class OrderModel extends BaseModel
         $this->where('order_id',$orderInfo['order_id'])->update($upData);
         $this->cleanMemcache($orderInfo['order_id']);
         return true;
+    }
+
+
+    public function moreAward($orderInfo = array()){
+
+        trace($orderInfo,'debug');
+
+//        $is_rolePrice = $GoodsModel->rolePrice($orderInfo['buy_goods_id'],$userinfo);
+//        // 设置身份价格不发放复购奖励
+//        if(empty($is_rolePrice));
+        $UsersModel = new UsersModel();
+        $DividendModel = new DividendModel();
+        $OrderGoodsModel = new OrderGoodsModel();
+        $GoodsModel=new GoodsModel();
+        $RoleModel=new RoleModel();
+
+        //获取订单的全部商品信息
+        if(count($orderInfo['goodsList']) < 1) return false;
+
+        $userInfo = $UsersModel->info($orderInfo['user_id'],'user_id',false);  //下单人会员
+        //会员上级关系链(包括自己)
+        $upperList = $UsersModel->getSuperiorSelf($orderInfo['user_id']);
+        trace($upperList,'debug');
+        //分销流水信息
+        $inData = array(
+            //订单类型:
+            'order_type' => 'order',
+            //订单id
+            'order_id' => $orderInfo['order_id'],
+            //订单编号
+            'order_sn' => $orderInfo['order_sn'],
+            //购买会员
+            'buy_uid' => $orderInfo['user_id'],
+            //分佣会员(获得佣金的会员)
+            'dividend_uid' => 0,
+            //分佣身份ID（获得分佣的会员身份id）
+            'role_id' => 0,
+            //分佣身份（获得分佣的会员身份）
+            'role_name' => '',
+            //分佣层级(这里固定2，占时不知道为什么)
+            'level' => 2,
+            //状态0待支付 1已支付 3待返佣金 9已返佣金
+            'status' => 1,
+            //订单金额（用于分佣的订单总额）
+            'order_amount' => $orderInfo['order_amount'],
+            //奖项名称
+            'award_name' => '',
+            //分佣金额（奖励积分）
+            'dividend_amount' => 0,
+            //创建时间
+            'add_time' => time()
+        );
+
+        //每个用户得到的奖励(数组)
+        $insertAll_data=array();
+
+        $max_id = $RoleModel->order('level ASC')->value('role_id'); //获取当前最高级别 的id
+
+//        $min_id = $RoleModel->order('level DESC')->value('role_id'); //获取当前最低级别 的id
+
+        $get_uid_data = array();
+
+        //循环订单商品列表
+        foreach($orderInfo['goodsList'] as $g){
+            //商品数量
+            $goods_number = intval($g['goods_number']);
+            //商品信息
+            $goods=$GoodsModel->info($g['goods_id']);
+            //平级奖参数
+            $peers = json_decode($goods['peers'],true);//对应商品设置的平级比例
+            //平级奖==========================================
+            $waituser=array();  //遇到平级，等待分佣
+            $havepeer=0;
+            $level_now=10;  //目前等级
+            foreach($upperList as $ke=>$ul){
+                //会员以上才有差价奖（与对比等级有极差，給该用户计算平级奖）
+                if($ul['level'] < 6){
+                    if($ul['user_id']==$orderInfo['user_id']) continue;   //下单本人跳过
+                    if($ul['level']<$level_now) {
+                        $level_now = $ul['level'];
+                        if($ul['user_id']==$userInfo['pid'] && $ul['user_id']['role_id']==$userInfo['role_id'] && empty($waituser) && $havepeer==0){
+                            $waituser=$ul;       //遇到直推上级且是平级
+                            $havepeer=1;
+                            continue;
+                        }
+                        $is_rolePrice = $GoodsModel->rolePrice($g['goods_id'], $ul['role_id']); //此人对应身份的身份价;
+                        $findLeve = $ul['level'] + 1;
+                        $next_role_id = $RoleModel->where('level', $findLeve)->value('role_id');
+                        $down_rolePrice = $GoodsModel->rolePrice($g['goods_id'], $next_role_id); //低一级的身份价;
+                        $award = $down_rolePrice - $is_rolePrice;   //计算得到基数(单件商品)
+                        if ($award <= 0) continue;
+
+                        if ($ul['role_id'] == $max_id && !empty($waituser)) {  //是联创  且有平级
+                            $per = $peers[$waituser['role_id']][0];
+                            if ($waituser['role_id'] == $max_id) {  //若平级是联创
+                                $result = $UsersModel->isSameMonth($waituser['last_up_role_time'], time());
+                                if ($result == true) {
+                                    $per = $peers[$waituser['role_id']][0];
+                                } else {
+                                    $per = $peers[$waituser['role_id']][1];
+                                }
+                            }
+                            $getward = ($orderInfo['order_amount'] - $orderInfo['shipping_fee']) * $per * 0.01;
+                            $get_uid_data[$waituser['user_id']]['award'] += $getward;
+                            $get_uid_data[$waituser['user_id']]['award_name'] = '平级推荐奖';
+                            $get_uid_data[$waituser['user_id']]['role_id'] =$waituser['role_id'];
+                            $get_uid_data[$waituser['user_id']]['role_name'] =$waituser['role_name'];
+
+                            $get_uid_data[$ul['user_id']]['award'] += ($award * $goods_number * 0.01) - $getward;
+                            $get_uid_data[$ul['user_id']]['award_name'] = '差价补贴(分)';
+                            $get_uid_data[$ul['user_id']]['role_id'] =$ul['role_id'];;
+                            $get_uid_data[$ul['user_id']]['role_name'] =$ul['role_name'];;
+
+                            $waituser = array();
+                        } else {
+                            $get_uid_data[$ul['user_id']]['award'] += $award * $goods_number;
+                            $get_uid_data[$ul['user_id']]['award_name'] = '差价补贴';
+                            $get_uid_data[$ul['user_id']]['role_id'] =$ul['role_id'];;
+                            $get_uid_data[$ul['user_id']]['role_name'] =$ul['role_name'];;
+                        }
+                    }
+                }
+                //差价+平级奖-------------------------------------------------------------------
+            }
+            if(!empty($waituser)){
+                $per=$peers[$waituser['role_id']][0];
+                if($waituser['role_id']==$max_id){
+                    $result=$UsersModel->isSameMonth($waituser['last_up_role_time'],time());
+                    if($result==true){
+                        $per=$peers[$waituser['role_id']][0];
+                    }else{
+                        $per=$peers[$waituser['role_id']][1];
+                    }
+                }
+                $get_uid_data[$waituser['user_id']]['award'] += ($orderInfo['order_amount']-$orderInfo['shipping_fee']) * $per  * 0.01;
+                $get_uid_data[$waituser['user_id']]['award_name']='平级推荐奖';
+                $get_uid_data[$waituser['user_id']]['role_id'] =$waituser['role_id'];
+                $get_uid_data[$waituser['user_id']]['role_name'] =$waituser['role_name'];
+            }
+        }
+        //差价、平级奖==========================================END
+
+        foreach ($get_uid_data as $ky=>$vy){
+            $inData['dividend_uid'] = $ky;
+            $inData['role_id'] = $vy['role_id'];
+            $inData['role_name'] = $vy['role_name'];
+            $inData['award_name'] = $vy['award_name'];
+            $inData['dividend_amount'] = $vy['award'];
+            if($inData['dividend_amount'] >0) $insertAll_data[] = $inData;
+        }
+        $res = $DividendModel->insertAll($insertAll_data);
+        return true;
+
     }
 
 }

@@ -1043,4 +1043,45 @@ class UsersModel extends BaseModel
         $userList=explode(',',rtrim($userList,','));
         return $userList;
     }
+
+    /*------------------------------------------------------ */
+    //-- 获取会员的上级关联链(备份)
+    /*------------------------------------------------------ */
+    public function getSuperiorSelf($user_id = 0)
+    {
+        if ($user_id < 1) return array();
+        $chain = Cache::get('userSuperior_' . $user_id);
+        if ($chain) return $chain;
+        $dividendRole = (new RoleModel())->getRows();
+        $i = 1;
+//        $user_id = $this->where('user_id', $user_id)->value('pid');
+        if ($user_id < 1) return [];
+        do {
+            $info = $this->where('user_id', $user_id)->field('user_id,nick_name,pid,role_id,reg_time,last_up_role_time')->find();
+            $chain[$i]['weizhi'] = $i;
+            $chain[$i]['level'] = $info['role_id'] > 0 ? $dividendRole[$info['role_id']]['level'] : '无等级';
+            $chain[$i]['user_id'] = $info['user_id'];
+            $chain[$i]['last_up_role_time'] = $info['last_up_role_time'];
+            $chain[$i]['reg_time'] = dateTpl($info['reg_time']);
+            $chain[$i]['nick_name'] = empty($info['nick_name']) ? '未填写' : $info['nick_name'];
+            $chain[$i]['role_id'] = $info['role_id'];
+            $chain[$i]['role_name'] = $info['role_id'] > 0 ? $dividendRole[$info['role_id']]['role_name'] : '无身份';
+            $user_id = $info['pid'];
+            $i++;
+        } while ($user_id > 0);
+
+        Cache::set('userSuperior_' . $user_id, $chain, 300);
+        return $chain;
+    }
+
+
+    function isSameMonth($time1, $time2)
+    {
+        $m1 = date('Ym', $time1);
+        $m2 = date('Ym', $time2);
+        if($m1 == $m2){
+            return true;
+        }
+        return false;
+    }
 }

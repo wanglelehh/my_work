@@ -88,19 +88,30 @@
 
                         </div>
                     </div>
+
                     <div class="form-group">
-                        <label class="col-sm-2 control-label">是否分销商品：</label>
+                        <label class="col-sm-2 control-label">商品类型：</label>
                         <div class="col-sm-3 ">
-                            <select name="is_dividend" id="is_dividend" style="width:100%;" onChange="getType()">
-                                <option {$row['is_dividend']==0?'selected':''} value="0">不是</option>
-                                <option {$row['is_dividend']==1?'selected':''} value="1">是</option>
+                            <select name="is_type" id="is_type" style="width:100%;" onChange="getType()">
+                                <option {$row['is_type']==0?'selected':''} value="0">普通商品</option>
+                                <option {$row['is_type']==1?'selected':''} value="1">身份商品</option>
                             </select>
                         </div>
                     </div>
 
+                    <!--<div class="form-group">-->
+                        <!--<label class="col-sm-2 control-label">是否分销商品：</label>-->
+                        <!--<div class="col-sm-3 ">-->
+                            <!--<select name="is_dividend" id="is_dividend" style="width:100%;" onChange="getType()">-->
+                                <!--<option {$row['is_dividend']==0?'selected':''} value="0">不是</option>-->
+                                <!--<option {$row['is_dividend']==1?'selected':''} value="1">是</option>-->
+                            <!--</select>-->
+                        <!--</div>-->
+                    <!--</div>-->
+
                     <script type="text/javascript">
                         function getType() {
-                            var is_type = $("#is_dividend").val();
+                            var is_type = $("#is_type").val();
                             switch(is_type){
                                 case '0':
                                     $('.type_1').removeClass('show').addClass('hide');
@@ -112,7 +123,7 @@
                         }
                     </script>
 
-                    <div class="type_1" {$row.is_dividend == 0 ? 'style="display: none;' : ''}">
+                    <div class="type_1" {$row.is_type == 0 ? 'style="display: none;' : ''}">
                         <div class="form-group is_dividend">
                             <label class="col-sm-2 control-label">平级推荐奖：</label>
                             <div class="col-sm-8">

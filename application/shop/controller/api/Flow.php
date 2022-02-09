@@ -262,6 +262,7 @@ class Flow extends ApiController
         // 验证购物车中的商品能否下单
         foreach ($cartList['goodsList'] as $key => $grow) {
             $goods = $GoodsModel->info($grow['goods_id']);
+            $inArr['is_type']=$goods['is_type'];
             //活动信息相关：1-限时优惠
             $promInfo = [];
             if ($grow['prom_type'] == 1) {
@@ -376,7 +377,9 @@ class Flow extends ApiController
         $inArr['order_amount'] = $cartList['orderTotal'] + $inArr['shipping_fee'] - $inArr['use_bonus'];
 
 
-        $inArr['order_type'] = $this->is_integral;//订单类型，0普通订单,1积分订单
+        if($this->is_integral==1){
+            $inArr['order_type'] = $this->is_integral;//订单类型，0普通订单,1积分订单
+        }
 
         if($use_integral > 0){
             if ($use_integral > $this->userInfo['account']['use_integral']) {
