@@ -771,11 +771,6 @@ function base64ToImage($base64_image_content,$file_path,$file_name){
 //-- @return string $path 保存的路径及文件名 ./public/upload/headimg/s3f21sdf3s1ads.jpg
 /*------------------------------------------------------ */
 function downloadImage($url,$path){
-    $extension = end(explode('.',$path));
-    $extension = strtolower($extension);
-    if (in_array($extension,['jpg','jpeg','png','gif']) == false){
-        return false;
-    }
     $ch=curl_init();
     $timeout=5;
     curl_setopt($ch,CURLOPT_URL,$url);

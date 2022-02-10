@@ -219,9 +219,9 @@ class WeiXinModel extends BaseModel
     /*------------------------------------------------------ */
     //-- 获取微信用户信息，非关注也可以调用
     /*------------------------------------------------------ */
-    function getWxUserInfo($openid)
+    function getWxUserInfo($openid,$access_token)
     {
-        $access_token = $this->getAccessToken();
+//        $access_token = $this->getAccessToken();
         $userinfo = file_get_contents("https://api.weixin.qq.com/sns/userinfo?access_token=" . $access_token . "&openid=" . $openid . "&lang=zh_CN");
         $userinfo = json_decode($userinfo, true);
         return $userinfo;

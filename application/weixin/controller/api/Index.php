@@ -11,6 +11,7 @@ use app\weixin\model\WeiXinModel;
 use app\weixin\model\WeiXinMpModel;
 use app\weixin\model\WeiXinInviteLogModel;
 use app\member\model\UsersModel;
+use think\Db;
 
 
 class Index  extends ApiController{
@@ -26,6 +27,8 @@ class Index  extends ApiController{
     public function getOpenId(){
         $code = input('code','','trim');
         $type = input('type','','trim');
+        $wx_nickname = filterEmoji(input('wx_nickname','','trim'));
+        $wx_headimgurl = input('wx_headimgurl','','trim');
         $auto_login = input('auto_login',0,'intval');
         if ($type == 'MP'){
             $is_mp = 1;
@@ -44,9 +47,15 @@ class Index  extends ApiController{
         $where[] = ['wx_openid','=',$data['openid']];
         $where[] = ['is_mp','=',$is_mp];
         $wxuInfo = $this->Model->where($where)->find();
+
+        $getWxInfo = $wxModel->getWxUserInfo($data['openid'],$data['access_token']);
+
+
         if (empty($wxuInfo)){//数据不存在，写入
             $inData['is_mp'] = $is_mp;
             $inData['wx_openid'] = $data['openid'];
+            $inData['wx_nickname'] = $type == 'MP' ? $wx_nickname : $getWxInfo['nickname'];
+            $inData['wx_headimgurl'] = $type == 'MP' ? $wx_headimgurl : $getWxInfo['headimgurl'];
             if (empty($data['unionid']) == false){
                 $inData['unionid'] = $data['unionid'];
             }
@@ -59,6 +68,13 @@ class Index  extends ApiController{
             if ($wxuInfo['unionid'] != $data['unionid']){
                 $upData['unionid'] = $data['unionid'];
             }
+            if ($type == 'MP'){
+                if ($wxuInfo['wx_nickname'] != $wx_nickname ) $upData['wx_nickname'] = $wx_nickname;
+                if ($wxuInfo['wx_headimgurl'] != $wx_headimgurl) $upData['wx_headimgurl'] = $wx_headimgurl;
+            }else{
+                if ($wxuInfo['wx_nickname'] != $getWxInfo['nickname']) $upData['wx_nickname'] = $getWxInfo['nickname'];
+                if ($wxuInfo['wx_headimgurl'] != $getWxInfo['headimgurl']) $upData['wx_headimgurl'] = $getWxInfo['headimgurl'];
+            }
 
         }
 
@@ -69,8 +85,8 @@ class Index  extends ApiController{
             if ($wxArr['subscribe'] == 1){
                 $upData['sex'] = $wxArr['sex'];
                 $upData['subscribe'] = $wxArr['subscribe'] * 1;
-                $upData['wx_nickname'] = $wxArr['nickname'];
-                $upData['wx_headimgurl'] = $wxArr['headimgurl'];
+                if (empty($wxuInfo['wx_nickname'])) $upData['wx_nickname'] = $wxArr['nickname'];
+                if (empty($wxuInfo['wx_headimgurl'])) $upData['wx_headimgurl'] = $wxArr['headimgurl'];
                 $upData['wx_city'] = $wxArr['city'];
                 $upData['wx_province'] = $wxArr['province'];
             }else{
@@ -107,9 +123,9 @@ class Index  extends ApiController{
                 }
             }
         }else{
-            if ($auto_login == 1 && settings('wx_auto_login') == 1){ //公众号自动登陆
+//            if ($auto_login == 1 && settings('wx_auto_login') == 1){ //公众号自动登陆
                 $data['token'] = (new UsersModel)->doLogin($wxuInfo['user_id']);
-            }
+//            }
         }
         return $this->success($data);
     }
@@ -126,7 +142,7 @@ class Index  extends ApiController{
             return $this->error($dataObj);
         }
         $UsersModel = new UsersModel();
-        $userInfo = $UsersModel->where('mobile',$dataObj['phoneNumber'])->field('user_id,is_ban,token')->find();
+        $userInfo = $UsersModel->where('mobile',$dataObj['phoneNumber'])->find();
         if (empty($userInfo) == false){
             if ($userInfo['is_ban'] == 1) {
                 return $this->error(langMsg('用户已被禁用.', 'member.login.is_ban'));
@@ -134,9 +150,40 @@ class Index  extends ApiController{
             $data['share_token'] = $userInfo['token'];
             $data['token'] = $UsersModel->doLogin($userInfo['user_id']);
         }else{
-            $data['phoneNumber'] = $dataObj['phoneNumber'];
-            $data['must_reg'] = 1;//相关手机号码未注册会员，提示并跳转注册
+            $inArr['openid']=$openid;
+            $inArr['iv']=$iv;
+            $inArr['encryptedData']=$encryptedData;
+            $inArr['mobile']=$dataObj['phoneNumber'];
+            $inArr['openid']=$openid;
+            $inArr['password'] = 'Abc123456'; //系统默认密码
+            $res=$UsersModel->register($inArr,0);
+            if($res!=true){
+                return $this->error(langMsg($res));
+            }
+            $userInfo = $UsersModel->where('mobile',$inArr['mobile'])->find();
+            $data['share_token'] = $userInfo['token'];
+            $data['token'] = $UsersModel->doLogin($userInfo['user_id']);
         }
+        $WeiXinUsersModel=new WeiXinUsersModel();
+        $wxuInfo=$WeiXinUsersModel->where('wx_openid',$openid)->find();
+        Db::startTrans();
+        if($wxuInfo['user_id']<1 || $wxuInfo['user_id']!=$userInfo['user_id']){
+            $res=$WeiXinUsersModel->where('wx_openid',$openid)->update(['user_id'=>$userInfo['user_id'],'update_time'=>time()]);
+            if(!$res){
+                Db::rollback();
+                return $this->error(langMsg('用户绑定失败,请稍后再试'));
+            }
+        }
+        if(empty($userInfo['nick_name']) && empty($userInfo['headimgurl']) && !empty($wxuInfo['wx_headimgurl']) && !empty($wxuInfo['wx_nickname'])){
+            $img=$UsersModel->getHeadImgBeuFen($wxuInfo['wx_headimgurl']);
+            $nick_name=filterEmoji($wxuInfo['wx_nickname']);
+            $res=$UsersModel->where('user_id',$userInfo['user_id'])->update(['nick_name'=>$nick_name,'headimgurl'=>$img]);
+            if(!$res){
+                Db::rollback();
+                return $this->error(langMsg('头像、昵称更新有误,请稍后再试'));
+            }
+        }
+        Db::commit();
         return $this->success($data);
     }
     /*------------------------------------------------------ */
@@ -200,5 +247,83 @@ class Index  extends ApiController{
             return $this->error('绑定失败，请重试.');
         }
         return $this->success();
+    }
+    /**
+     * 公众号手机号绑定微信会员信息
+     */
+    public function goBindWxUser(){
+        $openid = input('openid','','trim');
+        $share_token = input('share_token','','trim');
+        $code = input('code','','trim');
+        $mobile = input('mobile','','intval');
+        $is_login = input('is_login','0','intval');
+        if (empty($openid)){
+            return $this->error('获取openid失败.');
+        }
+        $UsersModel = new UsersModel();
+        $where = [];
+        $where[] = ['wx_openid','=',$openid];
+        $where[] = ['is_mp','=',0];
+        $wxInfo = $this->Model->where($where)->find();
+        //是登录时，如果微信会员信息不存在则提示绑定
+        if ($is_login == 1 && empty($wxInfo['user_id'])){
+            $data['is_bind'] = 1;
+            return $this->success($data);
+        }
+        //有绑定会员直接登录
+        if ($wxInfo['user_id'] > 0 && $is_login == 1){
+            $data['token'] = $UsersModel->doLogin($wxInfo['user_id']);
+            return $this->success($data);
+        }
+        //下面出现情况是第一次提示绑定手机时用到的
+        if (empty($code)){
+            return $this->error('请填写短信验证码.');
+        }
+        $res = $this->checkCode('register',$mobile,$code);//验证短信验证
+        if ($res !== true){
+            return $this->error($res);
+        }
+        if (empty($wxInfo)) return $this->error('微信会员不存在.');
+        if (!checkMobile($mobile)) return $this->error('请填写正确手机号.');
+        $userInfo = $UsersModel->where('mobile',$mobile)->find();
+        //不存在直接注册
+        Db::startTrans();
+        $updata = [];
+        if (empty($userInfo)){
+            $inArr['invite_code'] = $share_token;
+            $inArr['mobile'] = $mobile;
+            $inArr['nick_name'] = $wxInfo['wx_nickname'];
+            $inArr['headimgurl'] = $UsersModel->getHeadImgBeuFen($wxInfo['wx_headimgurl']);
+            $inArr['password'] = 'Abc123456'; //系统默认密码
+            $res = $UsersModel->register($inArr);
+            if($res !== true){
+                Db::rollback();
+                return $this->error('绑定失败.');
+            }
+            $user = $UsersModel->where('mobile',$inArr['mobile'])->field('user_id,is_ban,token')->find();
+            $updata['user_id'] = $user['user_id'];
+        }else if($wxInfo['user_id'] != $userInfo['user_id']) { //存在会员并且user_id不同 - 进行绑定
+            $updata['user_id'] = $userInfo['user_id'];
+            if(empty($userInfo['nick_name']) && empty($userInfo['headimgurl']) && !empty($wxuInfo['wx_headimgurl']) && !empty($wxuInfo['wx_nickname'])){
+                $img=$UsersModel->getHeadImgBeuFen($wxuInfo['wx_headimgurl']);
+                $nick_name=filterEmoji($wxuInfo['wx_nickname']);
+                $res=$UsersModel->where('user_id',$userInfo['user_id'])->update(['nick_name'=>$nick_name,'headimgurl'=>$img]);
+                if(!$res){
+                    Db::rollback();
+                    return $this->error(langMsg('头像、昵称更新有误,请稍后再试'));
+                }
+            }
+        }
+        if(empty($updata)==false){
+            $res = $this->Model->where($where)->update($updata);
+            if (empty($res)){
+                Db::rollback();
+                return $this->error('绑定失败1.');
+            }
+        }
+        $data['token'] = $UsersModel->doLogin($userInfo['user_id']);
+        //直接登录
+        Db::commit();
+        return $this->success($data);
     }
 }?>

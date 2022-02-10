@@ -17,6 +17,7 @@ class Sms extends ApiController{
         $time = time();
 		$type = input('type','','trim');
       	$sms_fun = settings('sms_fun');
+        $is_bind = input('is_bind','0','intval');
         $_type = $type;
         if ($_type == 'channel_sms_register') {
             $_type = 'register';
@@ -64,7 +65,7 @@ class Sms extends ApiController{
         if (in_array($type,['login','forget_password'])){
             $count = $usersModel->where('mobile',$mobile)->count('user_id');
             if ($count < 1 ) return $this->error('手机号码不存在.');
-        }elseif(in_array($type,['register'])){
+        }elseif(in_array($type,['register']) && $is_bind == 0){
             $count = $usersModel->where('mobile',$mobile)->count('user_id');
             if ($count > 0 ) return $this->error('手机号码已存在.');
         }elseif(in_array($type,['bind_mobile'])){

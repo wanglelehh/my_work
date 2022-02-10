@@ -157,7 +157,7 @@ class UsersModel extends BaseModel
             }
             $inArr['mobile'] = $dataObj['phoneNumber'];
             $inArr['nick_name'] = $inArr['nick_name']?$inArr['nick_name']:$wxUser['wx_nickname'];
-            $inArr['headimgurl'] = $wxUser['wx_headimgurl'];
+            $inArr['headimgurl'] = $this->getHeadImgBeuFen($wxUser['wx_headimgurl']);
             unset($inArr['openid'],$inArr['iv'],$inArr['encryptedData']);
         }elseif($wxuid < 1){
             if (empty($inArr['mobile'])) {
@@ -880,6 +880,28 @@ class UsersModel extends BaseModel
             }
         }
         return '.' . $headimgurl;
+    }
+
+
+    /*------------------------------------------------------ */
+    //-- 获取远程会员头像到本地
+    /*------------------------------------------------------ */
+    public function getHeadImgBeuFen($headimgurl = '')
+    {
+        if (empty($headimgurl) == false && strstr($headimgurl, 'http')) {
+            $headimgurl = strstr($headimgurl, 'https') ? str_replace("https", "http", $headimgurl) : $headimgurl;
+            $file_path = config('config._upload_') . 'headimg/' . substr(time(), -1) . '/';
+            makeDir($file_path);
+            //图片文件
+            $file_name = $file_path . random_str(12);
+            $extend = getFileExtend($headimgurl);
+            $file_name .= '.' . $extend[1];
+            downloadImage($headimgurl, $file_name);
+            $upArr['headimgurl'] = $headimgurl = trim($file_name, '.');
+//            $res = $this->upInfo($user_id, $upArr);
+//            if (empty($res)) return false;
+        }
+        return $upArr['headimgurl'];
     }
     /*------------------------------------------------------ */
     //-- 获取分享二维码
