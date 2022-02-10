@@ -11,7 +11,7 @@
                 </li>                                  
             </ul>
              
-            <a href="{:url('info')}"  title="添加身份" class="btn btn-sm btnbtn-default fr  m-t-md m-r"><i class="fa fa-plus m-r-xs"></i>添加身份</a>
+            <!--<a href="{:url('info')}"  title="添加身份" class="btn btn-sm btnbtn-default fr  m-t-md m-r"><i class="fa fa-plus m-r-xs"></i>添加身份</a>-->
         </div>
 </header>
 
@@ -52,9 +52,10 @@
                     <td>  <a href="{:url('info',array('role_id'=>$vo['role_id']))}"   class="m-xs" title="编辑">
                         <i class="fa fa-edit text-muted"></i>
                     </a>
-                        <a href="{:url('delete',array('role_id'=>$vo['role_id']))}" data-toggle="ajaxRemove" data-msg="确定删除 {$vo.level_name}" class="m-xs" title="删除">
-                            <i class="fa fa-trash-o text-muted"></i>
-                        </a></td>
+                        <!--<a href="{:url('delete',array('role_id'=>$vo['role_id']))}" data-toggle="ajaxRemove" data-msg="确定删除 {$vo.level_name}" class="m-xs" title="删除">-->
+                            <!--<i class="fa fa-trash-o text-muted"></i>-->
+                        <!--</a>-->
+                    </td>
                 </tr>
                 {/volist}
                 </tbody>

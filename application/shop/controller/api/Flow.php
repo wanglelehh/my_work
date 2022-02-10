@@ -40,8 +40,27 @@ class Flow extends ApiController
         $type = input('type', '', 'trim');
         $prom_type = input('prom_type', 0, 'intval');
         $prom_id = input('prom_id', 0, 'intval');
-        if ($type == 'onbuy') {
+        $this->checkLogin();//验证登陆
+        if ($type=="oncart"){
             $this->checkLogin();//验证登陆
+            //身份商品不能加入购物车
+            $GoodsModel = new GoodsModel();
+            $goods_info = $GoodsModel->info($goods_id);
+            if ($goods_info['is_type'] == 1) {
+                $goodsIds=$GoodsModel->where('is_type',0)->column('goods_id');
+                $where=[];
+                $where[]=['user_id','=',$this->userInfo['user_id']];
+                $where[]=['goods_id','in',$goodsIds];
+                $find=$this->Model->where($where)->select();
+                if(count($find)>0)  return $this->error('购物车中有普通商品！');
+            }else{
+                $goodsIds=$GoodsModel->where('is_type',1)->column('goods_id');
+                $where=[];
+                $where[]=['user_id','=',$this->userInfo['user_id']];
+                $where[]=['goods_id','in',$goodsIds];
+                $find=$this->Model->where($where)->select();
+                if(count($find)>0)  return $this->error('购物车中有身份商品！');
+            }
         }
         if ($num < 1) $num = 1;
         $sku_id = input('sku_id', 0, 'intval');

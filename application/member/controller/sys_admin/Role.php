@@ -70,7 +70,9 @@ class Role extends AdminController
                 $data['function'][$data['upleve_function']]['buy_goods'] = $buy_goods;
 			}
 		}
-		
+        $team=json_decode($data['team'], true);
+        $this->assign("team", $team);
+
 		return $data;
 	}
 	/*------------------------------------------------------ */
@@ -139,6 +141,16 @@ class Role extends AdminController
         $upleve_value['buy_goods'] = $buy_goods;
 		$data['upleve_value'] = json_encode($upleve_value);
 
+        $team = input('team');
+        if ($team) {
+            $i = 0;
+            $lists = array();
+            foreach ($team as $key => $value) {
+                $lists[$i] = $value;
+                $i++;
+            }
+            $data['team'] = json_encode($lists);
+        }
         $this->oldpid = $this->Model->where('role_id',$data['role_id'])->value('pid');
 		return $data;		
 	}

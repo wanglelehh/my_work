@@ -4,6 +4,7 @@ namespace app\shop\model;
 
 use app\BaseModel;
 use app\distribution\model\DividendModel;
+use app\mainadmin\model\SettingsModel;
 use app\member\model\RoleModel;
 use app\member\model\UsersModel;
 use think\facade\Cache;
@@ -943,6 +944,27 @@ class OrderModel extends BaseModel
             $orderInfo['is_stock'] = 1;
         }//end
 
+        $GoodsModel=new GoodsModel();
+        $SettingsModel=new SettingsModel();
+        $goodsList=(new OrderGoodsModel())->where('order_id',$orderInfo['order_id'])->select()->toArray();
+        //奖金池
+        $one_award=0;
+        foreach ($goodsList as $v){
+            $give_pool=$GoodsModel->where('goods_id',$v['goods_id'])->value('give_pool');
+            if($give_pool>0){
+                $one_award +=$give_pool *  $v['goods_number'];
+            }
+        }
+        if($one_award>0){
+            $find=$SettingsModel->where('name','team_pool')->find();
+            if($find){
+                $SettingsModel->where('name','team_pool')->setInc('data',$one_award);
+            }else{
+                $SettingsModel->insert(['name'=>'team_pool','data'=>$one_award]);
+            }
+            $SettingsModel->cleanMemcache();
+        }
+        //end
 
         $UsersModel =  new \app\member\model\UsersModel();
         $usersInfo = $UsersModel->info($orderInfo['user_id']);//获取会员信息
@@ -1130,6 +1152,7 @@ class OrderModel extends BaseModel
             $inData['role_name'] = $vy['role_name'];
             $inData['award_name'] = $vy['award_name'];
             $inData['dividend_amount'] = $vy['award'];
+            $inData['is_type']=$vy['award_name']=='平级推荐奖'? 'peer_award':'chaji_award';
             if($inData['dividend_amount'] >0) $insertAll_data[] = $inData;
         }
         $res = $DividendModel->insertAll($insertAll_data);

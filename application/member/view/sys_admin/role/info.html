@@ -98,6 +98,54 @@
 
                         </div>
                     </div>
+                    {if $row['level'] <=2}
+                    <div class="form-group">
+                        <style>
+                            #team {padding-top: 0;}
+                            .addTP, .delTP {margin: 0 2%; display: inline-block; padding: 1%;}
+                            .delTP img {width: 10%; margin: 10%;}
+                        </style>
+                        <label class=" control-label">月度管理补贴：</label>
+                        <div class="tab-pane " id="team">
+                            {if condition="empty($team) == false"}
+                            {volist name="team" id="list" key="k"}
+                            <div class="form-group TP_{$k}" data-id="team{$k}">
+                                <input type="text" name="team[{$k}][num1]" class="input-mini" value="{$list[num1]}">元 -
+                                <input type="text" name="team[{$k}][num2]" class="input-mini" value="{$list[num2]}">元 ，分红奖
+                                <input type="text" name="team[{$k}][reward1]" class="input-mini" value="{$list[reward1]}"> %
+                                {if condition="$k eq 1"}
+                                <span class="addTP addTP_{$k}" onClick="addTP({$k})"><i class="fa fa-plus m-r-xs"></i></span>
+                                {else /}
+                                <span class="delTP addTP_{$k}" onClick="delTP({$k})"><i class="fa fa-times text-danger text"></i></span>
+                                {/if}
+                            </div>
+                            {/volist}
+                            {else /}
+                            <div class="form-group TP_0" data-id="0">
+                                <input type="text" name="team[0][num1]" class="input-mini" value="{$team[0][num1]}">元 -
+                                <input type="text" name="team[0][num2]" class="input-mini" value="{$team[0][num2]}">元 ，分红奖
+                                <input type="text" name="team[0][reward1]" class="input-mini" value="{$team[0][reward1]}"> %
+                                <span class="addTP addTP_0" onClick="addTP(0)"><i class="fa fa-plus m-r-xs"></i></span>
+                            </div>
+                            {/if}
+                        </div>
+                        <script>
+                            function addTP(N) {
+                                var id = $("#team").children(":last-child").attr('data-id');
+                                // console.log(id);
+                                var num=id.substr(-1);
+                                // console.log(parseInt(num));
+                                var M = parseInt(num) + 1;
+                                // console.log(M);
+                                var html = '<div class="form-group TP_'+M+'" data-id="'+M+'">  <input type="text" name="team['+M+'][num1]" class="input-mini" value="">元 - <input type="text" name="team['+M+'][num2]" class="input-mini" value="">元 ，分红奖<input type="text" name="team['+M+'][reward1]" class="input-mini" value=""> % <span class="delTP addTP_'+M+'" onClick="delTP('+M+')"><i class="fa fa-times text-danger text"></i></span></div>';
+                                $("#team").append(html);
+                            }
+                            function delTP(N){
+                                $(".TP_"+N).remove();
+                            }
+                        </script>
+                    </div>
+                    {/if}
 
                 </div>
             </section>
