@@ -1,0 +1,31 @@
+<html>
+<style>
+    p{
+        margin: 0px;
+        padding: 0px;
+        line-height: 28px;
+        font-size: 14px;
+    }
+</style>
+<body>
+<table style="width: 100%;">
+    <tr>
+        <td colspan="2">
+         {$contract|htmlspecialchars_decode|raw}
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <!--<p>甲方（盖章）：</p>-->
+            <p>甲方（盖章）：<img src="{$contract_seal}" style="width: 120px"></p>
+            <p>{$first_party}</p>
+            <p>签署日期：{$signingDate}</p>
+        </td>
+        <td>
+            <p>乙方：<img src="{$partyBSign}" style="width: 180px"></p>
+            <p>签署日期：{$signingDate}</p>
+        </td>
+    </tr>
+</table>
+</body>
+</html>

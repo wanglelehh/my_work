@@ -101,6 +101,12 @@
                 <label class="control-label">最近登陆IP：</label>
                 <div class="col-sm-3"><label>{$row.login_ip|default='未记录'}</label></div>
             </div>
+            {notempty name="$row.contract_pdf"}
+            <div class="form-group">
+                <label class="control-label">合同签署：</label>
+                <div class="col-sm-3"><label><a href="{$row.contract_pdf}" target="_blank" >查看合同</a></label></div>
+            </div>
+            {/notempty}
             <header class="panel-heading bg-light">
                 帐户资产
             </header>

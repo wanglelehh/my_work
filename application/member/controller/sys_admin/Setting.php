@@ -55,4 +55,21 @@ class Setting extends AdminController
 		return $this->success('设置成功.');
     }
 
+    public function testPdfContract(){
+        $contract = settings('role_contract');
+        $channel_contract_first_party = settings('role_contract_first_party');
+        $channel_contract_seal = settings('role_contract_seal');
+        $channel_contract_seal_x = settings('role_contract_seal_x');
+        $channel_contract_seal_y = settings('role_contract_seal_y');
+        $contract = str_replace('{甲方姓名}',$channel_contract_first_party,$contract);
+        $contract = str_replace('{乙方姓名}','测试',$contract);
+        $contract = str_replace('{乙方身份证号码}','440xxxxxxxxxxxxx',$contract);
+        $this->assign("contract",$contract);
+        $this->assign("first_party",$channel_contract_first_party);
+        $this->assign("signingDate",date('Y年m月d日'));
+        $this->assign("partyBSign",'/a_static/main/img/test_sign.png');
+        $html = $this->fetch('pdf/tpl')->getContent();
+        htmlToPdf($html,'测试','测试',$channel_contract_seal,$channel_contract_seal_x,$channel_contract_seal_y,"I");
+    }
+
 }

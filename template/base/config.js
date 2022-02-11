@@ -6,7 +6,7 @@ if(process.env.NODE_ENV === 'development'){
 	// #ifdef H5
 		is_test = window.location.href.indexOf("lzyunli") ;
 	// #endif
-	if(is_test >= 0 ){		var _baseUrl = 'http://ruiyin.lzyunli.com/';//测试服,请求网址		console.log('测试服环境')	}else{		var _baseUrl = 'https://wsshop2.lzyunli.com/';//生产环境,请求网址	}
+	if(is_test >= 0 ){		var _baseUrl = 'https://ruiyin.lzyunli.com/';//测试服,请求网址		console.log('测试服环境')	}else{		var _baseUrl = 'https://wsshop2.lzyunli.com/';//生产环境,请求网址	}
 }
 export default {
 	defaultIndex:'/pages/shop/index/index',//默认首页

@@ -23,7 +23,7 @@ require __DIR__ . '/../thinkphp/base.php';
 
 // 支持事先使用静态方法设置Request对象和Config对象
 define('INDEX', true);
-//define('VIEWPATH', '../template/default/');
+define('VIEWPATH', '../template/default/');
 define('EXTEND_PATH', '../extend/');
 define('DATA_PATH', '../Data/');
 

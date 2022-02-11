@@ -434,6 +434,33 @@ class Users extends ApiController
             return $this->error('签名保存失败，请重试.');
         }
         $upArr['signature'] = trim($file_path.$file_name, '.');
+        if($res){
+            if(empty($upArr['signature'])) return $this->error('请阅读合同并签名');
+            // 合同
+            $contract = settings('role_contract');
+            $region_contract_first_party = settings('role_contract_first_party');
+            $region_contract_seal = settings('role_contract_seal');
+            $region_contract_seal_x = settings('role_contract_seal_x');
+            $region_contract_seal_y = settings('role_contract_seal_y');
+            $contract = str_replace('{甲方姓名}',$region_contract_first_party,$contract);
+            $contract = str_replace('{乙方姓名}',$this->userInfo['nick_name'],$contract);
+            $contract = str_replace('{乙方身份证号码}',$this->userInfo['id_card_number'],$contract);
+//            $contract = str_replace('{收款人姓名}',$data['payee'],$contract);
+//            $contract = str_replace('{收款账号}',$data['account'],$contract);
+//            $contract = str_replace('{开户行}',$data['bank'],$contract);
+//            $contract = str_replace('{合同时间}',date('Y年m月d日').'至'.date('Y年m月d日',strtotime('+12 month',time())),$contract);
+            $this->assign("contract",$contract);
+            $this->assign("first_party",$region_contract_first_party);
+            $this->assign("signingDate",date('Y年m月d日'));
+            $this->assign("partyBSign",$upArr['signature']);
+            $this->assign("contract_seal",$region_contract_seal);
+            $html = $this->fetch('pdf/tpl')->getContent();
+            $fileName = $this->userInfo['user_id'].'_'.$this->userInfo['role_id']. '_' . rand(1000, 9999). '_' . time();
+            $path = '/upload/pdf/';
+//            htmlToPdf($html, '合同', $fileName, $region_contract_seal, $region_contract_seal_x, $region_contract_seal_y, "F");
+            htmlToPdf($html, '合同', $fileName, '', '', '', "F");
+            $upArr['contract_pdf'] = $path . $fileName . '.pdf';
+        }
         $res = $this->Model->upInfo($this->userInfo['user_id'],$upArr);
         if ($res < 1) {
             return $this->error('未知错误，处理失败.');
