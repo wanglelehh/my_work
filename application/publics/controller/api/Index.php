@@ -131,6 +131,20 @@ class Index extends ApiController
         $data['channel_contract'] = $contract;
         return $this->success($data);
     }
+
+    /*------------------------------------------------------ */
+    //-- 获取role合同
+    /*------------------------------------------------------ */
+    public function getRoleContract()
+    {
+        $contract = htmlspecialchars_decode(settings('role_contract'));
+        $channel_contract_first_party = settings('role_contract_first_party');
+        $contract = str_replace('{甲方姓名}',$channel_contract_first_party,$contract);
+        $contract = str_replace('{乙方姓名}',$this->userInfo['real_name'],$contract);
+        $contract = str_replace('{乙方身份证号码}',$this->userInfo['id_card_number'],$contract);
+        $data['channel_contract'] = $contract;
+        return $this->success($data);
+    }
     /*------------------------------------------------------ */
     //-- 获取语言包
     /*------------------------------------------------------ */

@@ -183,6 +183,27 @@
 			getCenterInfo() {
 				//获取会员中心信息
 				this.$u.post('member/api.center/getCenterInfo').then(res => {
+				    console.log(res);
+				    if(res.code=='400'){
+				        console.log(123);
+                        uni.showModal({
+                            title: this.app.langReplace('提示'),
+                            content: res.msg,
+                            showCancel: true,
+                            confirmText: this.app.langReplace('前往签署'),
+                            cancelText: this.app.langReplace('取消'),
+                            success: function(res) {
+                                if (res.confirm) {
+                                    uni.redirectTo({
+                                        url: '/pages/member/center/signContract' });
+                                }else {
+                                    uni.redirectTo({
+                                        url: '/pages/shop/index/index' });
+								}
+                            }
+                        });
+                        return false;
+					}
 					if (res.data.userInfo){
 						this.userInfo = res.data.userInfo;
 						this.orderStats = res.data.orderStats;

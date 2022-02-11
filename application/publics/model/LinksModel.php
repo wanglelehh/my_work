@@ -52,7 +52,12 @@ class LinksModel extends BaseModel
             ],[
                 'name' => '每日签到',
                 'url' =>'/pages/member/center/sign'
-            ],[
+            ],
+            [
+                'name' => '代理合同',
+                'url' =>'/pages/member/center/signContract'
+            ],
+            [
                 'name' => '我的售后',
                 'url' =>'/pages/shop/aftersale/index'
             ],[

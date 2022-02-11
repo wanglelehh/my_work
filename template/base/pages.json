@@ -189,6 +189,12 @@
 			}
 		},
 		{
+			"path": "pages/member/center/signContract",
+			"style": {
+				"navigationBarTitleText": "代理合同"
+			}
+		},
+		{
 			"path": "pages/member/address/list",
 			"style": {
 				"navigationBarTitleText": "收货地址"

@@ -1,0 +1,17 @@
+.menu_box {
+		border-radius: 10rpx;
+		background-color: #FFFFFF;
+		padding: 40rpx 0rpx;
+		text-align: center;
+		.grid_price {
+			color: $font-color-base;
+			font-size: 60rpx;
+			font-weight: 500;
+			text {
+				font-size: 48rpx;
+			}
+		}
+		.grid_text {
+			font-size: 32rpx;
+		}
+}

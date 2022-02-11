@@ -413,4 +413,32 @@ class Users extends ApiController
         return $this->success('提交成功.');
     }
 
+
+    /*------------------------------------------------------ */
+    //-- role签约
+    /*------------------------------------------------------ */
+    public function signRoleContract()
+    {
+        $signature = input('signature');
+        if (empty($signature)){
+            return $this->error('请签名后再提交.');
+        }
+        $extend = getFileExtend($signature);
+        if ($extend == false){
+            return $this->error('未能识别签名图片，请尝试重新上传.');
+        }
+        $file_path = config('config._upload_') . 'signature/';
+        $file_name = random_str(15).rand(10,99).'.'.$extend[1];
+        $res = base64ToImage($signature,$file_path,$file_name);
+        if ($res == false){
+            return $this->error('签名保存失败，请重试.');
+        }
+        $upArr['signature'] = trim($file_path.$file_name, '.');
+        $res = $this->Model->upInfo($this->userInfo['user_id'],$upArr);
+        if ($res < 1) {
+            return $this->error('未知错误，处理失败.');
+        }
+        return $this->success('提交成功.');
+    }
+
 }

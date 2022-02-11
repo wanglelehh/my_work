@@ -19,6 +19,7 @@
                         <li class="active"><a href="#basic" data-toggle="tab">基本设置</a></li>
                         <li><a href="#withdraw" data-toggle="tab">提现设置</a></li>
                         <li><a href="#register" data-toggle="tab">注册协议</a></li>
+                        <li><a href="#contract" data-toggle="tab">PDF代理合同</a></li>
                     </ul>
                 </header>
                 <div class="tab-content">
@@ -302,6 +303,45 @@
                             <textarea rows="13" class="hd" data-toggle="ueditor" data-div="register_agreement" data-height="450" data-maximumwords="50000" name="register_agreement" >{$setting['register_agreement']|raw}</textarea>
                         </div>
                         <div >移动端的图片建议宽度为750像素</div>
+                    </div>
+                    <div class="tab-pane " id="contract">
+                        <div class="form-group">
+                            <label class="control-label">代理合同：</label>
+                            <div class="col-sm-9 " style="padding-left:0px;">
+                                <div id="role_contract"></div>
+                                <textarea rows="13" class="hd" data-toggle="ueditor" data-div="role_contract" data-height="450" data-maximumwords="50000" name="role_contract" >{$setting['role_contract']|raw}</textarea>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">甲方姓名：</label>
+                            <div class=" col-sm-4 ">
+                                <input type="text" name="role_contract_first_party" placeholder="甲方姓名" class="input-max"
+                                       value="{$setting.role_contract_first_party}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">合同盖章：</label>
+                            <div class="col-sm-9 ">
+                                <div class="defUpImgBox" data-toggle="uploaderImg">
+                                    <img  src="{$setting.role_contract_seal|default=''}">
+                                    <input  type="hidden"  name="role_contract_seal"  value="{$setting.role_contract_seal}">
+                                    <div class="tips">点击上传</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">盖章定位：</label>
+                            <div class="col-sm-9 ">
+                                left：<input type="text" class="input-small" min="0" data-rule-required="true" data-rule-integer="true" name="role_contract_seal_x" value="{$setting.role_contract_seal_x|intval}" aria-required="true">px
+                                top：<input type="text" class="input-small"  min="0" data-rule-required="true" data-rule-integer="true" name="role_contract_seal_y" value="{$setting.role_contract_seal_y|intval}" aria-required="true">px
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">预览效果：</label>
+                            <div class="col-sm-9 ">
+                                <a href="{:url('testPdfContract')}" target="_blank" class="btn btn-primary">点击预览效果，请保存后操作</a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>

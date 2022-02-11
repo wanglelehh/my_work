@@ -1,0 +1,103 @@
+// 默认主题色
+.base-color{
+	color: $base-color;
+}
+.bg-base{
+	background-color: $base-color !important;
+}
+.primarybtn {
+	color: #FFFFFF;
+	background-color: $base-color !important;
+	border-radius: 46rpx;
+}
+.primarybtnB {
+	color: #FFFFFF;
+	background-color: $base-color !important;
+	border-radius: 46rpx;
+}
+.primarybtnC {
+	color: #FFFFFF;
+	background-color: #C2C2C2 !important;
+	border-radius: 46rpx;
+}
+.primarybtnD {
+	color: #666666;
+	background-color: #FFFFFF;
+	border-radius: 46rpx;
+}
+.primarybtnD::after{
+	border: none;
+}
+// 弹框按钮颜色
+uni-modal .uni-modal__btn_primary{
+	color: $base-color !important;
+}
+.iphonexBottom{
+	padding-bottom: 20rpx;
+}
+// C端A主题色
+.baseA{
+	$baseA-color:#FE385E;
+	.u-badge{
+		background-color: $baseA-color !important;
+	}
+	.base-color{
+		color: $baseA-color !important;
+	}
+
+	.border-color{
+		border-color: $baseA-color !important;
+	}
+	.base-select{
+		.current{
+			color: $baseA-color !important;
+			&:before{
+				border-color:$baseA-color;
+			}
+			&:after{
+				border-color:$baseA-color !important;
+				background-color:$baseA-color !important;
+			}
+			.sort_desc {
+				&:after {
+					border-color: $baseA-color !important;
+				}
+			}
+			.sort_asc {
+				&:before {
+					border-color: $baseA-color !important;
+			}
+			}
+		}
+	}
+	.bg-base{
+		background-color: $baseA-color !important;
+	}
+	.base-select .selected{
+		border: 1px solid #FE385E;
+		background-color: #FDF0F2 !important;
+		color: #FE3854 !important;
+	}
+	.action-btn{
+		&.recom{
+			color: $baseA-color;
+			&:after{
+				border-color: $baseA-color;
+			}
+		}
+	}
+	
+	// 按钮固定样式
+	.primarybtn {
+		color: #FFFFFF;
+		background: linear-gradient(90deg, #FE385E 0%, #FF6F8E 100%);
+	}
+	.primarybtnB {
+		background: linear-gradient(99deg, 
+		$baseA-color 0%, 
+		$baseA-color 100%), 
+	linear-gradient(
+		$baseA-color, 
+		$baseA-color);
+	}
+}
