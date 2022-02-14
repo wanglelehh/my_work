@@ -28,14 +28,6 @@ class Center extends ApiController
     public function getCenterInfo()
     {
         if (empty($this->userInfo['user_id'])){
-            if(empty($this->userInfo['signature']) && $this->userInfo['role_id']!=11){
-                $return=[
-                    'code'=>400,
-                    'msg'=>'成为代理需签署合同,是否前往签署.'
-                ];
-                return $this->ajaxReturn($return);
-//                return $this->error('您还未签署代理合同,请前往签署.');
-            }
             return $this->success();
         }
         //判断订单模块是否存在
@@ -52,13 +44,15 @@ class Center extends ApiController
             //$data['unusedNum'] = $bonus['unusedNum'];//未使用优惠券
         }
         $data['userInfo'] = $this->userInfo;
-        if(empty($this->userInfo['signature']) && $this->userInfo['role_id']!=11){
-            $return=[
-                'code'=>400,
-                'msg'=>'成为代理需签署合同,是否前往签署.'
-            ];
-            return $this->ajaxReturn($return);
+        if($this->userInfo['user_id']>0){
+            if(empty($this->userInfo['signature']) && $this->userInfo['role_id']!=11){
+                $return=[
+                    'code'=>400,
+                    'msg'=>'成为代理需签署合同,是否前往签署.'
+                ];
+                return $this->ajaxReturn($return);
 //                return $this->error('您还未签署代理合同,请前往签署.');
+            }
         }
         $data['teamCount'] = (new FansModel)->getFansCountToCenter($this->userInfo['user_id']);
 
