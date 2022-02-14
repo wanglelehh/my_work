@@ -126,53 +126,53 @@
                     <label >{$row.account.total_dividend|priceFormat=true} <span class="help-inline">此项记录用户历史所有佣金总和</span></label>
                 </div>
             </div>
-            <div class="form-group">
-                <label class="control-label">消费积分：</label>
-                <div class="col-sm-3">
-                    <label>
-                        {$row.account.use_integral}
-                    </label>
-                </div>
-                <label class="control-label">历史总积分：</label>
-                <div class="col-sm-3">
-                    <label>
-                        {$row.account.total_integral|intval}
-                    </label>
-                </div>
+            <!--<div class="form-group">-->
+                <!--<label class="control-label">消费积分：</label>-->
+                <!--<div class="col-sm-3">-->
+                    <!--<label>-->
+                        <!--{$row.account.use_integral}-->
+                    <!--</label>-->
+                <!--</div>-->
+                <!--<label class="control-label">历史总积分：</label>-->
+                <!--<div class="col-sm-3">-->
+                    <!--<label>-->
+                        <!--{$row.account.total_integral|intval}-->
+                    <!--</label>-->
+                <!--</div>-->
 
-            </div>
+            <!--</div>-->
             {if condition="$row.role.role_type ==1"}
-            <div class="line line-dashed line-lg pull-in"></div>
-            <div class="form-group">
-                <label class="control-label">云仓库存：</label>
-                <div class="col-sm-3 m-t-mc">
-                    <a href="{:url('/channel/sys_admin.stock/info',array('user_id'=>$row['user_id']))}">{$row.channelInfo.stockStat.cloudStockTotal}  <i class="fa fa-search "></i></a>
-                </div>
-                <label class="control-label">实体库存：</label>
-                <div class="col-sm-3 m-t-mc">
-                    <a href="{:url('/channel/sys_admin.stock/info',array('user_id'=>$row['user_id']))}">{$row.channelInfo.stockStat.entityStockTotal}  <i class="fa fa-search "></i></a>
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="control-label">保证金：</label>
-                <div class="col-sm-3 m-t-mc">
-                    <a href="{:url('/channel/sys_admin.account_log/index',array('user_id'=>$row['user_id']))}">{$row.channelInfo.account.earnest_money}元  <i class="fa fa-search "></i></a>
-                </div>
-                <label class="control-label">可用货款：</label>
-                <div class="col-sm-3 m-t-mc">
-                    <a href="{:url('/channel/sys_admin.account_log/index',array('user_id'=>$row['user_id']))}">{$row.channelInfo.account.goods_money}元  <i class="fa fa-search "></i></a>
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="control-label">余额(代理)：</label>
-                <div class="col-sm-3 m-t-mc">
-                    <a href="{:url('/channel/sys_admin.account_log/index',array('user_id'=>$row['user_id']))}">{$row.channelInfo.account.balance_money}元  <i class="fa fa-search "></i></a>
-                </div>
-                <label class="control-label">累计提现：</label>
-                <div class="col-sm-3 m-t-mc">
-                    <a href="{:url('/channel/sys_admin.account_log/index',array('user_id'=>$row['user_id']))}">{$row.channelInfo.account.withdraw_money_total}元  <i class="fa fa-search "></i></a>
-                </div>
-            </div>
+            <!--<div class="line line-dashed line-lg pull-in"></div>-->
+            <!--<div class="form-group">-->
+                <!--<label class="control-label">云仓库存：</label>-->
+                <!--<div class="col-sm-3 m-t-mc">-->
+                    <!--<a href="{:url('/channel/sys_admin.stock/info',array('user_id'=>$row['user_id']))}">{$row.channelInfo.stockStat.cloudStockTotal}  <i class="fa fa-search "></i></a>-->
+                <!--</div>-->
+                <!--<label class="control-label">实体库存：</label>-->
+                <!--<div class="col-sm-3 m-t-mc">-->
+                    <!--<a href="{:url('/channel/sys_admin.stock/info',array('user_id'=>$row['user_id']))}">{$row.channelInfo.stockStat.entityStockTotal}  <i class="fa fa-search "></i></a>-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--<div class="form-group">-->
+                <!--<label class="control-label">保证金：</label>-->
+                <!--<div class="col-sm-3 m-t-mc">-->
+                    <!--<a href="{:url('/channel/sys_admin.account_log/index',array('user_id'=>$row['user_id']))}">{$row.channelInfo.account.earnest_money}元  <i class="fa fa-search "></i></a>-->
+                <!--</div>-->
+                <!--<label class="control-label">可用货款：</label>-->
+                <!--<div class="col-sm-3 m-t-mc">-->
+                    <!--<a href="{:url('/channel/sys_admin.account_log/index',array('user_id'=>$row['user_id']))}">{$row.channelInfo.account.goods_money}元  <i class="fa fa-search "></i></a>-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--<div class="form-group">-->
+                <!--<label class="control-label">余额(代理)：</label>-->
+                <!--<div class="col-sm-3 m-t-mc">-->
+                    <!--<a href="{:url('/channel/sys_admin.account_log/index',array('user_id'=>$row['user_id']))}">{$row.channelInfo.account.balance_money}元  <i class="fa fa-search "></i></a>-->
+                <!--</div>-->
+                <!--<label class="control-label">累计提现：</label>-->
+                <!--<div class="col-sm-3 m-t-mc">-->
+                    <!--<a href="{:url('/channel/sys_admin.account_log/index',array('user_id'=>$row['user_id']))}">{$row.channelInfo.account.withdraw_money_total}元  <i class="fa fa-search "></i></a>-->
+                <!--</div>-->
+            <!--</div>-->
             {/if}
             <div class="form-horizontal">
 

@@ -275,6 +275,7 @@ class Order extends AdminController
             $data['list'][$key] = $this->Model->info($row['order_id']);
         }
         $this->assign("orderType", config('config.order_type'));
+        $this->assign("isType", config('config.is_type'));
         $this->assign("orderLang", lang('order'));
         $this->assign("data", $data);
         $this->assign("search", $search);

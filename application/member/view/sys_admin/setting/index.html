@@ -52,14 +52,14 @@
                                 <span class="help-line">只针对微信公众号/小程序访问有效</span>
                             </div>
                         </div>
-                        <div class="form-group ">
-                            <label class="col-sm-2 control-label">注册赠送积分：</label>
-                            <div class="controls">
-                                <input type="text" value="{$setting['register_integral']}" min=0 size="10"
-                                       data-rule-required="true" data-rule-integer="true" name="register_integral">
-                                <span class="help-line">用户注册赠送积分</span>
-                            </div>
-                        </div>
+                        <!--<div class="form-group ">-->
+                            <!--<label class="col-sm-2 control-label">注册赠送积分：</label>-->
+                            <!--<div class="controls">-->
+                                <!--<input type="text" value="{$setting['register_integral']}" min=0 size="10"-->
+                                       <!--data-rule-required="true" data-rule-integer="true" name="register_integral">-->
+                                <!--<span class="help-line">用户注册赠送积分</span>-->
+                            <!--</div>-->
+                        <!--</div>-->
                         <div class="form-group ">
                             <label class="col-sm-2 control-label">注册显示邀请人信息：</label>
                             <div class="controls">
@@ -95,19 +95,19 @@
                         </div>
 
                         <div class="line line-dashed line-lg pull-in" style="width:99%;"></div>
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label">是否开放签到：</label>
-                            <div class="controls">
-                                <label class="radio-inline">
-                                    <input name="sign_in" value="1" class="js_radio_undertake" data-class="sign_in_box"
-                                           {$setting['sign_in']==1?'checked':''} type="radio">开放
-                                </label>
-                                <label class="radio-inline">
-                                    <input name="sign_in" value="0" class="js_radio_undertake" {$setting['sign_in']==0?'checked':''}
-                                    type="radio" >关闭
-                                </label>
-                            </div>
-                        </div>
+                        <!--<div class="form-group">-->
+                            <!--<label class="col-sm-2 control-label">是否开放签到：</label>-->
+                            <!--<div class="controls">-->
+                                <!--<label class="radio-inline">-->
+                                    <!--<input name="sign_in" value="1" class="js_radio_undertake" data-class="sign_in_box"-->
+                                           <!--{$setting['sign_in']==1?'checked':''} type="radio">开放-->
+                                <!--</label>-->
+                                <!--<label class="radio-inline">-->
+                                    <!--<input name="sign_in" value="0" class="js_radio_undertake" {$setting['sign_in']==0?'checked':''}-->
+                                    <!--type="radio" >关闭-->
+                                <!--</label>-->
+                            <!--</div>-->
+                        <!--</div>-->
                         <div class="radio_undertake_sign_in sign_in_box {$setting['sign_in']==1?'':'hide'}">
                             {if condition="$setting['luckdraw_all'] == 1"}
                             <div class="form-group ">

@@ -48,17 +48,22 @@
 						<view class="ff">{{userInfo.account.balance_money}}</view>
 						<view class="fs26 color-99">{{app.langReplace('余额')}}</view>
 					</u-grid-item>
-					<u-grid-item bg-color="none" class="p0" @click="app.goPage('/pages/member/wallet/points')">
+					<!-- <u-grid-item bg-color="none" class="p0" @click="app.goPage('/pages/member/wallet/points')">
 						<view class="ff">{{userInfo.account.use_integral}}</view>
 						<view class="fs26 color-99">{{app.langReplace('积分')}}</view>
-					</u-grid-item>
+					</u-grid-item> -->
 					<u-grid-item bg-color="none" class="p0" @click="app.goPage('/pages/member/fans/index')">
-						<view class="ff">{{teamCount.allNum}}</view>
+						<!-- <view class="ff">{{teamCount.allNum}}</view> -->
+						<view class="ff">{{teamCount.allNum>0?teamCount.allNum:0}}</view>
 						<view class="fs26 color-99">{{app.langReplace('粉丝')}}</view>
 					</u-grid-item>
 					<u-grid-item bg-color="none" class="p0" @click="app.goPage('/pages/member/center/collect')">
 						<view class="ff">{{collectNum}}</view>
 						<view class="fs26 color-99">{{app.langReplace('收藏')}}</view>
+					</u-grid-item>
+					<u-grid-item bg-color="none" class="p0" v-if="userInfo.role_id>12">
+						<view class="ff">{{setting.team_pool>0?setting.team_pool:0}}</view>
+						<view class="fs26 color-99">{{app.langReplace('奖金池')}}</view>
 					</u-grid-item>
 				</u-grid>
 			</view>
@@ -184,26 +189,6 @@
 				//获取会员中心信息
 				this.$u.post('member/api.center/getCenterInfo').then(res => {
 				    console.log(res);
-				    if(res.code=='400'){
-				        console.log(123);
-                        uni.showModal({
-                            title: this.app.langReplace('提示'),
-                            content: res.msg,
-                            showCancel: true,
-                            confirmText: this.app.langReplace('前往签署'),
-                            cancelText: this.app.langReplace('取消'),
-                            success: function(res) {
-                                if (res.confirm) {
-                                    uni.redirectTo({
-                                        url: '/pages/member/center/signContract' });
-                                }else {
-                                    uni.redirectTo({
-                                        url: '/pages/shop/index/index' });
-								}
-                            }
-                        });
-                        return false;
-					}
 					if (res.data.userInfo){
 						this.userInfo = res.data.userInfo;
 						this.orderStats = res.data.orderStats;
@@ -215,6 +200,25 @@
 						}
 					}else{
 						this.app.delAuthCode();
+					}
+					if(this.userInfo['role_id']>12 && this.userInfo['signature']==''){
+					    uni.showModal({
+					        title: this.app.langReplace('提示'),
+					        content: '成为代理需签署合同,是否前往签署.',
+					        showCancel: true,
+					        confirmText: this.app.langReplace('前往签署'),
+					        cancelText: this.app.langReplace('取消'),
+					        success: function(res) {
+					            if (res.confirm) {
+					                uni.redirectTo({
+					                    url: '/pages/member/center/signContract' });
+					            }else {
+					                uni.redirectTo({
+					                    url: '/pages/shop/index/index' });
+								}
+					        }
+					    });
+						return false;
 					}
 				});
 				this.$u.post('member/api.center/getCenterNavMenu').then(res => {

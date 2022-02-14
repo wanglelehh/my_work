@@ -49,10 +49,11 @@ class LinksModel extends BaseModel
             ],[
                 'name' => '我的钱包',
                 'url' =>'/pages/member/wallet/index'
-            ],[
-                'name' => '每日签到',
-                'url' =>'/pages/member/center/sign'
             ],
+//            [
+//                'name' => '每日签到',
+//                'url' =>'/pages/member/center/sign'
+//            ],
             [
                 'name' => '代理合同',
                 'url' =>'/pages/member/center/signContract'

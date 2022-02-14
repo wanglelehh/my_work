@@ -1066,6 +1066,7 @@ class OrderModel extends BaseModel
 
         $get_uid_data = array();
 
+        Db::startTrans();
         //循环订单商品列表
         foreach($orderInfo['goodsList'] as $g){
             //商品数量
@@ -1078,6 +1079,7 @@ class OrderModel extends BaseModel
             $waituser=array();  //遇到平级，等待分佣
             $havepeer=0;
             $level_now=10;  //目前等级
+            $ji_cha=0;
             foreach($upperList as $ke=>$ul){
                 //会员以上才有差价奖（与对比等级有极差，給该用户计算平级奖）
                 if($ul['level'] < 6){
@@ -1090,10 +1092,11 @@ class OrderModel extends BaseModel
                             continue;
                         }
                         $is_rolePrice = $GoodsModel->rolePrice($g['goods_id'], $ul['role_id']); //此人对应身份的身份价;
-                        $findLeve = $ul['level'] + 1;
-                        $next_role_id = $RoleModel->where('level', $findLeve)->value('role_id');
-                        $down_rolePrice = $GoodsModel->rolePrice($g['goods_id'], $next_role_id); //低一级的身份价;
-                        $award = $down_rolePrice - $is_rolePrice;   //计算得到基数(单件商品)
+//                        $findLeve = $ul['level'] + 1;
+//                        $next_role_id = $RoleModel->where('level', $findLeve)->value('role_id');
+//                        $down_rolePrice = $GoodsModel->rolePrice($g['goods_id'], $next_role_id); //低一级的身份价;
+                        $award = $is_rolePrice-$ji_cha;   //计算得到基数(单件商品)
+                        $ji_cha=$is_rolePrice;
                         if ($award <= 0) continue;
 
                         if ($ul['role_id'] == $max_id && !empty($waituser)) {  //是联创  且有平级
@@ -1146,6 +1149,7 @@ class OrderModel extends BaseModel
         }
         //差价、平级奖==========================================END
 
+        $all_dividend_amount=0;
         foreach ($get_uid_data as $ky=>$vy){
             $inData['dividend_uid'] = $ky;
             $inData['role_id'] = $vy['role_id'];
@@ -1154,8 +1158,19 @@ class OrderModel extends BaseModel
             $inData['dividend_amount'] = $vy['award'];
             $inData['is_type']=$vy['award_name']=='平级推荐奖'? 'peer_award':'chaji_award';
             if($inData['dividend_amount'] >0) $insertAll_data[] = $inData;
+            $all_dividend_amount+=$inData['dividend_amount'];
         }
         $res = $DividendModel->insertAll($insertAll_data);
+        if(!$res){
+            Db::rollback();
+        }
+        if($all_dividend_amount>0){
+            $re=$this->where('order_id',$orderInfo['order_id'])->update(['dividend_amount'=>$all_dividend_amount]);
+            if(!$re){
+                Db::rollback();
+            }
+        }
+        Db::commit();
         return true;
 
     }
