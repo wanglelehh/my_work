@@ -1089,7 +1089,7 @@ class OrderModel extends BaseModel
                     }   //下单本人跳过
                     if($ul['level']<$level_now) {
                         $level_now = $ul['level'];
-                        if($ul['user_id']==$userInfo['pid'] && $ul['user_id']['role_id']==$userInfo['role_id'] && empty($waituser) && $havepeer==0){
+                        if($ul['user_id']==$userInfo['pid'] && $ul['user_id']['role_id']==$orderInfo['dividend_role_id'] && empty($waituser) && $havepeer==0){
                             $waituser=$ul;       //遇到直推上级且是平级
                             $havepeer=1;
                             continue;

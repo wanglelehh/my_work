@@ -118,6 +118,7 @@ class UpLevelModel extends BaseModel
                     $Class = new $fun();
                 }
 
+                $arr=['1'=>'达到直推条件','2'=>'购买身份产品','3'=>'团队业绩达标'];
                 $res = $Class->judgeIsUp($usersInfo,$orderInfo, $stats, $role);//判断是否能升级
                 if ($res == false) {//当前会员不执行升级，终止
                     if ($DividendInfo['level_up_type'] == 1){
@@ -125,6 +126,7 @@ class UpLevelModel extends BaseModel
                     }
                     break;
                 }
+                $uplog=$arr[$res].',';
                 $upRole = $role;
                 if ($DividendInfo['level_up_type'] == 0) {//逐级升时调用
                     break;//跳出循环进行升级操作
@@ -143,6 +145,7 @@ class UpLevelModel extends BaseModel
                     return false;
                 }
                 $log_info = '';
+                $log_info .=$uplog;
                 if ($orderInfo['d_type'] == 'role_order' && $user_id == $orderInfo['user_id']) {
                     $log_info .= '购买指定商品，';
                 }

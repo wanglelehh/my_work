@@ -48,7 +48,7 @@ class BasalFunLevel
                 return false;
             }
             if ($role['up_condition'] == 1 && $status == true) {//只需满足任一条件即可升级
-                return true;
+                return 1;
             }
         }
         //直推条件判断end
@@ -57,7 +57,7 @@ class BasalFunLevel
         if(isset($upLeveValue['any_product'])){
             if ($usersInfo['user_id'] == $orderInfo['user_id'] && $upLeveValue['any_product'] == 1 && $orderInfo['is_type']==1) {
                 if ($role['up_condition'] == 1) {//只需满足任一条件即可升级
-                    return true;
+                    return 2;
                 }
             }
         }
@@ -83,7 +83,7 @@ class BasalFunLevel
                     return false;
                 }
             }elseif ($role['up_condition'] == 1) {//只需满足任一条件即可升级
-                return true;
+                return 3;
             }
         }
         //团队业绩end
