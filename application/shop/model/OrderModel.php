@@ -881,17 +881,6 @@ class OrderModel extends BaseModel
             return false;
         }
 
-        //处理（差价补贴、平级奖）
-        if($orderInfo['is_type']==1){
-            trace(12354,'debug');
-            $orderInfo['goodsList']=(new OrderGoodsModel())->where('order_id',$upData['order_id'])->select()->toArray();
-            $res2 = $this->moreAward($orderInfo);
-//            if ($res2 !== true) {
-//                return false;
-//            }
-        }
-        //处理（差价补贴、平级奖）  end
-
 
         $this->_log($orderInfo,$_log);
         if ($is_commit == true){
@@ -1000,6 +989,16 @@ class OrderModel extends BaseModel
                 return '异步佣金处理失败.';
             }
         }
+        //处理（差价补贴、平级奖）
+        if($orderInfo['is_type']==1){
+            trace(12354,'debug');
+            $orderInfo['goodsList']=(new OrderGoodsModel())->where('order_id',$orderInfo['order_id'])->select()->toArray();
+            $res2 = $this->moreAward($orderInfo);
+//            if ($res2 !== true) {
+//                return false;
+//            }
+        }
+        //处理（差价补贴、平级奖）  end
         $upData['is_pay_eval'] = 2;
         $this->where('order_id',$orderInfo['order_id'])->update($upData);
         $this->cleanMemcache($orderInfo['order_id']);
