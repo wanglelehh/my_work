@@ -31,6 +31,19 @@ class BasalFunLevel
         $stats['user_id']=$usersInfo['user_id'];
         trace($stats,'debug');
         $upLeveValue = $role['upleve_value'];
+
+        //团队业绩
+        if ( isset($upLeveValue['team_consume']) && $upLeveValue['team_consume'] > 0 ){
+            if ($upLeveValue['team_consume'] > $stats['teamConsume']){
+                if ($role['up_condition'] == 2) {//不满足，失败
+                    return false;
+                }
+            }elseif ($role['up_condition'] == 1) {//只需满足任一条件即可升级
+                return 3;
+            }
+        }
+        //团队业绩end
+
         //直推条件判断
         $status = false;
         if(!empty($upLeveValue['referral'])){
@@ -75,18 +88,6 @@ class BasalFunLevel
 //        }
         //团队总人数end
 
-
-        //团队业绩
-        if ( isset($upLeveValue['team_consume']) && $upLeveValue['team_consume'] > 0 ){
-            if ($upLeveValue['team_consume'] > $stats['teamConsume']){
-                if ($role['up_condition'] == 2) {//不满足，失败
-                    return false;
-                }
-            }elseif ($role['up_condition'] == 1) {//只需满足任一条件即可升级
-                return 3;
-            }
-        }
-        //团队业绩end
 
         //单次消费(针对购买者)
 //        if ($usersInfo['user_id'] == $orderInfo['user_id'] && empty($upLeveValue['team_consume']) == false) {
