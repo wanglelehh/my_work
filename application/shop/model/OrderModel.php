@@ -1083,7 +1083,11 @@ class OrderModel extends BaseModel
             foreach($upperList as $ke=>$ul){
                 //会员以上才有差价奖（与对比等级有极差，給该用户计算平级奖）
                 if($ul['level'] < 6){
-                    if($ul['user_id']==$orderInfo['user_id']) continue;   //下单本人跳过
+                    if($ul['user_id']==$orderInfo['user_id']) {
+                        $is_rolePrice = $GoodsModel->rolePrice($g['goods_id'], $ul['role_id']); //此人对应身份的身份价;
+                        $ji_cha=$is_rolePrice;
+                        continue;
+                    }   //下单本人跳过
                     if($ul['level']<$level_now) {
                         $level_now = $ul['level'];
                         if($ul['user_id']==$userInfo['pid'] && $ul['user_id']['role_id']==$userInfo['role_id'] && empty($waituser) && $havepeer==0){
@@ -1095,7 +1099,7 @@ class OrderModel extends BaseModel
 //                        $findLeve = $ul['level'] + 1;
 //                        $next_role_id = $RoleModel->where('level', $findLeve)->value('role_id');
 //                        $down_rolePrice = $GoodsModel->rolePrice($g['goods_id'], $next_role_id); //低一级的身份价;
-                        $award = $is_rolePrice-$ji_cha;   //计算得到基数(单件商品)
+                        $award =$ji_cha - $is_rolePrice;   //计算得到基数(单件商品)
                         $ji_cha=$is_rolePrice;
                         if ($award <= 0) continue;
 
