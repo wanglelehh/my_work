@@ -26,7 +26,11 @@
     </td>
     <td >
         <!--{$orderType[$vo['order_type']]}-->
-        {$isType[$vo['is_type']]}
+        {if $vo.is_type>0 }
+            {$isType[$vo['is_type']]}
+        {else/}
+            {$orderType[$vo['order_type']]}
+        {/if}
     </td>
     <td>{$vo.ostatus}</td>
     <td>{$vo.add_time|dateTpl}</td>

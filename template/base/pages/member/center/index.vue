@@ -69,7 +69,7 @@
 						<view class="ff">{{setting.team_pool>0?setting.team_pool:0}}</view>
 						<view class="fs26 color-99">{{app.langReplace('奖金池')}}</view>
 					</u-grid-item>
-					<u-grid-item bg-color="none" class="p0" v-else>
+					<u-grid-item bg-color="none" class="p0" @click="app.goPage('/pages/member/center/collect')" v-else>
 						<view class="ff">{{collectNum}}</view>
 						<view class="fs26 color-99">{{app.langReplace('收藏')}}</view>
 					</u-grid-item>
