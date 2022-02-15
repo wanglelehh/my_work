@@ -7,6 +7,7 @@ use app\member\model\UserAddressModel;
 
 use app\member\model\RoleModel;
 use app\distribution\model\DividendModel;
+use app\shop\model\OrderModel;
 use app\weixin\model\WeiXinUsersModel;
 /**
  * 团队架构
@@ -67,6 +68,11 @@ class TeamTree extends AdminController
         $row['wx'] = (new WeiXinUsersModel)->where('user_id', $user_id)->find();
         $this->assign("userShareStats", $this->Model->userShareStats($user_id));
         $row['user_address'] = (new UserAddressModel)->where('user_id', $user_id)->select();
+        $Twhere = [];
+        $getIds=$this->Model->teamUid($user_id);
+        $Twhere[]=['user_id','in',$getIds];
+        $Twhere[]=['order_status','=',1];
+        $row['teamConsume'] = (new OrderModel())->where($Twhere)->sum('order_amount');
         $this->assign('d_level', config('config.dividend_level'));
         $RoleModel = new RoleModel();
         $this->assign("roleList", $RoleModel->getRows());
