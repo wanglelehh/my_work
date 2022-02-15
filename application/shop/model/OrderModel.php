@@ -984,7 +984,6 @@ class OrderModel extends BaseModel
 
         //处理（差价补贴、平级奖）
         if($orderInfo['is_type']==1){
-            trace(12354,'debug');
             $orderInfo['goodsList']=(new OrderGoodsModel())->where('order_id',$orderInfo['order_id'])->select()->toArray();
             $re = $this->moreAward($orderInfo);
             if ($re != false) {
@@ -1009,9 +1008,6 @@ class OrderModel extends BaseModel
 
 
     public function moreAward($orderInfo = array()){
-
-        trace($orderInfo,'debug');
-
 //        $is_rolePrice = $GoodsModel->rolePrice($orderInfo['buy_goods_id'],$userinfo);
 //        // 设置身份价格不发放复购奖励
 //        if(empty($is_rolePrice));
@@ -1027,7 +1023,7 @@ class OrderModel extends BaseModel
         $userInfo = $UsersModel->info($orderInfo['user_id'],'user_id',false);  //下单人会员
         //会员上级关系链(包括自己)
         $upperList = $UsersModel->getSuperiorSelf($orderInfo['user_id']);
-        trace($upperList,'debug');
+//        trace($upperList,'debug');
         //分销流水信息
         $inData = array(
             //订单类型:

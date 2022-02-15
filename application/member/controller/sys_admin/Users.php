@@ -270,6 +270,7 @@ class Users extends AdminController
         $getIds=$this->Model->teamUid($user_id);
         $Twhere[]=['user_id','in',$getIds];
         $Twhere[]=['order_status','=',1];
+        $Twhere[]=['is_type','=',1];
         $row['teamConsume'] = (new OrderModel())->where($Twhere)->sum('order_amount');
         $this->assign('row', $row);
         $this->assign('d_level', config('config.dividend_level'));

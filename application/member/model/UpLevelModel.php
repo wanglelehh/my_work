@@ -19,8 +19,7 @@ class UpLevelModel extends BaseModel
     public function evalLevelUp(&$orderInfo)
     {
         //执行分销身份升级处理
-        $roleList = (new RoleModel)->getRows(-1,'desc');
-
+        $roleList = (new RoleModel)->getRows();
         $oldFun = '';
         $DividendInfo = settings('DividendInfo');
         $UsersBindSuperiorModel = new UsersBindSuperiorModel();
@@ -39,12 +38,12 @@ class UpLevelModel extends BaseModel
             $stats = [];
             $stats['subRoleCount'] = [];
             //汇总直推身份的会员数
-            foreach ($roleList as $role) {
-                $where = [];
-                $where['pid'] = $user_id;
-                $where['role_id'] = $role['role_id'];
-                $stats['subRoleCount'][$role['role_id']] = $UsersModel->where($where)->count();
-            }
+//            foreach ($roleList as $role) {
+//                $where = [];
+//                $where['pid'] = $user_id;
+//                $where['role_id'] = $role['role_id'];
+//                $stats['subRoleCount'][$role['role_id']] = $UsersModel->where($where)->count();
+//            }
             //汇总直推身份的会员数end
 
 //            //团队总人数（包含自己）
@@ -59,14 +58,21 @@ class UpLevelModel extends BaseModel
             $getIds=$UsersModel->teamUid($user_id);
             $where[]=['user_id','in',$getIds];
             $where[]=['order_status','=',1];
+            $where[]=['is_type','=',1];
             $stats['teamConsume'] = $OrderModel->where($where)->sum('order_amount');
             //团队业绩（包含自己）end
 
 //            trace($stats,'debug');
             $upRole = [];
+            $roleleve=10;
             foreach ($roleList as $role) {
                 if ($role['level'] >= $userRoleLevel ) {//当前分销身份低于等于用户现身份，跳过
                     continue;
+                }
+                if(!empty($upRole)){
+                    if ($role['level'] >= $upRole['level'] ) {//已经获取一个身份，重新循环的身份低于已有的，跳过
+                        continue;
+                    }
                 }
                 if ($role['is_auto'] == 9) {//手动调整,跳过
                     continue;

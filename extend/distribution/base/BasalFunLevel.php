@@ -28,11 +28,11 @@ class BasalFunLevel
     /*------------------------------------------------------ */
     public function judgeIsUp(&$usersInfo, &$orderInfo, &$stats, &$role)
     {
+//        if($usersInfo['user_id']==1){
+//            trace($stats,'debug');
+//            trace($role,'debug');
+//        }
         $stats['user_id']=$usersInfo['user_id'];
-        trace('start','debug');
-        trace($role,'debug');
-        trace($stats,'debug');
-        trace('end','debug');
         $upLeveValue = $role['upleve_value'];
 
         //团队业绩
