@@ -5,6 +5,8 @@ use app\ApiController;
 use app\member\model\UsersModel;
 use app\member\model\NavMenuModel;
 use app\member\model\FansModel;
+use app\shop\model\OrderModel;
+
 /*------------------------------------------------------ */
 //-- 会员中心相关API
 /*------------------------------------------------------ */
@@ -54,6 +56,11 @@ class Center extends ApiController
 ////                return $this->error('您还未签署代理合同,请前往签署.');
 //            }
 //        }
+        $where = [];
+        $getIds=$this->Model->teamUid($this->userInfo['user_id']);
+        $where[]=['user_id','in',$getIds];
+        $where[]=['order_status','=',1];
+        $data['teamConsume'] = (new OrderModel())->where($where)->sum('order_amount');
         $data['teamCount'] = (new FansModel)->getFansCountToCenter($this->userInfo['user_id']);
 
         $data['unReadMsgNum'] = (new \app\mainadmin\model\MessageModel)->getMessageUnCount($this->userInfo['user_id']);

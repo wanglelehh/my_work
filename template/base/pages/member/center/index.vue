@@ -57,13 +57,21 @@
 						<view class="ff">{{teamCount.allNum>0?teamCount.allNum:0}}</view>
 						<view class="fs26 color-99">{{app.langReplace('粉丝')}}</view>
 					</u-grid-item>
-					<u-grid-item bg-color="none" class="p0" @click="app.goPage('/pages/member/center/collect')">
+					<!-- <u-grid-item bg-color="none" class="p0" @click="app.goPage('/pages/member/center/collect')">
 						<view class="ff">{{collectNum}}</view>
 						<view class="fs26 color-99">{{app.langReplace('收藏')}}</view>
+					</u-grid-item> -->
+					<u-grid-item bg-color="none" class="p0">
+						<view class="ff">{{teamConsume>0?teamConsume:0}}</view>
+						<view class="fs26 color-99">{{app.langReplace('团队业绩')}}</view>
 					</u-grid-item>
 					<u-grid-item bg-color="none" class="p0" v-if="userInfo.role_id>12">
 						<view class="ff">{{setting.team_pool>0?setting.team_pool:0}}</view>
 						<view class="fs26 color-99">{{app.langReplace('奖金池')}}</view>
+					</u-grid-item>
+					<u-grid-item bg-color="none" class="p0" v-else>
+						<view class="ff">{{collectNum}}</view>
+						<view class="fs26 color-99">{{app.langReplace('收藏')}}</view>
 					</u-grid-item>
 				</u-grid>
 			</view>
@@ -162,7 +170,8 @@
 				teamCount: {
 					allNum:0,
 					underNum:0
-				}
+				},
+				teamConsume:0,
 			}
 		},
 		onLoad(options) {
@@ -194,6 +203,7 @@
 						this.orderStats = res.data.orderStats;
 						this.collectNum = res.data.collectNum;
 						this.teamCount = res.data.teamCount;
+						this.teamConsume=res.data.teamConsume;
 						this.unReadMsgNum = res.data.unReadMsgNum;
 						if (this.userInfo.headimgurl != '') {
 							this.headimgurl = this.config.baseUrl + this.userInfo.headimgurl;
