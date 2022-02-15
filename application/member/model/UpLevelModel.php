@@ -147,7 +147,7 @@ class UpLevelModel extends BaseModel
                 $log_info = '';
                 $log_info .=$uplog;
                 if ($orderInfo['d_type'] == 'role_order' && $user_id == $orderInfo['user_id']) {
-                    $log_info .= '购买指定商品，';
+//                    $log_info .= '购买指定商品，';
                 }
                 $log_info .= '【' .  $roleList[$usersInfo['role_id']]['role_name'] . '】升级为【' . $upRole['role_name'] . '】';
                 $UsersModel->_upLog($user_id, $log_info,$upRole['role_id'], $usersInfo['role_id']);
