@@ -65,6 +65,10 @@
             </label>
         </div>
     </div>
+    <div class="form-group">
+        <label class="control-label">团队业绩：</label>
+        <div class="col-sm-3"><label>{$row.teamConsume|priceFormat=true}</label></div>
+    </div>
     {if condition="$row.headimgurl <> ''"}
     <div style="position:absolute; top:0px; right:20px; width:120px;" class="image-list"><img src="{$row.headimgurl}" style="width:100%" /></div>
     {/if}
