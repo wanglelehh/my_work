@@ -22,10 +22,14 @@ class RoleModel extends BaseModel
 	/*------------------------------------------------------ */
 	//-- 获取列表
 	/*------------------------------------------------------ */ 
-	public  function getRows($role_type = -1){
+	public  function getRows($role_type = -1,$DESC='ASC'){
         $rows = Cache::get(self::$mkey);
 		if (empty($rows)){
-            $rows = $this->field('*,role_id as id,role_name as name')->order('level ASC')->select()->toArray();
+		    if($DESC!='ASC'){
+                $rows = $this->field('*,role_id as id,role_name as name')->order('level DESC')->select()->toArray();
+            }else{
+                $rows = $this->field('*,role_id as id,role_name as name')->order('level ASC')->select()->toArray();
+            }
             Cache::set(self::$mkey,$rows,600);
         }
 		foreach ($rows as $row){

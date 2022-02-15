@@ -19,7 +19,7 @@ class UpLevelModel extends BaseModel
     public function evalLevelUp(&$orderInfo)
     {
         //执行分销身份升级处理
-        $roleList = (new RoleModel)->getRows();
+        $roleList = (new RoleModel)->getRows(-1,'desc');
 
         $oldFun = '';
         $DividendInfo = settings('DividendInfo');

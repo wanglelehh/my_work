@@ -982,6 +982,18 @@ class OrderModel extends BaseModel
             Db::rollback();// 回滚事务
         }//end
 
+        //处理（差价补贴、平级奖）
+        if($orderInfo['is_type']==1){
+            trace(12354,'debug');
+            $orderInfo['goodsList']=(new OrderGoodsModel())->where('order_id',$orderInfo['order_id'])->select()->toArray();
+            $re = $this->moreAward($orderInfo);
+            if ($re != false) {
+                $upData['dividend_amount']=$re['dividend_amount'];
+            }
+        }
+        //处理（差价补贴、平级奖）  end
+
+
         if ($orderInfo['is_dividend'] == 0){
             $res = $this->runDistribution($orderInfo);//提成处理
             if ($res == false) {
@@ -989,16 +1001,6 @@ class OrderModel extends BaseModel
                 return '异步佣金处理失败.';
             }
         }
-        //处理（差价补贴、平级奖）
-        if($orderInfo['is_type']==1){
-            trace(12354,'debug');
-            $orderInfo['goodsList']=(new OrderGoodsModel())->where('order_id',$orderInfo['order_id'])->select()->toArray();
-            $res2 = $this->moreAward($orderInfo);
-//            if ($res2 !== true) {
-//                return false;
-//            }
-        }
-        //处理（差价补贴、平级奖）  end
         $upData['is_pay_eval'] = 2;
         $this->where('order_id',$orderInfo['order_id'])->update($upData);
         $this->cleanMemcache($orderInfo['order_id']);
@@ -1164,15 +1166,17 @@ class OrderModel extends BaseModel
         $res = $DividendModel->insertAll($insertAll_data);
         if(!$res){
             Db::rollback();
+            return false;
         }
-        if($all_dividend_amount>0){
-            $re=$this->where('order_id',$orderInfo['order_id'])->update(['dividend_amount'=>$all_dividend_amount]);
-            if(!$re){
-                Db::rollback();
-            }
-        }
+//        if($all_dividend_amount>0){
+//            $re=$this->where('order_id',$orderInfo['order_id'])->update(['dividend_amount'=>$all_dividend_amount]);
+//            if(!$re){
+//                Db::rollback();
+//            }
+//        }
         Db::commit();
-        return true;
+        $return['dividend_amount']=$all_dividend_amount;
+        return $return;
 
     }
 
