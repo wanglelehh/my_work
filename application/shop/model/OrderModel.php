@@ -1111,13 +1111,13 @@ class OrderModel extends BaseModel
                                     $per = $peers[$waituser['role_id']][1];
                                 }
                             }
-                            $getward = ($award * $goods_number * 0.01) * $per * 0.01;
+                            $getward = ($award * $goods_number) * $per * 0.01;
                             $get_uid_data[$waituser['user_id']]['award'] += $getward;
                             $get_uid_data[$waituser['user_id']]['award_name'] = '平级推荐奖';
                             $get_uid_data[$waituser['user_id']]['role_id'] =$waituser['role_id'];
                             $get_uid_data[$waituser['user_id']]['role_name'] =$waituser['role_name'];
 
-                            $get_uid_data[$ul['user_id']]['award'] += ($award * $goods_number * 0.01) - $getward;
+                            $get_uid_data[$ul['user_id']]['award'] += ($award * $goods_number) - $getward;
                             $get_uid_data[$ul['user_id']]['award_name'] = '差价补贴(分)';
                             $get_uid_data[$ul['user_id']]['role_id'] =$ul['role_id'];;
                             $get_uid_data[$ul['user_id']]['role_name'] =$ul['role_name'];;
