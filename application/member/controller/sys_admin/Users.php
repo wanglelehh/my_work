@@ -267,7 +267,7 @@ class Users extends AdminController
         $this->assign("userShareStats", $this->Model->userShareStats($user_id));
         $row['user_address'] = (new UserAddressModel)->where('user_id', $user_id)->select();
         $Twhere = [];
-        $getIds=$this->Model->teamUid($this->userInfo['user_id']);
+        $getIds=$this->Model->teamUid($user_id);
         $Twhere[]=['user_id','in',$getIds];
         $Twhere[]=['order_status','=',1];
         $row['teamConsume'] = (new OrderModel())->where($Twhere)->sum('order_amount');
