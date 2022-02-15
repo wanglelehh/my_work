@@ -46,11 +46,11 @@ class UpLevelModel extends BaseModel
 //            }
             //汇总直推身份的会员数end
 
-//            //团队总人数（包含自己）
-//            $where = [];
-//            $where[] = ['', 'exp', Db::raw("FIND_IN_SET('" . $user_id . "',superior)")];
-//            $stats['teamCount'] = $UsersBindSuperiorModel->where($where)->count();
-//            //团队总人数（包含自己）end
+            //团队总人数（包含自己）
+            $where = [];
+            $where[] = ['', 'exp', Db::raw("FIND_IN_SET('" . $user_id . "',superior)")];
+            $stats['teamCount'] = $UsersBindSuperiorModel->where($where)->count();
+            //团队总人数（包含自己）end
 
 
             //团队业绩（包含自己）

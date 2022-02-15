@@ -49,7 +49,7 @@ class YdShare extends Command{
         foreach ($userIds as $key => $uid){
             $userInfo=$UsersModel->info($uid);
             if(empty($userInfo)) continue;
-            $teamUid=$UsersModel->teamUid($uid);
+            $teamUid=$UsersModel->teamAllUid($uid);
             $team=$RoleModel->where('role_id',$userInfo['role_id'])->value('team');
 
             $team=json_decode($team,true);  //对应身份设置的补贴比例
@@ -58,6 +58,7 @@ class YdShare extends Command{
             $owhere[] = ['order_status','=',1];
             $owhere[] = ['add_time','>=',$userInfo['last_up_role_time']];
             $owhere[] = ['user_id','in',$teamUid];
+            $owhere[] = ['is_type','=',1];
             $orderIds=$OrderModel->where($owhere)->whereTime('pay_time','month')->column('order_id');
             if(count($orderIds)<1) continue;
 

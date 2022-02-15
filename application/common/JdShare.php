@@ -85,6 +85,7 @@ class JdShare extends Command
             $owhere[] = ['order_status','=',1];
             $owhere[] = ['add_time','between',[$start_time,$end_time]];
             $owhere[] = ['user_id','in',$teamUid];
+            $owhere[] = ['is_type','=',1];
             $orderIds=$OrderModel->where($owhere)->column('order_id');     //符合条件的订单
             if(count($orderIds)<1) continue;      //没有订单，跳过
 

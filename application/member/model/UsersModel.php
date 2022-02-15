@@ -1066,6 +1066,13 @@ class UsersModel extends BaseModel
         return $userList;
     }
 
+    public function teamAllUid($user_id){
+        $UsersBindSuperiorModel=new UsersBindSuperiorModel();
+        $where = [];
+        $where[] = ['', 'exp', Db::raw("FIND_IN_SET('" . $user_id . "',superior)")];
+        $userList = $UsersBindSuperiorModel->where($where)->column('user_id');
+        return $userList;
+    }
     /*------------------------------------------------------ */
     //-- 获取会员的上级关联链(备份)
     /*------------------------------------------------------ */
