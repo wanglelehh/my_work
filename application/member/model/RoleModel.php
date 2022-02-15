@@ -25,7 +25,7 @@ class RoleModel extends BaseModel
 	public  function getRows($role_type = -1){
         $rows = Cache::get(self::$mkey);
 		if (empty($rows)){
-            $rows = $this->field('*,role_id as id,role_name as name')->order('level DESC')->select()->toArray();
+            $rows = $this->field('*,role_id as id,role_name as name')->order('level ASC')->select()->toArray();
             Cache::set(self::$mkey,$rows,600);
         }
 		foreach ($rows as $row){
