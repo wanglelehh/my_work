@@ -126,6 +126,10 @@ class UpLevelModel extends BaseModel
                     }
                     break;
                 }
+                if($res==1){
+                    $level=$userRoleLevel-$role['level'];  //通过直推条件升级，必须逐级升
+                    if($level!=1) continue;
+                }
                 $uplog=$arr[$res].',';
                 $upRole = $role;
                 if ($DividendInfo['level_up_type'] == 0) {//逐级升时调用

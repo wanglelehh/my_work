@@ -44,6 +44,16 @@ class BasalFunLevel
         }
         //团队业绩end
 
+        // 购买身份产品商品
+        if(isset($upLeveValue['any_product'])){
+            if ($usersInfo['user_id'] == $orderInfo['user_id'] && $upLeveValue['any_product'] == 1 && $orderInfo['is_type']==1) {
+                if ($role['up_condition'] == 1) {//只需满足任一条件即可升级
+                    return 2;
+                }
+            }
+        }
+        // 购买身份产品商品end
+
         //直推条件判断
         $status = false;
         if(!empty($upLeveValue['referral'])){
@@ -66,15 +76,7 @@ class BasalFunLevel
         }
         //直推条件判断end
 
-        // 购买身份产品商品
-        if(isset($upLeveValue['any_product'])){
-            if ($usersInfo['user_id'] == $orderInfo['user_id'] && $upLeveValue['any_product'] == 1 && $orderInfo['is_type']==1) {
-                if ($role['up_condition'] == 1) {//只需满足任一条件即可升级
-                    return 2;
-                }
-            }
-        }
-        // 购买身份产品商品end
+
 
         //团队总人数
 //        if ($upLeveValue['team_total'] > 0){
