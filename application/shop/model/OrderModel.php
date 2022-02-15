@@ -1086,15 +1086,12 @@ class OrderModel extends BaseModel
                 if($ul['user_id']==$orderInfo['user_id']) {
                     $is_rolePrice = $GoodsModel->rolePrice($g['goods_id'], $ul['role_id']); //此人对应身份的身份价;
                     $ji_cha=$is_rolePrice;
+                    $level_now=$ul['level'];
                     continue;
                 }   //下单本人跳过
                 if($ul['level']<$level_now) {
                     $level_now = $ul['level'];
-                    if($ul['user_id']==$userInfo['pid'] && $ul['role_id']==$orderInfo['dividend_role_id'] && empty($waituser) && $havepeer==0){
-                        $waituser=$ul;       //遇到直推上级且是平级
-                        $havepeer=1;
-                        continue;
-                    }
+
                     $is_rolePrice = $GoodsModel->rolePrice($g['goods_id'], $ul['role_id']); //此人对应身份的身份价;
 //                        $findLeve = $ul['level'] + 1;
 //                        $next_role_id = $RoleModel->where('level', $findLeve)->value('role_id');
@@ -1103,33 +1100,44 @@ class OrderModel extends BaseModel
                     $ji_cha=$is_rolePrice;
                     if ($award <= 0) continue;
 
-                    if ($ul['role_id'] == $max_id && !empty($waituser)) {  //是联创  且有平级
-                        $per = $peers[$waituser['role_id']][0];
-                        if ($waituser['role_id'] == $max_id) {  //若平级是联创
-                            $result = $UsersModel->isSameMonth($waituser['last_up_role_time'], time());
-                            if ($result == true) {
-                                $per = $peers[$waituser['role_id']][0];
-                            } else {
-                                $per = $peers[$waituser['role_id']][1];
+                    if (!empty($waituser)) {  //有平级  $ul['role_id'] == $max_id &&
+                        if($ul['role_id'] == $max_id){  //是联创
+                            $per = $peers[$waituser['role_id']][0];
+                            if ($waituser['role_id'] == $max_id) {  //若平级是联创
+                                $result = $UsersModel->isSameMonth($waituser['last_up_role_time'], time());
+                                if ($result == true) {
+                                    $per = $peers[$waituser['role_id']][0];
+                                } else {
+                                    $per = $peers[$waituser['role_id']][1];
+                                }
                             }
+                            $getward = ($award * $goods_number * 0.01) * $per * 0.01;
+                            $get_uid_data[$waituser['user_id']]['award'] += $getward;
+                            $get_uid_data[$waituser['user_id']]['award_name'] = '平级推荐奖';
+                            $get_uid_data[$waituser['user_id']]['role_id'] =$waituser['role_id'];
+                            $get_uid_data[$waituser['user_id']]['role_name'] =$waituser['role_name'];
+
+                            $get_uid_data[$ul['user_id']]['award'] += ($award * $goods_number * 0.01) - $getward;
+                            $get_uid_data[$ul['user_id']]['award_name'] = '差价补贴(分)';
+                            $get_uid_data[$ul['user_id']]['role_id'] =$ul['role_id'];;
+                            $get_uid_data[$ul['user_id']]['role_name'] =$ul['role_name'];;
+                            $waituser = array();
+                        }else{
+                            $get_uid_data[$ul['user_id']]['award'] += $award * $goods_number;
+                            $get_uid_data[$ul['user_id']]['award_name'] = '差价补贴';
+                            $get_uid_data[$ul['user_id']]['role_id'] =$ul['role_id'];
+                            $get_uid_data[$ul['user_id']]['role_name'] =$ul['role_name'];
                         }
-                        $getward = ($orderInfo['order_amount'] - $orderInfo['shipping_fee']) * $per * 0.01;
-                        $get_uid_data[$waituser['user_id']]['award'] += $getward;
-                        $get_uid_data[$waituser['user_id']]['award_name'] = '平级推荐奖';
-                        $get_uid_data[$waituser['user_id']]['role_id'] =$waituser['role_id'];
-                        $get_uid_data[$waituser['user_id']]['role_name'] =$waituser['role_name'];
-
-                        $get_uid_data[$ul['user_id']]['award'] += ($award * $goods_number * 0.01) - $getward;
-                        $get_uid_data[$ul['user_id']]['award_name'] = '差价补贴(分)';
-                        $get_uid_data[$ul['user_id']]['role_id'] =$ul['role_id'];;
-                        $get_uid_data[$ul['user_id']]['role_name'] =$ul['role_name'];;
-
-                        $waituser = array();
                     } else {
                         $get_uid_data[$ul['user_id']]['award'] += $award * $goods_number;
                         $get_uid_data[$ul['user_id']]['award_name'] = '差价补贴';
-                        $get_uid_data[$ul['user_id']]['role_id'] =$ul['role_id'];;
-                        $get_uid_data[$ul['user_id']]['role_name'] =$ul['role_name'];;
+                        $get_uid_data[$ul['user_id']]['role_id'] =$ul['role_id'];
+                        $get_uid_data[$ul['user_id']]['role_name'] =$ul['role_name'];
+                    }
+                }else if($ul['level']==$level_now){  //是平级
+                    if($ul['user_id']==$userInfo['pid'] && $ul['role_id']==$orderInfo['dividend_role_id'] && empty($waituser) && $havepeer==0){
+                        $waituser=$ul;       //遇到直推上级且是平级
+                        $havepeer=1;
                     }
                 }
                 //差价+平级奖-------------------------------------------------------------------
