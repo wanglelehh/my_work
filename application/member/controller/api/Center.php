@@ -60,6 +60,7 @@ class Center extends ApiController
         $getIds=$this->Model->teamUid($this->userInfo['user_id']);
         $where[]=['user_id','in',$getIds];
         $where[]=['order_status','=',1];
+        $where[]=['is_type','=',1];
         $data['teamConsume'] = (new OrderModel())->where($where)->sum('order_amount');
         $data['teamCount'] = (new FansModel)->getFansCountToCenter($this->userInfo['user_id']);
 
