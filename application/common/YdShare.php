@@ -57,7 +57,7 @@ class YdShare extends Command{
             foreach ($usersIds as $value){
                 if ($value == $uid || in_array($value,$arr['delUserIds'])) continue;
                 if (($UsersModel->where('user_id',$value)->value('role_id'))<20) continue;
-                $user_total = $OrderModel->getTotalOrderMoney($value,$time);
+                $user_total = $OrderModel->getTotalOrderMoney($value,$findTime);
                 $my_total -= $user_total;
                 if ($user_total > 0){
                     $uwhere = [];
