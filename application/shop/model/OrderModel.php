@@ -1198,7 +1198,9 @@ class OrderModel extends BaseModel
         $where[] = ['', 'exp', Db::raw("FIND_IN_SET('" . $user_id . "',ub.superior)")];
         $usersIds = (new UsersBindSuperiorModel())->alias('ub')->where($where)->column('ub.user_id');
         $owhere[] = ['user_id','in',$usersIds];
-        $owhere[] = ['add_time','>=',$upTime];
+        if($upTime>0){
+            $owhere[] = ['add_time','>=',$upTime];
+        }
         $owhere[] = ['pay_status','=',1];
         $owhere[] = ['order_status','=',1];
         $owhere[] = ['is_type','=',1];
