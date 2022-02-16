@@ -1066,11 +1066,16 @@ class UsersModel extends BaseModel
         return $userList;
     }
 
-    public function teamAllUid($user_id){
-        $UsersBindSuperiorModel=new UsersBindSuperiorModel();
-        $where = [];
-        $where[] = ['', 'exp', Db::raw("FIND_IN_SET('" . $user_id . "',superior)")];
-        $userList = $UsersBindSuperiorModel->where($where)->column('user_id');
+    public function getTeamUsers($user_id){
+        $userList = $user_id;
+        $pids = $user_id;
+        $teamids = $this->where([['pid','in',$pids]])->column('user_id');
+        $userList .= ','.implode(',',$teamids);
+        while (count($teamids) > 0){
+            $teamids = $this->where([['pid','in',$teamids]])->column('user_id');
+            $userList .= ','.implode(',',$teamids);
+        }
+        $userList=explode(',',rtrim($userList,','));
         return $userList;
     }
     /*------------------------------------------------------ */

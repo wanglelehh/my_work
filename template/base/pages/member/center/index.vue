@@ -121,6 +121,14 @@
 						<u-icon :name="baseUrl+item.imgurl" :size="68"></u-icon>
 						<view class="mt10 fs24">{{item.title}}</view>
 					</u-grid-item>
+					
+					<u-grid-item  class="mt10 mb10">
+						<button  open-type="contact" bindcontact="handleContact" hover-class="none">
+							<u-icon :name="'/static/public/images/cneter_comment.jpg'" :size="68"></u-icon>
+							<view class="mt10 fs24">客服</view>
+						</button>
+					</u-grid-item>
+					
 				</u-grid>
 				<view v-if="setting.user_center_nav_tpl == 1" v-for="(item, index) in navMenu" :key="index">
 					<view class="list-cell b-b mt20" @click="centerNav(item)" hover-class="cell-hover" :hover-stay-time="50">
@@ -258,6 +266,9 @@
 </script>
 
 <style lang="scss">
+	button::after{
+		border: 5rpx solid red;
+	}
 	.u-badge{
 		z-index: 999;
 	}

@@ -6,6 +6,7 @@ use app\BaseModel;
 use app\distribution\model\DividendModel;
 use app\mainadmin\model\SettingsModel;
 use app\member\model\RoleModel;
+use app\member\model\UsersBindSuperiorModel;
 use app\member\model\UsersModel;
 use think\facade\Cache;
 use think\Db;
@@ -1182,6 +1183,45 @@ class OrderModel extends BaseModel
         $return['dividend_amount']=$all_dividend_amount;
         return $return;
 
+    }
+
+    public function getTotalOrderMoney($user_id,$time='last month'){
+        $GoodsModel=new GoodsModel();
+        $user=(new UsersModel())->field('last_up_role_time,role_id')->where('user_id',$user_id)->find();
+        $where[] = ['', 'exp', Db::raw("FIND_IN_SET('" . $user_id . "',ub.superior)")];
+        $usersIds = (new UsersBindSuperiorModel())->alias('ub')->where($where)->column('ub.user_id');
+        $owhere[] = ['user_id','in',$usersIds];
+        $owhere[] = ['add_time','>=',$user['last_up_role_time']];
+        $owhere[] = ['pay_status','=',1];
+        $owhere[] = ['order_status','=',1];
+        $owhere[] = ['is_type','=',1];
+        $orderIds = $this->where($owhere)->whereTime('pay_time',$time)->column('order_id');
+
+        $goodsList=(new OrderGoodsModel())->where('order_id','in',$orderIds)->select();
+        $total=0;  //总业绩
+        foreach ($goodsList as $ke=>$ve){
+            $goods=$GoodsModel->info($ve['goods_id']);
+            $is_rolePrice = $GoodsModel->rolePrice($ve['goods_id'], 21); //商品联创的身份价;
+            $price= empty($is_rolePrice) ? $goods['shop_price']:$is_rolePrice;
+            $total += $price * $ve['goods_number'];
+        }
+        $reward1 = $this->getBfb($total,$user['role_id']);
+        trace('用户:'.$user_id.'-业绩:'.$total.'-比例:'.$reward1,'debug');
+        return $reward1 ? $total * $reward1 * 0.01 : 0;
+    }
+
+    public function getBfb($total,$role_id=21){
+        if($total <= 0) return 0;
+        $team=(new RoleModel())->where('role_id',$role_id)->value('team');
+        $team=json_decode($team,true);  //对应身份设置的补贴比例
+
+        $reward1 = 0;
+        foreach ($team as $t){
+            if($total >= $t['num1'] && $reward1 < $t['reward1']){
+                $reward1 = $t['reward1'];
+            }
+        }
+        return $reward1;
     }
 
 }
