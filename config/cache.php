@@ -20,7 +20,7 @@ return [
     // 缓存保存目录
     'path'   => '',
     // 缓存前缀
-    'prefix' => 'ws_base2_',
+    'prefix' => 'ruiyin_lzyl_',
     // 缓存有效期 0表示永久缓存
     'expire' => 0,
 ];
