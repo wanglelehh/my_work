@@ -50,7 +50,7 @@
 
 		<view class="p30">
 			<button v-if="setting.withdraw_status == 1" size="default" shape="circle" type="primary" class="mt40 primarybtn" @click="app.goPage('withdraw')">{{app.langReplace('去提现')}}</button>
-			<button size="default" shape="circle" type="primary" class="mt40 primarybtnB" @click="app.goPage('recharge')">{{app.langReplace('去充值')}}</button>
+			<!-- <button size="default" shape="circle" type="primary" class="mt40 primarybtnB" @click="app.goPage('recharge')">{{app.langReplace('去充值')}}</button> -->
 		</view>
 	</view>
 </template>

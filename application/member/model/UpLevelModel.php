@@ -144,6 +144,12 @@ class UpLevelModel extends BaseModel
             }
 
             if (empty($upRole) == false) {
+                if($upRole['role_id']>19){ //是城市合伙人级别或以上
+                    $findorder=$OrderModel->where('user_id',$user_id)->where('is_up',1)->find();
+                    if(empty($findorder)){
+                        $OrderModel->where('order_id',$orderInfo['order_id'])->update(['is_up'=>1]);
+                    }
+                }
                 $upData['last_up_role_time'] = time();
                 $upData['role_id'] = $upRole['role_id'];
                 $upData['is_channel'] = 0;

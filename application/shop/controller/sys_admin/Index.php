@@ -1,6 +1,7 @@
 <?php
 namespace app\shop\controller\sys_admin;
 use app\AdminController;
+use app\distribution\model\DividendModel;
 use think\facade\Cache;
 
 use app\shop\model\OrderModel;
@@ -78,7 +79,19 @@ class Index extends AdminController
         $this->assign('userStats',$userStats);
         //end
 
+
+
+        $DividendModel=new DividendModel();
+        $aWhere=[];
+        $aWhere[]=['status','in',[1,2,3]];
+        $award['peer_award'] = $DividendModel->where($aWhere)->where('is_type','peer_award')->sum('dividend_amount');
+        $award['chaji_award'] = $DividendModel->where($aWhere)->where('is_type','chaji_award')->sum('dividend_amount');
+        $this->assign('award',$award);
+
         $OrderModel = new OrderModel();
+
+        $awardPool=$OrderModel->sum('award_pool');
+        $this->assign('awardPool',$awardPool);
         //订单统计相关
         $stats = [];
         $i = 0;

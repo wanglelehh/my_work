@@ -65,7 +65,7 @@
 						<view class="ff">{{teamConsume>0?teamConsume:0}}</view>
 						<view class="fs26 color-99">{{app.langReplace('团队业绩')}}</view>
 					</u-grid-item>
-					<u-grid-item bg-color="none" class="p0" v-if="userInfo.role_id>12">
+					<u-grid-item bg-color="none" class="p0" v-if="userInfo.role_id>19">
 						<view class="ff">{{setting.team_pool>0?setting.team_pool:0}}</view>
 						<view class="fs26 color-99">{{app.langReplace('奖金池')}}</view>
 					</u-grid-item>
@@ -121,14 +121,14 @@
 						<u-icon :name="baseUrl+item.imgurl" :size="68"></u-icon>
 						<view class="mt10 fs24">{{item.title}}</view>
 					</u-grid-item>
-					
+					<!-- #ifdef MP-WEIXIN -->
 					<u-grid-item  class="mt10 mb10">
-						<button  open-type="contact" bindcontact="handleContact" hover-class="none">
-							<u-icon :name="'/static/public/images/cneter_comment.jpg'" :size="68"></u-icon>
-							<view class="mt10 fs24">客服</view>
+						<button class="u-reset-button" open-type="contact" bindcontact="handleContact" hover-class="none">
+							<u-icon :name="baseUrl+contact_imgurl" :size="68"></u-icon>
+							<view class="fs24">客服</view>
 						</button>
 					</u-grid-item>
-					
+					<!-- #endif -->
 				</u-grid>
 				<view v-if="setting.user_center_nav_tpl == 1" v-for="(item, index) in navMenu" :key="index">
 					<view class="list-cell b-b mt20" @click="centerNav(item)" hover-class="cell-hover" :hover-stay-time="50">
@@ -154,6 +154,7 @@
 		},
 		data() {
 			return {
+				contact_imgurl:'/static/public/images/cneter_comment.png',
 				now_page:'',
 				baseUrl: this.config.baseUrl,
 				setting: {},
@@ -267,7 +268,11 @@
 
 <style lang="scss">
 	button::after{
-		border: 5rpx solid red;
+		line-height: none !important;
+		background-color: none !important;
+		// color: #000;
+		border-radius: 0;
+		border: none;
 	}
 	.u-badge{
 		z-index: 999;

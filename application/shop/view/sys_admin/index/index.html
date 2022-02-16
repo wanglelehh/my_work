@@ -88,18 +88,22 @@
     </section>
     <section class="panel  panel-default">
         <div class="row m-l-none m-r-none bg-light lter">
-            <div class="col-sm-6 col-md-3 padder-v b-r b-light ">
-                <span class="fa-stack fa-2x pull-left m-r-sm  m-l">
-                            <i class="fa fa-circle fa-stack-2x icon-muted"></i>
-                            <i class="fa fa-yen fa-stack-1x text-white"></i>
+            <div class="col-sm-6 col-md-3 padder-v b-r b-light lt">
+                  <span class="fa-stack fa-2x pull-left m-r-sm  m-l">
+                            <i class="fa fa-circle fa-stack-2x text-danger"></i>
+                            <i class="fa fa-yen  fa-stack-1x text-white"></i>
+                            <span class="easypiechart pos-abt" data-percent="100" data-line-width="4"
+                                  data-track-color="#f5f5f5" data-scale-color="false" data-size="50"
+                                  data-line-cap="butt" data-animate="3000" data-target="#firers"
+                                  data-update="5000"></span>
                         </span>
-                <a class="fl" href="{:url('member/sys_admin.recharge/index')}">
-                    <span class="h3 block m-t-xs"><strong id="wait_pay">{$rchargeLogNum}</strong></span>
-                    <small class="text-muted text-uc">充值待审核</small>
+                <a class="fl" href="#">
+                    <span class="h3 block m-t-xs"><strong id="balance_total">{$account.balance_money|priceToW}</strong></span>
+                    <small class="text-muted text-uc">余额总数</small>
                 </a>
-                <a class="fr" href="{:url('member/sys_admin.withdraw/index')}">
-                    <span class="h3 block m-t-xs"><strong id="wait_withdraw">{$withdrawLogNum}</strong></span>
-                    <small class="text-muted text-uc">提现待审核</small>
+                <a class="fr" href="#">
+                    <span class="h3 block m-t-xs"><strong id="award_pool">{$awardPool}</strong></span>
+                    <small class="text-muted text-uc">奖金池</small>
                 </a>
                 <div class="clearfix"></div>
             </div>
@@ -115,10 +119,10 @@
                     <span class="h3 block m-t-xs"><strong id="t_day_new_user">{$userStats['today_reg']}</strong></span>
                     <small class="text-muted text-uc">今天新增会员</small>
                 </a>
-                <a class="fr" href="#">
-                    <span class="h3 block m-t-xs"><strong id="y_day_new_user">{$userStats['today_sign']}</strong></span>
-                    <small class="text-muted text-uc">今天签到会员</small>
-                </a>
+                <!--<a class="fr" href="#">-->
+                    <!--<span class="h3 block m-t-xs"><strong id="y_day_new_user">{$userStats['today_sign']}</strong></span>-->
+                    <!--<small class="text-muted text-uc">今天签到会员</small>-->
+                <!--</a>-->
                 <div class="clearfix"></div>
             </div>
             <div class="col-sm-6 col-md-3 padder-v b-r b-light">
@@ -136,22 +140,41 @@
                 </a>
                 <div class="clearfix"></div>
             </div>
-            <div class="col-sm-6 col-md-3 padder-v b-r b-light lt">
-                  <span class="fa-stack fa-2x pull-left m-r-sm  m-l">
-                            <i class="fa fa-circle fa-stack-2x text-danger"></i>
-                            <i class="fa fa-yen  fa-stack-1x text-white"></i>
-                            <span class="easypiechart pos-abt" data-percent="100" data-line-width="4"
-                                  data-track-color="#f5f5f5" data-scale-color="false" data-size="50"
-                                  data-line-cap="butt" data-animate="3000" data-target="#firers"
-                                  data-update="5000"></span>
+            <div class="col-sm-6 col-md-3 padder-v b-r b-light ">
+                <span class="fa-stack fa-2x pull-left m-r-sm  m-l">
+                            <i class="fa fa-circle fa-stack-2x icon-muted"></i>
+                            <i class="fa fa-yen fa-stack-1x text-white"></i>
                         </span>
-                <a class="fl" href="#">
-                    <span class="h3 block m-t-xs"><strong id="balance_total">{$account.balance_money|priceToW}</strong></span>
-                    <small class="text-muted text-uc">余额总数</small>
+                <!--<a class="fl" href="{:url('member/sys_admin.recharge/index')}">-->
+                <!--<span class="h3 block m-t-xs"><strong id="wait_pay">{$rchargeLogNum}</strong></span>-->
+                <!--<small class="text-muted text-uc">充值待审核</small>-->
+                <!--</a>-->
+                <a class="fl" href="{:url('member/sys_admin.withdraw/index')}">
+                    <span class="h3 block m-t-xs"><strong id="wait_withdraw">{$withdrawLogNum}</strong></span>
+                    <small class="text-muted text-uc">提现待审核</small>
                 </a>
-                <a class="fr" href="#">
-                    <span class="h3 block m-t-xs"><strong id="bean_total">{$account.use_integral|priceToW}</strong></span>
-                    <small class="text-muted text-uc">积分总数</small>
+                <!--<a class="fr" href="#">-->
+                <!--<span class="h3 block m-t-xs"><strong id="award_pool">{$awardPool}</strong></span>-->
+                <!--<small class="text-muted text-uc">奖金池</small>-->
+                <!--</a>-->
+                <div class="clearfix"></div>
+            </div>
+        </div>
+    </section>
+    <section class="panel  panel-default">
+        <div class="row m-l-none m-r-none bg-light lter">
+            <div class="col-sm-6 col-md-3 padder-v b-r b-light ">
+                <span class="fa-stack fa-2x pull-left m-r-sm  m-l">
+                            <i class="fa fa-circle fa-stack-2x icon-muted"></i>
+                            <i class="fa fa-yen fa-stack-1x text-white"></i>
+                        </span>
+                <a class="fl" href="javascript:;">
+                    <span class="h3 block m-t-xs"><strong id="chaji_award">{$award['chaji_award']}</strong></span>
+                    <small class="text-muted text-uc">差价补贴</small>
+                </a>
+                <a class="fr" href="javascript:;">
+                <span class="h3 block m-t-xs"><strong id="peer_award">{$award['peer_award']}</strong></span>
+                <small class="text-muted text-uc">平级奖励</small>
                 </a>
                 <div class="clearfix"></div>
             </div>

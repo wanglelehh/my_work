@@ -934,27 +934,6 @@ class OrderModel extends BaseModel
             $orderInfo['is_stock'] = 1;
         }//end
 
-        $GoodsModel=new GoodsModel();
-        $SettingsModel=new SettingsModel();
-        $goodsList=(new OrderGoodsModel())->where('order_id',$orderInfo['order_id'])->select()->toArray();
-        //奖金池
-        $one_award=0;
-        foreach ($goodsList as $v){
-            $give_pool=$GoodsModel->where('goods_id',$v['goods_id'])->value('give_pool');
-            if($give_pool>0){
-                $one_award +=$give_pool *  $v['goods_number'];
-            }
-        }
-        if($one_award>0){
-            $find=$SettingsModel->where('name','team_pool')->find();
-            if($find){
-                $SettingsModel->where('name','team_pool')->setInc('data',$one_award);
-            }else{
-                $SettingsModel->insert(['name'=>'team_pool','data'=>$one_award]);
-            }
-            $SettingsModel->cleanMemcache();
-        }
-        //end
 
         $UsersModel =  new \app\member\model\UsersModel();
         $usersInfo = $UsersModel->info($orderInfo['user_id']);//获取会员信息
@@ -982,10 +961,32 @@ class OrderModel extends BaseModel
             }
             Db::rollback();// 回滚事务
         }//end
+        $GoodsModel=new GoodsModel();
+        $SettingsModel=new SettingsModel();
+        $goodsList=(new OrderGoodsModel())->where('order_id',$orderInfo['order_id'])->select()->toArray();
+        //奖金池
+        $one_award=0;
+        foreach ($goodsList as $v){
+            $give_pool=$GoodsModel->where('goods_id',$v['goods_id'])->value('give_pool');
+            if($give_pool>0){
+                $one_award +=$give_pool *  $v['goods_number'];
+            }
+        }
+        if($one_award>0){
+            $find=$SettingsModel->where('name','team_pool')->find();
+            if($find){
+                $SettingsModel->where('name','team_pool')->setInc('data',$one_award);
+            }else{
+                $SettingsModel->insert(['name'=>'team_pool','data'=>$one_award]);
+            }
+            $SettingsModel->cleanMemcache();
+            $upData['award_pool']=$one_award;
+        }
+        //end
 
         //处理（差价补贴、平级奖）
         if($orderInfo['is_type']==1){
-            $orderInfo['goodsList']=(new OrderGoodsModel())->where('order_id',$orderInfo['order_id'])->select()->toArray();
+            $orderInfo['goodsList']=$goodsList;
             $re = $this->moreAward($orderInfo);
             if ($re != false) {
                 $upData['dividend_amount']=$re['dividend_amount'];
@@ -1188,10 +1189,16 @@ class OrderModel extends BaseModel
     public function getTotalOrderMoney($user_id,$time='last month'){
         $GoodsModel=new GoodsModel();
         $user=(new UsersModel())->field('last_up_role_time,role_id')->where('user_id',$user_id)->find();
+        $month = date('m', strtotime("-1 month"));
+        $upTime=$user['last_up_role_time'];
+        if(date('m', $user['last_up_role_time'])==$month){  //同月升级
+            $add_time=$this->where('user_id',$user_id)->where('is_up',1)->value('add_time');
+            $upTime=$add_time<$upTime?$add_time:$upTime;
+        }
         $where[] = ['', 'exp', Db::raw("FIND_IN_SET('" . $user_id . "',ub.superior)")];
         $usersIds = (new UsersBindSuperiorModel())->alias('ub')->where($where)->column('ub.user_id');
         $owhere[] = ['user_id','in',$usersIds];
-        $owhere[] = ['add_time','>=',$user['last_up_role_time']];
+        $owhere[] = ['add_time','>=',$upTime];
         $owhere[] = ['pay_status','=',1];
         $owhere[] = ['order_status','=',1];
         $owhere[] = ['is_type','=',1];
