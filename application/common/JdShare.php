@@ -103,7 +103,7 @@ class JdShare extends Command
             }
         }
         if(count($get_uid)<1) return true; //没有平分用户
-        $award=$allAward/$get_uid;
+        $award=$allAward/count($get_uid) * 1;
         if($award<=0) return true;
 
         Db::startTrans();
