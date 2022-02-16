@@ -104,6 +104,8 @@ class JdShare extends Command
         }
         if(count($get_uid)<1) return true; //没有平分用户
         $award=$allAward/count($get_uid) * 1;
+        trace('奖金池:'.$allAward.'用户人数:'.count($get_uid).'-奖励:'.$award.'-----;','debug');
+        echo '奖金池:'.$allAward.'用户人数:'.count($get_uid).'-奖励:'.$award.'-----;';
         if($award<=0) return true;
 
         Db::startTrans();
