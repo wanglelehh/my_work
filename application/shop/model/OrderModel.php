@@ -1206,7 +1206,9 @@ class OrderModel extends BaseModel
             $total += $price * $ve['goods_number'];
         }
         $reward1 = $this->getBfb($total,$user['role_id']);
-        trace('用户:'.$user_id.'-业绩:'.$total.'-比例:'.$reward1,'debug');
+        if($reward1>0 && $total>0){
+            trace('用户:'.$user_id.'-业绩:'.$total.'-比例:'.$reward1,'debug');
+        }
         return $reward1 ? $total * $reward1 * 0.01 : 0;
     }
 
