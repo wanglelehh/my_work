@@ -71,7 +71,7 @@ class JdShare extends Command
         $get_uid=array();
         foreach ($userIds as $key => $uid){
             $start_time = strtotime(date('Y-m-01', strtotime("-3 month")));//开始时间
-            $end_time = strtotime(date('Y-m-01', time())) - 1;//结束时间
+            $end_time = strtotime(date('Y-m-01', $time)) - 1;//结束时间
             $userInfo=$UsersModel->info($uid);
 
             if(empty($userInfo)) continue;
