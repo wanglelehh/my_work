@@ -41,7 +41,7 @@
 		<view v-if="open==true" style="position: fixed;top: 0;left: 0;z-index: 1111;width: 100%;height: 100%;background: rgba(0,0,0,0.5);">
 			<view style="width: 80%;left: 10%;top: 50%;position: absolute;border-radius: 20rpx;margin-top: -400rpx;padding: 20rpx;">
 				<u-icon name="close-circle" @click="closeOpen()" size="70" style="position: absolute;right: -55rpx;top: -70rpx;"></u-icon>
-				<image class="play" :src="look_image" style="width:100%;height:900rpx;border-radius: 20rpx;" ></image>
+				<image class="play" :src="look_image" style="width:100%;height:800rpx;border-radius: 20rpx;" ></image>
 			</view>
 		</view>
 	</view>
