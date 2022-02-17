@@ -16,6 +16,7 @@ class Index extends ApiController
         $data['page'] = $ShopPageTheme->getToWxApp();
         $data['tipsubscribe'] = 0;
         $data['shop_index_img']=settings('shop_index_img');
+        $data['shop_index_img_open']=settings('shop_index_img_open');
         $source = request()->header('source');
         if ($source == 'H5-WX' ){
             $openid = input('openid','','trim');

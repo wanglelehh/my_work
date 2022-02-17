@@ -112,7 +112,7 @@
 						title
 					})
 					setTimeout(() =>{
-						if(res.data.shop_index_img !=''){
+						if(res.data.shop_index_img_open ==1 && res.data.shop_index_img !=''){
 							this.open=true
 							this.look_image=this.config.baseUrl+res.data.shop_index_img;
 						}
