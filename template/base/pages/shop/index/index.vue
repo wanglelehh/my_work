@@ -38,6 +38,12 @@
 		<view v-else>
 			<tabbar v-if="pageInfo.page.diymenu==1" :now_page="now_page" :getCartNum="0"></tabbar>
 		</view>
+		<view v-if="open==true" style="position: fixed;top: 0;left: 0;z-index: 1111;width: 100%;height: 100%;background: rgba(0,0,0,0.5);">
+			<view style="width: 80%;left: 10%;top: 50%;position: absolute;border-radius: 20rpx;margin-top: -400rpx;padding: 20rpx;">
+				<u-icon name="close-circle" @click="closeOpen()" size="70" style="position: absolute;right: -55rpx;top: -70rpx;"></u-icon>
+				<image class="play" :src="look_image" style="width:100%;height:900rpx;border-radius: 20rpx;" ></image>
+			</view>
+		</view>
 	</view>
 </template>
 
@@ -54,6 +60,8 @@
 		},
 		data() {
 			return {
+				look_image:'/static/public/images/video_icon/avatar.jpg',
+                open:false,
 				now_page:'',
 				shareData: {},
 				is_diy: -1,
@@ -83,6 +91,9 @@
 		watch: {},
 		computed: {},
 		methods: {
+			closeOpen(){
+				this.open=false;
+			},
 			//请求数据
 			async loadData() {
 				let openid = this.app.getWxOpenId();
@@ -100,6 +111,12 @@
 					uni.setNavigationBarTitle({
 						title
 					})
+					setTimeout(() =>{
+						if(res.data.shop_index_img !=''){
+							this.open=true
+							this.look_image=this.config.baseUrl+res.data.shop_index_img;
+						}
+					}, 1000);
 					//console.log(this.pageInfo);
 				})
 			},

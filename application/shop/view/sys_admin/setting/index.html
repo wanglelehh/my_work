@@ -41,6 +41,20 @@
                                        class="input-large"> <span class="help-line"></span>
                             </div>
                         </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">开屏弹窗：</label>
+                            <div class="controls col-sm-6">
+                                <div class="defUpImgBox" data-toggle="uploaderOne">
+                                    <img id="the_shop_index_img" src="{$setting.shop_index_img|default='__STATIC__/main/img/image.png'}">
+                                    <input id="shop_index_img" type="hidden"  name="shop_index_img"  value="{$setting.shop_index_img}">
+                                    <div class="tips">点击上传</div>
+                                </div>
+                                <p>
+                                    <!--<span class="help-inline">建议图片尺寸：320*320像素</span>-->
+                                    <a href="javascript:;" onclick="$('#shop_index_img').val('');$('#the_shop_index_img').attr('src','__STATIC__/main/img/image.png');"><i class="fa fa-trash-o m-r-xs"></i>清除图片</a>
+                                </p>
+                            </div>
+                        </div>
                         <div class="line line-dashed line-lg pull-in" style="width:99%;"></div>
                         <div class="form-group">
                             <label class="col-sm-2 control-label">超时取消：</label>

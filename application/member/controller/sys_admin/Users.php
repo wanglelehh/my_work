@@ -143,6 +143,7 @@ class Users extends AdminController
 
         $count = $this->Model->alias('u')->where(join(' AND ', $where))->count('u.user_id');
 
+        $UsersBindSuperiorModel=new UsersBindSuperiorModel();
         if ($count < 1) return $this->error('没有找到可导出的日志资料！');
         $filename = '会员列表资料_' . date("YmdHis") . '.xls';
         $export_arr['UID'] = 'user_id';
@@ -152,6 +153,7 @@ class Users extends AdminController
         $export_arr['身份'] = 'userRole';
         $export_arr['注册时间'] = 'reg_time';
         $export_arr['最近登陆'] = 'login_time';
+        $export_arr['层级数'] = 'layer_num';
         $export_arr['推荐人ID'] = 'pid';
         $export_arr['推荐人手机'] = 'p_mobile';
         $export_arr['推荐人姓名'] = 'p_real_name';
@@ -172,6 +174,8 @@ class Users extends AdminController
                 if ($row['pid'] > 0){
                     $pUserInfo =  $this->Model->where('user_id',$row['pid'])->find();
                 }
+                $layer_num=$UsersBindSuperiorModel->where('user_id',$row['user_id'])->value('superior');
+                $layer_num=str_replace($row['user_id'],'',$layer_num);
                 $data .= "<tr>";
                 foreach ($export_arr as $val) {
                     $data .= "<td>";
@@ -180,7 +184,9 @@ class Users extends AdminController
                     }  elseif($val == 'userRole') {
                         $data .= ($row['role_id'] == 0 ? '无身份' : $roleList[$row['role_id']]['role_name']);
                     } else {
-                        if ($val == 'p_mobile') {
+                        if($val == 'layer_num'){
+                            $data .= (strlen($layer_num) > 0 ? ltrim($layer_num,',') : '');
+                        } elseif ($val == 'p_mobile') {
                             $data .= ($row['pid'] > 0 ? $pUserInfo['mobile'] : '');
                         }elseif ($val == 'p_real_name') {
                             $data .= ($row['pid'] > 0 ? $pUserInfo['real_name'] : '');
