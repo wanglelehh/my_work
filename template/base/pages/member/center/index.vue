@@ -122,8 +122,8 @@
 						<view class="mt10 fs24">{{item.title}}</view>
 					</u-grid-item>
 					<!-- #ifdef MP-WEIXIN -->
-					<u-grid-item  class="mt10 mb10">
-						<button class="u-reset-button" open-type="contact" bindcontact="handleContact" hover-class="none">
+					<u-grid-item  class="mt10 mb10 ser-son">
+						<button open-type="contact" bindcontact="handleContact" hover-class='none'>
 							<u-icon :name="baseUrl+contact_imgurl" :size="68"></u-icon>
 							<view class="fs24">客服</view>
 						</button>
@@ -268,11 +268,30 @@
 
 <style lang="scss">
 	button::after{
-		line-height: none !important;
-		background-color: none !important;
-		// color: #000;
-		border-radius: 0;
 		border: none;
+	}
+	.ser-son button {
+		
+		position: relative;
+		display: block;
+		margin-left: auto;
+		margin-right: auto;
+		padding-left: 0px;
+		padding-right: 0px;
+		box-sizing: border-box;
+		// font-size: 18px;
+		text-align: center;
+		text-decoration: none;
+		// line-height: 1;
+		line-height: 1.35;
+		// border-radius: 5px;
+		-webkit-tap-highlight-color: transparent;
+		overflow: hidden;
+		color: #000000;
+		background-color: #fff;
+		width: 100%;
+		height: 100%;
+		
 	}
 	.u-badge{
 		z-index: 999;
