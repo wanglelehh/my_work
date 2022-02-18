@@ -116,7 +116,7 @@ class Goods extends ApiController
             return $this->error('没有找到相关商品.');
         }
         $data['is_collect'] = 0;
-        if (empty($this->userInfo['user_id']) == false){//已登陆，查询用户是否有收藏此商品
+        if (empty($this->userInfo['user_id']) == false){//已登陆， 查询用户是否有收藏此商品
             $data['is_collect'] = $this->Model->isCollect($goods_id,$this->userInfo['user_id']);
         }
         return $this->success($data);
