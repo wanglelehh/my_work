@@ -3,6 +3,7 @@
 namespace app\shop\model;
 
 use app\BaseModel;
+use think\Db;
 use think\facade\Cache;
 
 //*------------------------------------------------------ */
@@ -266,6 +267,27 @@ class CartModel extends BaseModel
             }
             return true;
         }
+
+        // 会员限制购买数量
+        if($goods['restrict_purc'] > 0){
+            $OrderModel = new \app\shop\model\OrderModel();
+            // 统计累计购买数量
+            $where=[];
+            $where[] = ['','exp',Db::raw("FIND_IN_SET('".$goods['goods_id']."',buy_goods_id)")];
+            $where[]=['user_id','=',$this->userInfo['user_id']];
+            $where[]=['order_status','in',[0,1]];
+            $order_count = $OrderModel->where($where)->count();
+
+            if(($order_count) >= $goods['restrict_purc']){
+                return ['code' => -1, 'msg' => '此商品限购【'.$goods['restrict_purc'].'】次,已累计购买【'.$order_count.'】次'];
+            }
+
+//            if(($order_count + $num) > $goods['restrict_purc']){
+//                return ['code' => -1, 'msg' => '此商品限购【'.$goods['restrict_purc'].'】件,已累计购买【'.$order_count.'】件'];
+//            }
+
+        }
+
 
 
         /* 是否正在销售 */
