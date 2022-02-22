@@ -23,6 +23,8 @@
 		},
 		data() {
 			return {
+				settings: uni.getStorageSync('setting'),
+				user_token:uni.getStorageSync('user_token'),
 				showPage:false,
 				page_id:0,
 				getCartNum:0,//1执行请求购物车数量
@@ -48,6 +50,13 @@
 		},
 		watch: {},
 		computed: {},
+		onShareAppMessage() {
+		    return {
+		        title:this.pageInfo.page.title,
+		        imageUrl: this.baseUrl + this.settings.logo,
+		        path: '/pages/shop/index/diypage?pageid='+this.page_id+'&share_token='+this.user_token
+		    }
+		},
 		methods: {
 			//请求数据
 			async loadData() {
