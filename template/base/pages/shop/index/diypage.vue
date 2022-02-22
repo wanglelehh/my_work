@@ -27,6 +27,7 @@
 				user_token:uni.getStorageSync('user_token'),
 				showPage:false,
 				page_id:0,
+				pageid:0,
 				getCartNum:0,//1执行请求购物车数量
 				pageInfo: {
 					page: {}
@@ -41,7 +42,7 @@
 			}else{
 				this.pageid = options.pageid;
 			}
-			if (isNaN(this.pageid) == true || this.pageid < 1) {
+			if (this.pageid < 1) {
 				this.app.showModal('传值错误.', -1);
 				return false;
 			}
@@ -59,7 +60,7 @@
 		    return {
 		        title:this.pageInfo.page.title,
 		        imageUrl: this.baseUrl + this.settings.logo,
-		        path: '/pages/shop/index/diypage?pageid='+this.page_id+'&share_token='+this.user_token
+		        path: '/pages/shop/index/diypage?pageid='+this.pageid+'&share_token='+this.user_token
 		    }
 		},
 		methods: {
