@@ -159,8 +159,10 @@
 				baseUrl: this.config.baseUrl,
 				setting: {},
 				top_bg: '',
+				user_token:'',
 				userInfo: {
 					user_id:0,
+					token:'',
 					role: {},
 					account: {
 						balance_money:'0.00',
@@ -201,7 +203,6 @@
 				}, 500);
 			}
 			this.getCenterInfo();
-			this.setToken();
 		},
 		methods: {
 			getCenterInfo() {
@@ -210,6 +211,7 @@
 				    console.log(res);
 					if (res.data.userInfo){
 						this.userInfo = res.data.userInfo;
+						this.user_token = res.data.userInfo.token;
 						this.orderStats = res.data.orderStats;
 						this.collectNum = res.data.collectNum;
 						this.teamCount = res.data.teamCount;
@@ -217,6 +219,10 @@
 						this.unReadMsgNum = res.data.unReadMsgNum;
 						if (this.userInfo.headimgurl != '') {
 							this.headimgurl = this.config.baseUrl + this.userInfo.headimgurl;
+						}
+						var user_token=uni.getStorageSync("user_token");
+						if(user_token!=res.data.userInfo.token || user_token==''){
+							uni.setStorageSync("user_token",res.data.userInfo.token);
 						}
 					}else{
 						this.app.delAuthCode();
@@ -244,12 +250,7 @@
 				this.$u.post('member/api.center/getCenterNavMenu').then(res => {
 					this.navMenu = res.data.navMenu;
 				})
-			},
-			setToken(){
-				var user_token=uni.getStorageSync("user_token");
-				if(user_token!=this.userInfo['token'] || user_token==''){
-					uni.setStorageSync("user_token",this.userInfo['token']);
-				}
+				this.setToken();
 			},
 			centerNav(item){
 				if (item.bind_type == 'tel'){
