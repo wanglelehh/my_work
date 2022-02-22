@@ -259,6 +259,13 @@
 				return this.scrollTop > 90 ? 1 : 0;
 			}
 		},
+        onShareAppMessage() {
+            return {
+                title:this.selectGoods.goods_name,
+                imageUrl: this.baseUrl + this.selectGoods.goods_img,
+                path: '/pages/shop/goods/info?goods_id='+this.selectGoods.goods_id+'&share_token='+this.selectGoods.user_token
+            }
+        },
 		methods: {
 			goUrl(url){
 				this.app.goPage(url);
