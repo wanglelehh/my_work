@@ -17,6 +17,7 @@ class Index extends ApiController
         $data['tipsubscribe'] = 0;
         $data['shop_index_img']=settings('shop_index_img');
         $data['shop_index_img_open']=settings('shop_index_img_open');
+        $data['shop_index_link']=settings('shop_index_link');
         $source = request()->header('source');
         if ($source == 'H5-WX' ){
             $openid = input('openid','','trim');

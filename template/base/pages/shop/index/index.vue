@@ -41,7 +41,8 @@
 		<view v-if="open==true" style="position: fixed;top: 0;left: 0;z-index: 1111;width: 100%;height: 100%;background: rgba(0,0,0,0.5);">
 			<view style="width: 80%;left: 10%;top: 50%;position: absolute;border-radius: 20rpx;margin-top: -400rpx;padding: 20rpx;">
 				<u-icon name="close-circle" @click="closeOpen()" size="70" style="position: absolute;right: -55rpx;top: -70rpx;"></u-icon>
-				<image class="play" :src="look_image" style="width:100%;height:800rpx;border-radius: 20rpx;" ></image>
+				<image class="play" :src="look_image" style="width:100%;height:800rpx;border-radius: 20rpx;" v-if="look_image_url" @click="app.goPage(look_image_url)"></image>
+				<image class="play" :src="look_image" style="width:100%;height:800rpx;border-radius: 20rpx;" v-else ></image>
 			</view>
 		</view>
 	</view>
@@ -62,6 +63,7 @@
 			return {
 				settings: uni.getStorageSync('setting'),
 				look_image:'/static/public/images/video_icon/avatar.jpg',
+				look_image_url:'',
                 open:false,
 				now_page:'',
 				shareData: {},
@@ -125,6 +127,7 @@
 						if(res.data.shop_index_img_open ==1 && res.data.shop_index_img !=''){
 							this.open=true
 							this.look_image=this.config.baseUrl+res.data.shop_index_img;
+							this.look_image_url=res.data.shop_index_link;
 						}
 					}, 1000);
 					//console.log(this.pageInfo);
