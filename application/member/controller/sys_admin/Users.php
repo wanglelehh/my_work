@@ -176,6 +176,7 @@ class Users extends AdminController
                 }
                 $layer_num=$UsersBindSuperiorModel->where('user_id',$row['user_id'])->value('superior');
                 $layer_num=str_replace($row['user_id'],'',$layer_num);
+                $layer_num=str_replace(',','、',$layer_num);
                 $data .= "<tr>";
                 foreach ($export_arr as $val) {
                     $data .= "<td>";
@@ -185,7 +186,7 @@ class Users extends AdminController
                         $data .= ($row['role_id'] == 0 ? '无身份' : $roleList[$row['role_id']]['role_name']);
                     } else {
                         if($val == 'layer_num'){
-                            $data .= (strlen($layer_num) > 0 ? ltrim($layer_num,',') : '');
+                            $data .= (strlen($layer_num) > 0 ? ltrim($layer_num,'、') : '');
                         } elseif ($val == 'p_mobile') {
                             $data .= ($row['pid'] > 0 ? $pUserInfo['mobile'] : '');
                         }elseif ($val == 'p_real_name') {
