@@ -433,7 +433,8 @@
 				    this.$u.post('weixin/api.index/loginByMpPhone', {
 						iv:e.detail.iv,
 						encryptedData:e.detail.encryptedData,
-						openid:this.app.getWxOpenId()
+						openid:this.app.getWxOpenId(),
+						share_token:uni.getStorageSync("share_token"),
 					}).then(res => {
 						if (res.data.must_reg == 1){
 							let phoneNumber = res.data.phoneNumber;

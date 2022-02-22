@@ -136,12 +136,14 @@ class Index  extends ApiController{
     public function loginByMpPhone(){
         $openid = input('openid','','trim');
         $iv = input('iv','','trim');
+        $share_token = input('share_token','','trim');
         $encryptedData = input('encryptedData','','trim');
         $dataObj = $this->Model->WXBizDataCrypt($openid,$iv,$encryptedData);
         if (is_array($dataObj) == false){
             return $this->error($dataObj);
         }
         $UsersModel = new UsersModel();
+        $pid = $UsersModel->getShareUser($share_token);
         $userInfo = $UsersModel->where('mobile',$dataObj['phoneNumber'])->find();
         if (empty($userInfo) == false){
             if ($userInfo['is_ban'] == 1) {
@@ -155,6 +157,7 @@ class Index  extends ApiController{
             $inArr['encryptedData']=$encryptedData;
             $inArr['mobile']=$dataObj['phoneNumber'];
             $inArr['openid']=$openid;
+            $inArr['pid']=$pid;
             $inArr['password'] = 'Abc123456'; //系统默认密码
             $res=$UsersModel->register($inArr,0);
             if($res!=true){
