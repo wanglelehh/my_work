@@ -60,6 +60,7 @@
 		},
 		data() {
 			return {
+				settings: uni.getStorageSync('setting'),
 				look_image:'/static/public/images/video_icon/avatar.jpg',
                 open:false,
 				now_page:'',
@@ -71,6 +72,7 @@
 				showTopTips:false,
 				showqrcode:false,
 				weixin_qrcode:'',
+				user_token:'',
 			};
 		},
 		onLoad(options) {
@@ -90,6 +92,13 @@
 		},
 		watch: {},
 		computed: {},
+		onShareAppMessage() {
+		    return {
+		        title:this.settings.site_name,
+		        imageUrl: this.baseUrl + this.settings.logo,
+		        path: '/pages/shop/index/index?share_token='+this.selectGoods.user_token
+		    }
+		},
 		methods: {
 			closeOpen(){
 				this.open=false;
@@ -101,6 +110,7 @@
 					this.is_diy = res.data.is_diy;
 					this.pageInfo = res.data.page;
 					this.showTopTips = res.data.tipsubscribe == 1 ? true : false;
+					this.user_token = res.data.user_token ? res.data.user_token : '';
 					let title = this.pageInfo.page.title;
 					let titlebarbg = this.pageInfo.page.titlebarbg;
 					let titlebarcolor = this.pageInfo.page.titlebarcolor;
