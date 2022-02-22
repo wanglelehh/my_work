@@ -72,7 +72,7 @@
 				showTopTips:false,
 				showqrcode:false,
 				weixin_qrcode:'',
-				user_token:'',
+				user_token:uni.getStorageSync('user_token'),
 			};
 		},
 		onLoad(options) {
@@ -96,7 +96,7 @@
 		    return {
 		        title:this.settings.site_name,
 		        imageUrl: this.baseUrl + this.settings.logo,
-		        path: '/pages/shop/index/index?share_token='+this.selectGoods.user_token
+		        path: '/pages/shop/index/index?share_token='+this.user_token
 		    }
 		},
 		methods: {
@@ -110,7 +110,7 @@
 					this.is_diy = res.data.is_diy;
 					this.pageInfo = res.data.page;
 					this.showTopTips = res.data.tipsubscribe == 1 ? true : false;
-					this.user_token = res.data.user_token ? res.data.user_token : '';
+					// this.user_token = res.data.user_token ? res.data.user_token : '';
 					let title = this.pageInfo.page.title;
 					let titlebarbg = this.pageInfo.page.titlebarbg;
 					let titlebarcolor = this.pageInfo.page.titlebarcolor;

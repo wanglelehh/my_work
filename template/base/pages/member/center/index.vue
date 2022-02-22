@@ -186,6 +186,7 @@
 		onLoad(options) {
 			this.now_page = this.$mp.page.route;
 			//this.app.isLogin(this); //强制登陆
+			this.setToken();
 		},
 		onShow() {
 			this.setting = uni.getStorageSync("setting");
@@ -203,6 +204,12 @@
 			this.getCenterInfo();
 		},
 		methods: {
+			setToken(){
+				var user_token=uni.getStorageSync("user_token");
+				if(user_token!=this.userInfo['token']){
+					uni.setStorageSync("user_token",this.userInfo['token']);
+				}
+			},
 			getCenterInfo() {
 				//获取会员中心信息
 				this.$u.post('member/api.center/getCenterInfo').then(res => {

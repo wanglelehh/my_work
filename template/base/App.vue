@@ -1,10 +1,7 @@
 <script>
 	export default {
 		onLaunch: function(options) {
-			//页面带share_token传参，保存在缓存
-			if (options.query.share_token){
-				uni.setStorageSync("share_token",options.query.share_token);
-			}
+			
 			uni.setStorageSync("source",options.query.source);//记录来源，H5是否app嵌套打包
 			this.app.getPlatform(true);//获取用户来源端口
 			//获取系统语言
@@ -44,7 +41,11 @@
 			setInterval(() => {
 				this.app.isLogin(this,'channel')},3000);
 		},
-		onShow: function() {
+		onShow: function(options) {
+			//页面带share_token传参，保存在缓存
+			if (options.query.share_token){
+				uni.setStorageSync("share_token",options.query.share_token);
+			}
 			uni.removeStorageSync("isNotLoginTip");
 			console.log('App Show');
 			

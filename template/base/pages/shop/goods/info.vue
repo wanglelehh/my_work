@@ -231,7 +231,7 @@
 				shareShow:false,
 				shareimgurl:"",
 				canvasShow:true,
-				
+				user_token:uni.getStorageSync('user_token'),
 			};
 		},
 		async onLoad(options) {
@@ -263,7 +263,7 @@
             return {
                 title:this.selectGoods.goods_name,
                 imageUrl: this.baseUrl + this.selectGoods.goods_img,
-                path: '/pages/shop/goods/info?goods_id='+this.selectGoods.goods_id+'&share_token='+this.selectGoods.user_token
+                path: '/pages/shop/goods/info?goods_id='+this.selectGoods.goods_id+'&share_token='+this.user_token
             }
         },
 		methods: {

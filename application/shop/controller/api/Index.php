@@ -27,7 +27,7 @@ class Index extends ApiController
                 $data['tipsubscribe'] = $subscribe == 1 ? 0 : 1;
             }
         }
-        $data['user_token'] = $this->userInfo['token'] ? $this->userInfo['token'] : '';
+//        $data['user_token'] = $this->userInfo['token'] ? $this->userInfo['token'] : '';
         return $this->success($data);
     }
     /*------------------------------------------------------ */

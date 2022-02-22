@@ -119,7 +119,7 @@ class Goods extends ApiController
         if (empty($this->userInfo['user_id']) == false){//已登陆， 查询用户是否有收藏此商品
             $data['is_collect'] = $this->Model->isCollect($goods_id,$this->userInfo['user_id']);
         }
-        $data['user_token'] = $this->userInfo['token'] ? $this->userInfo['token'] : '';
+//        $data['user_token'] = $this->userInfo['token'] ? $this->userInfo['token'] : '';
         return $this->success($data);
     }
 
