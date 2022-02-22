@@ -34,12 +34,17 @@
 			};
 		},
 		onLoad(options) {
-			let pageid = parseInt(options.pageid);
-			if (isNaN(pageid) == true || pageid < 1) {
+			if (options.scene){//获取小程序的场景值，用于获取分享者的token
+				let scene = options.scene.split('_');
+				uni.setStorageSync("share_token",scene[0]);
+				this.pageid = scene[1];
+			}else{
+				this.pageid = options.pageid;
+			}
+			if (isNaN(this.pageid) == true || this.pageid < 1) {
 				this.app.showModal('传值错误.', -1);
 				return false;
 			}
-			this.pageid = pageid;
 			this.loadData();
 		},
 		onShow(){
