@@ -250,7 +250,6 @@
 				this.$u.post('member/api.center/getCenterNavMenu').then(res => {
 					this.navMenu = res.data.navMenu;
 				})
-				this.setToken();
 			},
 			centerNav(item){
 				if (item.bind_type == 'tel'){
