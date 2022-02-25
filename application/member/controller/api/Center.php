@@ -63,6 +63,7 @@ class Center extends ApiController
         $where[]=['is_type','=',1];
         $data['teamConsume'] = (new OrderModel())->where($where)->sum('order_amount');
         $data['teamCount'] = (new FansModel)->getFansCountToCenter($this->userInfo['user_id']);
+        $data['role_contract_open'] = settings('role_contract_open');
 
         $data['unReadMsgNum'] = (new \app\mainadmin\model\MessageModel)->getMessageUnCount($this->userInfo['user_id']);
         return $this->success($data);

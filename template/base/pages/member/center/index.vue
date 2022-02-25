@@ -183,6 +183,7 @@
 					underNum:0
 				},
 				teamConsume:0,
+				role_contract_open:0,
 			}
 		},
 		onLoad(options) {
@@ -217,6 +218,7 @@
 						this.teamCount = res.data.teamCount;
 						this.teamConsume=res.data.teamConsume;
 						this.unReadMsgNum = res.data.unReadMsgNum;
+						this.role_contract_open = res.data.role_contract_open;
 						if (this.userInfo.headimgurl != '') {
 							this.headimgurl = this.config.baseUrl + this.userInfo.headimgurl;
 						}
@@ -227,7 +229,7 @@
 					}else{
 						this.app.delAuthCode();
 					}
-					if(this.userInfo['role_id']>12 && this.userInfo['signature']=='' && this.setting.role_contract_open==1){
+					if(this.userInfo['role_id']>12 && this.userInfo['signature']=='' && this.role_contract_open==1){
 					    uni.showModal({
 					        title: this.app.langReplace('提示'),
 					        content: '成为代理需签署合同,是否前往签署.',
