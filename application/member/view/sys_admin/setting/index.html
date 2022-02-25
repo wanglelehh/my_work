@@ -306,6 +306,19 @@
                     </div>
                     <div class="tab-pane " id="contract">
                         <div class="form-group">
+                            <label class="control-label">合同签署：</label>
+                            <div class="controls">
+                                <label class="radio-inline">
+                                    <input name="role_contract_open" value="1" class="js_radio_undertake" data-class="sign_in_box"
+                                           {$setting['role_contract_open']==1?'checked':''} type="radio">开启
+                                </label>
+                                <label class="radio-inline">
+                                    <input name="role_contract_open" value="0" class="js_radio_undertake" {$setting['role_contract_open']==0?'checked':''}
+                                    type="radio" >关闭
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
                             <label class="control-label">代理合同：</label>
                             <div class="col-sm-9 " style="padding-left:0px;">
                                 <div id="role_contract"></div>

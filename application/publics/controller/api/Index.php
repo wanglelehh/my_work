@@ -50,6 +50,7 @@ class Index extends ApiController
         require EXTEND_PATH . '/../Data/rsaKey.php';
         $setting['rsa_public'] = RSA_PUBLIC;
         $setting['team_pool']=settings('team_pool');
+        $setting['role_contract_open']=settings('role_contract_open');
         $data['setting'] = $setting;
 
         session_start();
