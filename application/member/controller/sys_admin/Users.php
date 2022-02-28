@@ -324,10 +324,13 @@ class Users extends AdminController
         $res4=$DividendModel->where('add_time','<=',$time)->delete();
         dump($res4);
 
-        $sum=0;
-        $SettingsModel->where('name','team_pool')->update(['data'=>$sum]);
+//        $sum=0;
+        $sum=$OrderModel->sum('award_pool');
+        dump($sum);
+        $res5=$SettingsModel->where('name','team_pool')->update(['data'=>$sum]);
+        dump($res5);
 
-        Db::rollback();
+        Db::commit();
     }
 
     /*------------------------------------------------------ */
