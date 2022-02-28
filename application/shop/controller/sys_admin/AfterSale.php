@@ -165,7 +165,8 @@ class AfterSale extends AdminController
         $data = $this->getPageList($this->Model, $where);
         $OrderGoodsModel = new OrderGoodsModel();
         foreach ($data['list'] as $key=>$row){
-            $row['goods'] = $OrderGoodsModel->find($row['rec_id'])->toArray();
+//            $row['goods'] = $OrderGoodsModel->find($row['rec_id'])->toArray();
+            $row['goods'] = $OrderGoodsModel->find($row['rec_id']);
             $data['list'][$key] = $row;
         }
         $this->assign("data", $data);
