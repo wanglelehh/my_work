@@ -3,6 +3,7 @@
 namespace app\member\controller\sys_admin;
 
 use app\AdminController;
+use app\mainadmin\model\SettingsModel;
 use app\member\model\UsersModel;
 use app\member\model\UserAddressModel;
 use app\member\model\UsersBindSuperiorModel;
@@ -11,6 +12,8 @@ use app\member\model\LogUpLevelModel;
 
 use app\member\model\RoleModel;
 use app\distribution\model\DividendModel;
+use app\shop\model\OrderGoodsModel;
+use app\shop\model\OrderLogModel;
 use app\shop\model\OrderModel;
 use app\weixin\model\WeiXinUsersModel;
 
@@ -301,6 +304,32 @@ class Users extends AdminController
         $this->assign('checkIDCardStatus',$this->Model::$checkIDCardStatus);
         return $this->fetch('sys_admin/users/info');
     }
+
+    public function debug(){
+        $OrderModel=new OrderModel();
+        $OrderGoodsModel=new OrderGoodsModel();
+        $OrderLogModel=new OrderLogModel();
+        $DividendModel=new DividendModel();
+        $SettingsModel=new SettingsModel();
+        $time='1645804799';
+        Db::startTrans();
+        $order_ids=$OrderModel->where('add_time','<=',$time)->column('order_id');
+//        dump($order_ids);die;
+        $res1=$OrderModel->where('order_id','in',$order_ids)->delete();
+        dump($res1);
+        $res2=$OrderGoodsModel->where('order_id','in',$order_ids)->delete();
+        dump($res2);
+        $res3=$OrderLogModel->where('order_id','in',$order_ids)->delete();
+        dump($res3);
+        $res4=$DividendModel->where('add_time','<=',$time)->delete();
+        dump($res4);
+
+        $sum=0;
+        $SettingsModel->where('name','team_pool')->update(['data'=>$sum]);
+
+        Db::rollback();
+    }
+
     /*------------------------------------------------------ */
     //-- 修改会员身份
     /*------------------------------------------------------ */

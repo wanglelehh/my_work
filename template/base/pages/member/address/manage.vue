@@ -60,7 +60,8 @@
 			
 			let title = '新增地址';
 			if (options.type === 'edit') {
-				title = '编辑地址'
+				title = '编辑地址';
+				this.manageType='edit';
 				this.addressData = JSON.parse(options.data);
 				this.region_code = [this.addressData.province, this.addressData.city, this.addressData.district];
 				this.addressData.regionIds = this.addressData.province+','+this.addressData.city+','+this.addressData.district;

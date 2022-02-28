@@ -215,10 +215,9 @@ module.exports = {
 		})
 	},
 	pxToRpx(px) { //px转rpx
-		const info = uni.getSystemInfoSync();
 		if (px <= 0) return 0;
-		let scale = 750 / info.windowWidth;
-		return px * scale;
+		const info = uni.getSystemInfoSync();
+		return px * 750 / info.windowWidth / 2;
 	},
 	toParams(options){ //转换参数
 		let params = Object.keys(options).map(function (key) {
