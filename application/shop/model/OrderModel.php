@@ -184,10 +184,34 @@ class OrderModel extends BaseModel
                 $info['isSign'] = 1;
             } elseif ($info['shipping_status'] == $this->config['SS_SIGN']) {
                 $info['ostatus'] = '已完成';
+                $SettingsModel=new SettingsModel();
                 $shop_after_sale_limit = settings('shop_after_sale_limit');
                 if ($shop_after_sale_limit > 0){//开启售后
                     if ($info['sign_time'] > time() - $shop_after_sale_limit * 86400){
                         $info['isAfterSale'] = 1;//可操作：申请售后
+                    }
+                    if((time()-$info['sign_time']) > $shop_after_sale_limit * 86400){
+                        if($info['award_pool']>0 && empty($info['arrival_time'])){       //有奖金池且未发放
+                            $this->upInfo(['order_id'=>$info['order_id'],'arrival_time'=>time()]);
+                            $find=$SettingsModel->where('name','team_pool')->find();
+                            if($find){
+                                $SettingsModel->where('name','team_pool')->setInc('data',$info['award_pool']);
+                            }else{
+                                $SettingsModel->insert(['name'=>'team_pool','data'=>$info['award_pool']]);
+                            }
+                            $SettingsModel->cleanMemcache();
+                        }
+                    }
+                }else{      //没开启售后
+                    if($info['award_pool']>0 && empty($info['arrival_time'])){       //有奖金池且未发放
+                        $this->upInfo(['order_id'=>$info['order_id'],'arrival_time'=>time()]);
+                        $find=$SettingsModel->where('name','team_pool')->find();
+                        if($find){
+                            $SettingsModel->where('name','team_pool')->setInc('data',$info['award_pool']);
+                        }else{
+                            $SettingsModel->insert(['name'=>'team_pool','data'=>$info['award_pool']]);
+                        }
+                        $SettingsModel->cleanMemcache();
                     }
                 }
             }
@@ -962,7 +986,6 @@ class OrderModel extends BaseModel
             Db::rollback();// 回滚事务
         }//end
         $GoodsModel=new GoodsModel();
-        $SettingsModel=new SettingsModel();
         $goodsList=(new OrderGoodsModel())->where('order_id',$orderInfo['order_id'])->select()->toArray();
         //奖金池
         $one_award=0;
@@ -972,16 +995,17 @@ class OrderModel extends BaseModel
                 $one_award +=$give_pool *  $v['goods_number'];
             }
         }
-        if($one_award>0){
-            $find=$SettingsModel->where('name','team_pool')->find();
-            if($find){
-                $SettingsModel->where('name','team_pool')->setInc('data',$one_award);
-            }else{
-                $SettingsModel->insert(['name'=>'team_pool','data'=>$one_award]);
-            }
-            $SettingsModel->cleanMemcache();
-            $upData['award_pool']=$one_award;
-        }
+        $upData['award_pool']=$one_award>0?$one_award:0;
+//        if($one_award>0){
+//            $find=$SettingsModel->where('name','team_pool')->find();
+//            if($find){
+//                $SettingsModel->where('name','team_pool')->setInc('data',$one_award);
+//            }else{
+//                $SettingsModel->insert(['name'=>'team_pool','data'=>$one_award]);
+//            }
+//            $SettingsModel->cleanMemcache();
+//            $upData['award_pool']=$one_award>0?$one_award:0;
+//        }
         //end
 
         //处理（差价补贴、平级奖）
