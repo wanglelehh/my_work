@@ -47,7 +47,7 @@ class YdShare extends Command{
         if(count($userIds)<1) return true;
 
         $time=time();
-        $findTime='month';
+        $findTime='last month';
         Db::startTrans();
         foreach ($userIds as $key => $uid){
             $my_total = $OrderModel->getTotalOrderMoney($uid,$findTime);   //自己总业绩
