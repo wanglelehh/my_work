@@ -1,6 +1,6 @@
 <template>
 	<view :style="{padding:app.pxToRpx(diyitem.style.paddingtop)+'rpx 0rpx'}">
-	<u-swiper :height="app.pxToRpx(diyitem.style.height / 2)"  :list="list" :title="diyitem.style.showtitle==1?true:false" :effect3d="diyitem.style.effect3d==1?true:false"
+	<u-swiper :height="app.pxToRpx(diyitem.style.height) / 2"  :list="list" :title="diyitem.style.showtitle==1?true:false" :effect3d="diyitem.style.effect3d==1?true:false"
 	:indicator-pos="diyitem.style.indicatorPos" :mode="diyitem.style.dotstyle" :interval="diyitem.style.interval * 1000" @click="click" imgMode="widthFix"></u-swiper>
 	</view>
 </template>
