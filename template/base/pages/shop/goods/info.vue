@@ -246,12 +246,12 @@
 			}else{
 				this.goods_id = options.goods_id;
 			}
-			this.app.isLogin(this); //强制登陆
 			this.getGoodsInfo();
 		
 			
 		},
 		onShow() {
+			this.app.isLogin(this); //强制登陆
 			this.getComment();
 			this.loadCartNum();
 		},
