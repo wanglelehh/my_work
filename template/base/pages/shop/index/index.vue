@@ -83,6 +83,7 @@
 				uni.setStorageSync("share_token",scene[0]);
 			}
 			this.now_page = this.$mp.page.route;
+			this.app.isLogin(this); //强制登陆
 			this.loadData();
 			//微信公众号分享
 			let setting = uni.getStorageSync('setting');

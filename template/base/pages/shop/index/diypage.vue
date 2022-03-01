@@ -46,6 +46,7 @@
 				this.app.showModal('传值错误.', -1);
 				return false;
 			}
+			this.app.isLogin(this); //强制登陆
 			this.loadData();
 		},
 		onShow(){

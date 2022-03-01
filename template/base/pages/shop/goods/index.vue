@@ -117,6 +117,7 @@
 			}
 		},
 		onLoad(options) {
+			this.app.isLogin(this); //强制登陆
 			let title = this.app.langReplace('商品列表');
 			uni.setNavigationBarTitle({
 				title
