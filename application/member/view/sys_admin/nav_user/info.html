@@ -75,6 +75,21 @@
                         </div>
                     </div>
                     <div class="form-group">
+                        <label class="col-sm-2 control-label">是否复制</label>
+                        <div class="col-sm-3 ">
+                            <label class=" inline">
+                                <input type="radio" name="copy" value="1" {$row['copy']|tplckval=1,'checked',true}
+                                />
+                                是
+                            </label>
+                            <label class=" inline">
+                                <input type="radio" name="copy" value="2" {$row['copy']|tplckval=2,'checked'}/>
+                                否
+                            </label>
+                            <span class="help-line"> （注:小程序不支持，将弹出提示）</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
                         <label class="col-sm-2 control-label">排序</label>
                         <div class="col-sm-3 ">
                             <input type="text" name="sort_order" id="sort_order" value="{$row.sort_order|intval}"

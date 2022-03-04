@@ -254,6 +254,23 @@
 				})
 			},
 			centerNav(item){
+				if(item.copy==1){
+					var link=this.baseUrl+item.url.substr(1);
+					if(item.url.indexOf("?") != -1){      //有问号
+						link=link+'&share_token='+this.user_token;
+					}else{
+						link=link+'?share_token='+this.user_token;
+					}
+					// #ifdef MP-WEIXIN
+					this.$refs.uToast.show({
+						title: this.app.langReplace('小程序不支持复制链接'),
+						type: 'error',
+						position:'top'
+					});
+					return;
+					// #endif
+					this.app.copy(link);
+				}
 				if (item.bind_type == 'tel'){
 					uni.makePhoneCall({
 					 	// 手机号
