@@ -270,22 +270,23 @@
 					return;
 					// #endif
 					this.app.copy(link);
-				}
-				if (item.bind_type == 'tel'){
-					uni.makePhoneCall({
-					 	// 手机号
-					    phoneNumber: item.url+'', 
-						// 成功回调
-						success: (res) => {
-							console.log('调用成功!')	
-						},
-						// 失败回调
-						fail: (res) => {
-							console.log('调用失败!')
-						}
-					 });
 				}else{
-					this.app.goPage(item.url);
+                    if (item.bind_type == 'tel'){
+                        uni.makePhoneCall({
+                            // 手机号
+                            phoneNumber: item.url+'',
+                            // 成功回调
+                            success: (res) => {
+                                console.log('调用成功!')
+                            },
+                            // 失败回调
+                            fail: (res) => {
+                                console.log('调用失败!')
+                            }
+                        });
+                    }else{
+                        this.app.goPage(item.url);
+                    }
 				}
 			}
 		}
