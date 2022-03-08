@@ -188,7 +188,10 @@
 		},
 		onLoad(options) {
 			this.now_page = this.$mp.page.route;
-			this.app.isLogin(this); //强制登陆
+			let setting = uni.getStorageSync('setting');
+			if(setting.shop_force_login==1){
+				this.app.isLogin(this); //强制登陆
+			}
 		},
 		onShow() {
 			this.setting = uni.getStorageSync("setting");

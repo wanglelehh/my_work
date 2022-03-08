@@ -49,7 +49,10 @@
 			this.loadData();
 		},
 		onShow(){
-			this.app.isLogin(this); //强制登陆
+			let setting = uni.getStorageSync('setting');
+			if(setting.shop_force_login==1){
+				this.app.isLogin(this); //强制登陆
+			}
 			//this.getCartNum = 1;
 		},
 		onHide(){

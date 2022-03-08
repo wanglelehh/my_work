@@ -51,6 +51,7 @@ class Index extends ApiController
         $setting['rsa_public'] = RSA_PUBLIC;
         $setting['team_pool']=settings('team_pool');
         $setting['role_contract_open']=settings('role_contract_open');
+        $setting['shop_force_login']=settings('shop_force_login');
         $data['setting'] = $setting;
 
         session_start();
