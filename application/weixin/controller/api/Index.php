@@ -85,6 +85,13 @@ class Index  extends ApiController{
             if ($wxArr['subscribe'] == 1){
                 $upData['sex'] = $wxArr['sex'];
                 $upData['subscribe'] = $wxArr['subscribe'] * 1;
+                if ((empty($wxuInfo['wx_nickname']) || empty($wxuInfo['wx_headimgurl'])) && (empty($wxArr['nickname']) || empty($wxArr['headimgurl']))){
+                    if(isset($data['access_token'])){
+                        $wxUserInfo = $wxModel->getAccWxUserInfo($wxuInfo['wx_openid'],$data['access_token']);
+                        $wxArr['nickname'] = $wxUserInfo['nickname'];
+                        $wxArr['headimgurl'] = $wxUserInfo['headimgurl'];
+                    }
+                }
                 if (empty($wxuInfo['wx_nickname'])) $upData['wx_nickname'] = $wxArr['nickname'];
                 if (empty($wxuInfo['wx_headimgurl'])) $upData['wx_headimgurl'] = $wxArr['headimgurl'];
                 $upData['wx_city'] = $wxArr['city'];

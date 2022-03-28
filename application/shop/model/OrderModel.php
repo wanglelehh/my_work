@@ -195,7 +195,8 @@ class OrderModel extends BaseModel
                             $this->upInfo(['order_id'=>$info['order_id'],'arrival_time'=>time()]);
                             $find=$SettingsModel->where('name','team_pool')->find();
                             if($find){
-                                $SettingsModel->where('name','team_pool')->setInc('data',$info['award_pool']);
+                                $inNum=sprintf("%.2f",$find['data']+$info['award_pool']);
+                                $SettingsModel->where('name','team_pool')->update(['data'=>$inNum]);
                             }else{
                                 $SettingsModel->insert(['name'=>'team_pool','data'=>$info['award_pool']]);
                             }
@@ -207,7 +208,8 @@ class OrderModel extends BaseModel
                         $this->upInfo(['order_id'=>$info['order_id'],'arrival_time'=>time()]);
                         $find=$SettingsModel->where('name','team_pool')->find();
                         if($find){
-                            $SettingsModel->where('name','team_pool')->setInc('data',$info['award_pool']);
+                            $inNum=sprintf("%.2f",$find['data']+$info['award_pool']);
+                            $SettingsModel->where('name','team_pool')->update(['data'=>$inNum]);
                         }else{
                             $SettingsModel->insert(['name'=>'team_pool','data'=>$info['award_pool']]);
                         }
